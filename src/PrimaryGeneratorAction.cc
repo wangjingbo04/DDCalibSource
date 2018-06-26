@@ -64,6 +64,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det)
                + det->GetFilterHeight() + det->GetModerator2Height() 
                + det->GetModerator1Height() - det->GetDDGeneratorHeight()/2;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
+  fMessenger = new G4GenericMessenger(this,"/primary/", "...doc...");
+  fMessenger->DeclareMethod("updateGunPosition", &PrimaryGeneratorAction::UpdateGunPosition, "...doc...");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -97,4 +99,13 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void PrimaryGeneratorAction::UpdateGunPosition() {
+  G4double x = 0.*cm;
+  G4double y = 0.*cm;
+  G4double z = fDetector->GetInsulatorHeight()/2 + fDetector->GetThermalAbsorberHeight() 
+               + fDetector->GetFilterHeight() + fDetector->GetModerator2Height() 
+               + fDetector->GetModerator1Height() - fDetector->GetDDGeneratorHeight()/2;
+  fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));	
+}
 

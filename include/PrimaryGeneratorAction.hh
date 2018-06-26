@@ -41,6 +41,7 @@
 #include "G4ParticleGun.hh"
 #include "globals.hh"
 #include "DetectorConstruction.hh"
+#include "G4GenericMessenger.hh"
 
 class G4Event;
 
@@ -55,10 +56,12 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
   public:
     virtual void GeneratePrimaries(G4Event*);
     G4ParticleGun* GetParticleGun() {return fParticleGun;};
+    void UpdateGunPosition();
 
   private:
     G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
     DetectorConstruction* fDetector;       //pointer to the detector class
+    G4GenericMessenger* fMessenger;      //pinter to generic messanger class
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
