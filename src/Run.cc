@@ -97,6 +97,15 @@ void Run::ParticleCount(G4String name, G4double Ekin)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+void Run::AntiResonCount(){
+
+    static G4int antiResCount = 0;
+    antiResCount++;
+    G4cout << "Antiresonance Count: " << antiResCount << G4endl;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 void Run::SumTrackLength(G4int nstep1, G4int nstep2, 
                          G4double trackl1, G4double trackl2,
                          G4double time1, G4double time2)

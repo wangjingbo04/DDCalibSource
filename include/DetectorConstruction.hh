@@ -61,8 +61,18 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetWorldMaterial (G4String);
     void SetFilterHeight(G4double);
     void SetModerator1Height(G4double);
-    void SetModerator1Material (G4String);
     void SetModerator2Height(G4double);
+    
+    void GetMaterialTable();
+    void SetModerator1Material (G4String);
+    void GetModerator1Material ();
+    void SetModerator2Material (G4String);
+    void GetModerator2Material ();
+    void SetFilterMaterial (G4String);
+    void GetFilterMaterial ();
+    void SetAbsorberMaterial (G4String);
+    void GetAbsorberMaterial ();
+    
 
   public:
   

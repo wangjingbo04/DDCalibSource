@@ -62,7 +62,18 @@ class DetectorMessenger: public G4UImessenger
     G4UIdirectory*             fTestemDir;
     G4UIdirectory*             fDetDir;
     G4UIcmdWithAString*        fMaterCmd;
-    G4UIcmdWithAString*        fModerator1MaterCmd;
+
+    //Set and Get Commands
+    G4UIcmdWithoutParameter*   fGetMaterialTable;
+    G4UIcmdWithAString*        fModerator1SetMaterCmd;
+    G4UIcmdWithoutParameter*   fModerator1GetMaterCmd;
+    G4UIcmdWithAString*        fModerator2SetMaterCmd;
+    G4UIcmdWithoutParameter*   fModerator2GetMaterCmd;
+    G4UIcmdWithAString*        fFilterSetMaterCmd;
+    G4UIcmdWithoutParameter*   fFilterGetMaterCmd;
+    G4UIcmdWithAString*        fAbsorberSetMaterCmd;
+    G4UIcmdWithoutParameter*   fAbsorberGetMaterCmd;
+ 
     G4UIcmdWithADoubleAndUnit* fSizeCmd;
     G4UIcmdWithADoubleAndUnit* fFilterHeightCmd;
     G4UIcmdWithADoubleAndUnit* fModerator1HeightCmd;

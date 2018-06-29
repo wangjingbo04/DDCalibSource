@@ -44,7 +44,7 @@
 /analysis/h2/set 6 100 -30 30 m none linear 100 -8 8 m none linear #neutron capture position in LAr TPC y:x (top view)
 /analysis/h2/set 7 100 -30 30 m none linear 100 -8 8 m none linear #neutron capture position in LAr TPC z:x (side view)
 #=======================================================
-
+/ddsource/det/SetModerator1Material mat_Fe
 /run/printProgress 100
 #
 /run/beamOn 100000

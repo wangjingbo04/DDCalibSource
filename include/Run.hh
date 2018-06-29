@@ -54,7 +54,7 @@ class Run : public G4Run
     void CountProcesses(const G4VProcess* process);                  
     void ParticleCount(G4String, G4double);
     void SumTrackLength (G4int,G4int,G4double,G4double,G4double,G4double);
-    
+    void AntiResonCount();
     void SetPrimary(G4ParticleDefinition* particle, G4double energy);    
     void EndOfRun(); 
             

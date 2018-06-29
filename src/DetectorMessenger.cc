@@ -59,11 +59,50 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fMaterCmd->SetGuidance("Select material of the box.");
   fMaterCmd->SetParameterName("choice",false);
   fMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
-  fModerator1MaterCmd = new G4UIcmdWithAString("/ddsource/det/setModerator1Mat",this);
-  fModerator1MaterCmd->SetGuidance("Select material of the moderator1.");
-  fModerator1MaterCmd->SetParameterName("choice",false);
-  fModerator1MaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fModerator1GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetMaterialTable", this);
+  fModerator1GetMaterCmd->SetGuidance("Parameterless, returns a table of materials used.");
+  fModerator1GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);  
+
+  fModerator1SetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetModerator1Material",this);
+  fModerator1SetMaterCmd->SetGuidance("Select material of the moderator1.");
+  fModerator1SetMaterCmd->SetParameterName("choice",false);
+  fModerator1SetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fModerator1GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetModerator1Material", this);
+  fModerator1GetMaterCmd->SetGuidance("Parameterless, returns Moderator1 material.");
+  fModerator1GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fModerator2SetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetModerator2Material",this);
+  fModerator2SetMaterCmd->SetGuidance("Select material of the moderator2.");
+  fModerator2SetMaterCmd->SetParameterName("choice",false);
+  fModerator2SetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fModerator2GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetModerator2Material", this);
+  fModerator2GetMaterCmd->SetGuidance("Parameterless, returns Moderator2 material.");
+  fModerator2GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fFilterSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetFilterMaterial",this);
+  fFilterSetMaterCmd->SetGuidance("Select material of the Filter.");
+  fFilterSetMaterCmd->SetParameterName("choice",false);
+  fFilterSetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fFilterGetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetFilterMaterial", this);
+  fFilterGetMaterCmd->SetGuidance("Parameterless, returns Filter material.");
+  fFilterGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fAbsorberSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetAbsorberMaterial",this);
+  fAbsorberSetMaterCmd->SetGuidance("Select material of the Absorber.");
+  fAbsorberSetMaterCmd->SetParameterName("choice",false);
+  fAbsorberSetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fAbsorberGetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetAbsorberMaterial", this);
+  fAbsorberGetMaterCmd->SetGuidance("Parameterless, returns Absorber material.");
+  fAbsorberGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
   fSizeCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setSize",this);
   fSizeCmd->SetGuidance("Set size of the box");
@@ -130,7 +169,17 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
 DetectorMessenger::~DetectorMessenger()
 {
   delete fMaterCmd;
-  delete fModerator1MaterCmd;
+
+  //Material Commands
+  delete fModerator1SetMaterCmd;
+  delete fModerator1GetMaterCmd;
+  delete fModerator2SetMaterCmd;
+  delete fModerator2GetMaterCmd;
+  delete fFilterSetMaterCmd;
+  delete fFilterGetMaterCmd;
+  delete fAbsorberSetMaterCmd;
+  delete fAbsorberGetMaterCmd;
+
   delete fSizeCmd;
   delete fIsotopeCmd;
   delete fDetDir;
@@ -143,10 +192,35 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 { 
   if( command == fMaterCmd )
    { fDetector->SetWorldMaterial(newValue);}
+
   
-  if( command == fModerator1MaterCmd )
+  //Set and Get Material Commands
+  if( command == fModerator1SetMaterCmd )
    { fDetector->SetModerator1Material(newValue);}
-   
+
+  if( command == fModerator1GetMaterCmd )
+   { fDetector->GetModerator1Material();}
+
+  if( command == fModerator2SetMaterCmd )
+   { fDetector->SetModerator2Material(newValue);}
+
+  if( command == fModerator2GetMaterCmd )
+   { fDetector->GetModerator2Material();}
+
+  if( command == fFilterSetMaterCmd )
+   { fDetector->SetFilterMaterial(newValue);}
+
+  if( command == fFilterGetMaterCmd )
+   { fDetector->GetFilterMaterial();}
+
+  if( command == fAbsorberSetMaterCmd )
+   { fDetector->SetAbsorberMaterial(newValue);}
+
+ if( command == fAbsorberGetMaterCmd )
+   { fDetector->GetAbsorberMaterial();}
+
+
+
   if( command == fSizeCmd )
    { fDetector->SetSize(fSizeCmd->GetNewDoubleValue(newValue));}
    
@@ -171,4 +245,4 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
    }   
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......  fFilterGetMaterCmd->SetGuidance("Parameterless, returns Filter material.");

@@ -85,6 +85,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     G4AnalysisManager::Instance()->FillH1(6,ekin); // fill the energy of each step to the histogram
   }
   
+
   // neutrons from generator to 1st moderator
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
 //  	&& aStep->GetTrack()->GetTrackID() == 1
@@ -95,8 +96,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     fEventAction->AddNeutronEnter_Moderator1();
     if(fEventAction->GetNNeutronEnter_Moderator1() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
   }
+
   
-  // neutrons from 1st moderator to Fluental moderator
+  // neutrons from 1st moderator to 2nd moderator
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
 //  	&& aStep->GetTrack()->GetTrackID() == 1
   	&& postPoint->GetStepStatus() == fGeomBoundary 
@@ -105,6 +107,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     //G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
     fEventAction->AddNeutronEnter_Moderator2();
     if(fEventAction->GetNNeutronEnter_Moderator2() == 1) G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
+    Run* run = static_cast<Run*>(
+        G4RunManager::GetRunManager()->GetNonConstCurrentRun());
+    if(kinEnergy <= 57*keV && kinEnergy < 85*keV && fEventAction->GetNNeutronEnter_Moderator2() == 1) run->AntiResonCount();
   }
   
   // neutrons from Fluental moderator to filter
