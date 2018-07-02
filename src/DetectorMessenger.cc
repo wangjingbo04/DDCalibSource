@@ -60,7 +60,8 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fMaterCmd->SetParameterName("choice",false);
   fMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //Get and Set Material Functions
   
   fModerator1GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetMaterialTable", this);
   fModerator1GetMaterCmd->SetGuidance("Parameterless, returns a table of materials used.");
@@ -102,7 +103,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fAbsorberGetMaterCmd->SetGuidance("Parameterless, returns Absorber material.");
   fAbsorberGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
   
   fSizeCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setSize",this);
   fSizeCmd->SetGuidance("Set size of the box");

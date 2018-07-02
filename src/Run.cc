@@ -46,7 +46,7 @@ Run::Run(DetectorConstruction* det)
   fDetector(det), fParticle(0), fEkin(0.),
   fNbStep1(0), fNbStep2(0),
   fTrackLen1(0.), fTrackLen2(0.),
-  fTime1(0.),fTime2(0.)
+  fTime1(0.),fTime2(0.), fNbColMod1(0.)
 { }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -176,7 +176,21 @@ void Run::Merge(const G4Run* run)
   }
 
   G4Run::Merge(run); 
-} 
+}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+
+void Run::AddCollisionsMod1(){
+
+    fNbColMod1++;
+}
+
+
+G4int Run::GetCollisionsMod1(){
+
+    return fNbColMod1;
+}
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -264,6 +278,17 @@ void Run::EndOfRun()
            << " --> " << G4BestUnit(eMax, "Energy") 
            << ")" << G4endl;           
  }
+
+
+
+  //Average Nb of Collisions in Moderator 1
+  G4cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
+  G4cout << G4endl;
+  G4cout << "Average # of Collisions in Moderator 1: " << (GetCollisionsMod1()/100000) << G4endl;
+  G4cout << G4endl;
+  G4cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
+
+
  
   //normalize histograms      
   ////G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();

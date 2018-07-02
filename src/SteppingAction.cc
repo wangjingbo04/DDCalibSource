@@ -97,6 +97,17 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(fEventAction->GetNNeutronEnter_Moderator1() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
   }
 
+
+
+  //Number of Collisions in 1st moderator
+  if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+   && fEventAction->GetNNeutronEnter_Moderator2()== 1
+   && endVolume == fDetector->GetLogicModerator1()) {
+
+        Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
+        run->AddCollisionsMod1();
+  }
+
   
   // neutrons from 1st moderator to 2nd moderator
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
@@ -109,10 +120,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(fEventAction->GetNNeutronEnter_Moderator2() == 1) G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
     Run* run = static_cast<Run*>(
         G4RunManager::GetRunManager()->GetNonConstCurrentRun());
-    if(kinEnergy <= 57*keV && kinEnergy < 85*keV && fEventAction->GetNNeutronEnter_Moderator2() == 1) run->AntiResonCount();
+    if(kinEnergy >= 57*keV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Moderator2() == 1) run->AntiResonCount();
   }
   
-  // neutrons from Fluental moderator to filter
+  // neutrons from 2nd moderator to filter
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicModerator2() 
@@ -122,7 +133,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(fEventAction->GetNNeutronEnter_Filter() == 1) G4AnalysisManager::Instance()->FillH1(9,kinEnergy);
   }
   
-  // neutrons from filter to Li absorber
+  // neutrons from filter to thermal absorber
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicFilter() 

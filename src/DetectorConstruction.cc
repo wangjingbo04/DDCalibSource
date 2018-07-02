@@ -257,7 +257,7 @@ void DetectorConstruction::DefineMaterials()
       LiF->AddElement(Li, natoms=1);
       LiF->AddElement(F, natoms=1);
   
-  G4Material* Fluental = new G4Material ("Fluental", density, ncomponents=3);
+  G4Material* Fluental = new G4Material ("Fluental", density=2.831, ncomponents=3);
       Fluental->AddElement (Al, fractionmass = 30*perCent);
       Fluental->AddMaterial (AlF3, fractionmass = 69*perCent);
       Fluental->AddMaterial (LiF, fractionmass = 1*perCent);
@@ -875,6 +875,8 @@ void DetectorConstruction::SetFilterHeight(G4double value)
 void DetectorConstruction::SetModerator1Height(G4double value)
 {
   fModerator1_Height = value;
+  fReflectorHeight = fFilterHeight + fModerator2_comp1_Height + fModerator2_comp2_Height + fModerator1_Height + fReflectorThickness;
+  fNShieldHeight = fThermalAbsorberHeight + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
