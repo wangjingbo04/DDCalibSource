@@ -54,7 +54,8 @@ class Run : public G4Run
     void CountProcesses(const G4VProcess* process);                  
     void ParticleCount(G4String, G4double);
     void SumTrackLength (G4int,G4int,G4double,G4double,G4double,G4double);
-    void AntiResonCount();
+    G4int GetARCount();
+    void AddARCount();
     void AddCollisionsMod1();
     G4int GetCollisionsMod1();
     void SetPrimary(G4ParticleDefinition* particle, G4double energy);    
@@ -85,7 +86,8 @@ class Run : public G4Run
     G4int    fNbStep1, fNbStep2;
     G4double fTrackLen1, fTrackLen2;
     G4double fTime1, fTime2;
-    G4int fNbColMod1;    
+    G4int fNbColMod1;
+    G4int fARCount;    
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -121,7 +121,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(fEventAction->GetNNeutronEnter_Moderator2() == 1) G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
     Run* run = static_cast<Run*>(
         G4RunManager::GetRunManager()->GetNonConstCurrentRun());
-    if(kinEnergy >= 57*keV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Moderator2() == 1) run->AntiResonCount();
+    if(kinEnergy >= 57*keV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Moderator2() == 1) run->AddARCount();
   }
   
   // neutrons from 2nd moderator to filter

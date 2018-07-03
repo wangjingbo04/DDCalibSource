@@ -46,7 +46,7 @@ Run::Run(DetectorConstruction* det)
   fDetector(det), fParticle(0), fEkin(0.),
   fNbStep1(0), fNbStep2(0),
   fTrackLen1(0.), fTrackLen2(0.),
-  fTime1(0.),fTime2(0.), fNbColMod1(0.)
+  fTime1(0.),fTime2(0.), fNbColMod1(0.), fARCount(0.)
 { }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -97,11 +97,14 @@ void Run::ParticleCount(G4String name, G4double Ekin)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void Run::AntiResonCount(){
+void Run::AddARCount(){
 
-    static G4int antiResCount = 0;
-    antiResCount++;
-    G4cout << "Antiresonance Count: " << antiResCount << G4endl;
+    fARCount++;
+}
+
+G4int Run::GetARCount(){
+
+    return fARCount;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -284,7 +287,9 @@ void Run::EndOfRun()
   //Average Nb of Collisions in Moderator 1
   G4cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
   G4cout << G4endl;
-  G4cout << "Average # of Collisions in Moderator 1: " << (GetCollisionsMod1()/50000) << G4endl;
+  G4cout << "Total Number of Events: " << numberOfEvent << G4endl;
+  G4cout << "Total (57 keV - 1 MeV): " << GetARCount() << G4endl;
+  G4cout << "Average # of Collisions in Moderator 1: " << (GetCollisionsMod1()/numberOfEvent) << G4endl;
   G4cout << G4endl;
   G4cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
 
