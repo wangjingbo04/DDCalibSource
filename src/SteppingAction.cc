@@ -102,10 +102,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   //Number of Collisions in 1st moderator
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
    && fEventAction->GetNNeutronEnter_Moderator2()== 1
-   && endVolume == fDetector->GetLogicModerator1()) {
+   && preVolume == fDetector->GetLogicModerator1() 
+   || endVolume == fDetector->GetLogicModerator1()) {
 
-        Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
-        run->AddCollisionsMod1();
+         Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
+         run->AddCollisionsMod1();
   }
 
   

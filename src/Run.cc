@@ -284,7 +284,7 @@ void Run::EndOfRun()
   //Average Nb of Collisions in Moderator 1
   G4cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
   G4cout << G4endl;
-  G4cout << "Average # of Collisions in Moderator 1: " << (GetCollisionsMod1()/100000) << G4endl;
+  G4cout << "Average # of Collisions in Moderator 1: " << (GetCollisionsMod1()/50000) << G4endl;
   G4cout << G4endl;
   G4cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
 
