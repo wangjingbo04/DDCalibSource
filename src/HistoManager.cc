@@ -127,9 +127,9 @@ void HistoManager::Book()
   analysisManager->SetH1Activation(ih, true);
   ih = analysisManager->CreateH1("h1.13", "Neutrons entering liquid Argon pool", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.14", "Theta angle for neutrons entering the port", nbins=360, xmin, xmax, "degrees");
+  ih = analysisManager->CreateH1("h1.14", "Theta angle for neutrons entering the port", nbins=360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.15", "Phi angle for neutrons entering the port", nbins=360, xmin, xmax, "degrees");
+  ih = analysisManager->CreateH1("h1.15", "Phi angle for neutrons entering the port", nbins=360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
   
   // histos 2D
