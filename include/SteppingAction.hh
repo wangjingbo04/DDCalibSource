@@ -49,6 +49,9 @@ class SteppingAction : public G4UserSteppingAction
     SteppingAction(DetectorConstruction*, TrackingAction*,  EventAction*);
    ~SteppingAction();
 
+    G4double GetTheta(const G4Step* aStep);
+    G4double GetPhi(const G4Step* aStep);
+
     virtual void UserSteppingAction(const G4Step*);
     
   private:

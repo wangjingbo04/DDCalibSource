@@ -22,6 +22,8 @@
 /analysis/h1/set 11  3000  0. 3 MeV #neutron entering feedthrough port
 /analysis/h1/set 12  3000  0. 3 MeV #neutron entering gaseous argon buffer
 /analysis/h1/set 13  3000  0. 3 MeV #neutron entering liquid argon pool
+/analysis/h1/set 14  360  -180 180 Degrees #Angular Distribution in the x-z plane
+/analysis/h1/set 15  360  -180 180 Degrees #Angular Distribution in the x-y plane
 /analysis/h2/set 0 100 -50 50 cm none linear 100 -50 50 cm none linear #neutron capture position in 1st moderator y:x (top view)
 /analysis/h2/set 1 100 -50 50 cm none linear 100 550 650 cm none linear #neutron capture position in 1st moderator z:x (side view)
 /analysis/h2/set 2 100 -50 50 cm none linear 100 -50 50 cm none linear #neutron capture position in 2nd moderator y:x (top view)

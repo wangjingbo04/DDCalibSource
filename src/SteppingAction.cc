@@ -39,6 +39,8 @@
 
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
+
+#include<cmath>
                            
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -149,9 +151,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicThermalAbsorber()
   	&& endVolume == fDetector->GetLogicPort()) {  
-    //G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
-    fEventAction->AddNeutronEnter_Port();
-    if(fEventAction->GetNNeutronEnter_Port() == 1) G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
+        //G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
+
+        G4AnalysisManager::Instance()->FillH1(14, GetTheta(aStep));
+        G4AnalysisManager::Instance()->FillH1(15, GetPhi(aStep));
+
+        fEventAction->AddNeutronEnter_Port();
+        if(fEventAction->GetNNeutronEnter_Port() == 1) G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
   }
   
   // neutrons from feedthrough port to gas argon buffer
@@ -223,5 +229,52 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+
+
+G4double SteppingAction::GetTheta(const G4Step* aStep){
+    
+    G4ThreeVector p = aStep->GetTrack()->GetMomentumDirection();
+    G4double dx = p.x();
+    G4double dz = p.z();
+
+    G4double theta;
+    const G4double pi = 3.14159265;
+    G4double alpha = atan2(dz, dx) * (180/pi);
+
+    if(dx >= 0 && dz >= 0)
+        theta = alpha + 90;
+    else if(dx < 0 || dz < 0)
+        theta = alpha - 270;
+
+    return theta;
+}
+
+
+
+
+
+
+
+G4double SteppingAction::GetPhi(const G4Step* aStep){
+    
+    G4ThreeVector q = aStep->GetTrack()->GetMomentumDirection();
+    G4double dx = q.x();
+    G4double dy = q.y();
+
+    G4double phi;
+    const G4double pi = 3.14159265;
+    G4double alpha = atan2(dy, dx) * (180/pi);
+
+    if(dx >= 0 && dy >= 0)
+        phi = alpha + 90;
+    else if(dx < 0 || dy < 0)
+        phi = alpha - 270;
+
+    return phi;
+}
+
+
+
 
 

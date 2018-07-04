@@ -97,6 +97,8 @@ void HistoManager::Book()
   G4int nbins = 100;
   G4double vmin = 0.;
   G4double vmax = 100.;
+  G4double xmin = -180.;
+  G4double xmax = 180.; 
   G4int ih = analysisManager->CreateH1("h1.0", "incident neutron: nb of collisions above 57 keV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
   ih = analysisManager->CreateH1("h1.1", "incident neutron: total track length above 57 keV", nbins, vmin, vmax);
@@ -124,6 +126,10 @@ void HistoManager::Book()
   ih = analysisManager->CreateH1("h1.12", "Neutrons from feedthrough port to gas argon buffer", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
   ih = analysisManager->CreateH1("h1.13", "Neutrons entering liquid Argon pool", nbins, vmin, vmax);
+  analysisManager->SetH1Activation(ih, true);
+  ih = analysisManager->CreateH1("h1.14", "Theta angle for neutrons entering the port", nbins=360, xmin, xmax, "degrees");
+  analysisManager->SetH1Activation(ih, true);
+  ih = analysisManager->CreateH1("h1.15", "Phi angle for neutrons entering the port", nbins=360, xmin, xmax, "degrees");
   analysisManager->SetH1Activation(ih, true);
   
   // histos 2D
