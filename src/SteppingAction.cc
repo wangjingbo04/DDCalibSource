@@ -153,8 +153,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& endVolume == fDetector->GetLogicPort()) {  
         //G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
 
-        G4AnalysisManager::Instance()->FillH1(14, GetTheta(aStep));
-        G4AnalysisManager::Instance()->FillH1(15, GetPhi(aStep));
+        G4ThreeVector p = aStep->GetTrack()->GetMomentumDirection();
+        if (p.x() != 0 && p.z() != 0)
+            G4AnalysisManager::Instance()->FillH1(14, GetTheta(p.x(), p.z()));
+        if (p.x() != 0 && p.y() != 0)
+            G4AnalysisManager::Instance()->FillH1(15, GetPhi(p.x(), p.y()));
 
         fEventAction->AddNeutronEnter_Port();
         if(fEventAction->GetNNeutronEnter_Port() == 1) G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
@@ -232,20 +235,23 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
 
 
-G4double SteppingAction::GetTheta(const G4Step* aStep){
-    
-    G4ThreeVector p = aStep->GetTrack()->GetMomentumDirection();
-    G4double dx = p.x();
-    G4double dz = p.z();
+G4double SteppingAction::GetTheta(G4double dx, G4double dz){
 
-    G4double theta;
     const G4double pi = 3.14159265;
-    G4double alpha = atan2(dz, dx) * (180/pi);
+    G4double theta = std::atan(dz/dx) * (180/pi);
 
-    if(dx >= 0 && dz >= 0)
-        theta = alpha + 90;
-    else if(dx < 0 || dz < 0)
-        theta = alpha - 270;
+
+    if(dx > 0 && dz > 0)
+        theta = theta + 90;
+    else if(dx < 0 && dz < 0)
+        theta = theta - 90;
+    else if(dx > 0 && dz < 0)
+        theta = theta + 90;
+    else if(dx < 0 && dz > 0)
+        theta = theta - 90;
+
+    if(theta > 180 || theta < -180)
+        G4cout << "Error - SteppingAction::GetTheta()  " << "dx = " << dx << ", dz = " << dz << G4endl;
 
     return theta;
 }
@@ -256,21 +262,24 @@ G4double SteppingAction::GetTheta(const G4Step* aStep){
 
 
 
-G4double SteppingAction::GetPhi(const G4Step* aStep){
+G4double SteppingAction::GetPhi(G4double dx, G4double dy){
     
-    G4ThreeVector q = aStep->GetTrack()->GetMomentumDirection();
-    G4double dx = q.x();
-    G4double dy = q.y();
-
-    G4double phi;
     const G4double pi = 3.14159265;
-    G4double alpha = atan2(dy, dx) * (180/pi);
+    G4double phi = std::atan(dy/dx) * (180/pi);
 
-    if(dx >= 0 && dy >= 0)
-        phi = alpha + 90;
-    else if(dx < 0 || dy < 0)
-        phi = alpha - 270;
+    G4cout << "Phi1: " << phi << G4endl;
 
+    if(dx > 0 && dy > 0)
+        phi = phi + 90;
+    else if(dx < 0 && dy < 0)
+        phi = phi - 90;
+    else if(dx > 0 && dy < 0)
+        phi = phi + 90;
+    else if(dx < 0 && dy > 0)
+        phi = phi - 90;
+        
+   if(phi > 180 || phi < -180)
+        G4cout << "Error - SteppingAction::GetPhi() " << "dx = " << dx << ", dy = " << dy << G4endl;
     return phi;
 }
 
