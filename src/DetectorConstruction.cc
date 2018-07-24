@@ -99,7 +99,7 @@ DetectorConstruction::DetectorConstruction()
 
   // 3rd Filter
   fFilter3Height        = 10.0*cm;
-  fFilter3Radius_top    = 30.0*cm;
+  fFilter3Radius_top    = 12.5*cm;
   fFilter3Radius_bottom = 12.5*cm;
   
   // Feedthrough port
@@ -123,24 +123,24 @@ DetectorConstruction::DetectorConstruction()
   fCryostatHeight= fPoolHeight + fBufferHeight + 2*fCryostatThickness;
   
   // neutron DD generator
-  fDDGeneratorHeight = 30.0*cm;
-  fDDGeneratorRadius = 30.0*cm;
+  fDDGeneratorHeight = 50.0*cm;
+  fDDGeneratorRadius = 4.0*cm;
   
   // Moderator
-  fModerator_Height = 45.0*cm; // must be larger than the DD generator height
-  fModerator_Radius = 40.0*cm;
+  fModerator_Height = 65.0*cm; // must be larger than the DD generator height
+  fModerator_Radius = 14.0*cm;
 
   // 1st Filter
   fFilter1Height = 13*cm;
-  fFilter1Radius = 40.0*cm;
+  fFilter1Radius = 20.0*cm;
 
   // 2nd Filter
-  fFilter2Height = 13*cm;
-  fFilter2Radius_top = 40.0*cm;
-  fFilter2Radius_bottom = 30*cm;
+  fFilter2Height = 87*cm;
+  fFilter2Radius_top = 20.0*cm;
+  fFilter2Radius_bottom = 12.5*cm;
   
   // neutron reflector
-  fReflectorThickness = 20.0*cm;
+  fReflectorThickness = 10.0*cm;
   fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
   fReflectorRadius = fFilter1Radius + fReflectorThickness;
   
