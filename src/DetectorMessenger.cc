@@ -63,36 +63,45 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
 
   //Get and Set Material Functions
   
-  fModerator1GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetMaterialTable", this);
-  fModerator1GetMaterCmd->SetGuidance("Parameterless, returns a table of materials used.");
-  fModerator1GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);  
+  fGetMaterialTable = new G4UIcmdWithoutParameter("/ddsource/det/GetMaterialTable", this);
+  fGetMaterialTable->SetGuidance("Parameterless, returns a table of materials used.");
+  fGetMaterialTable->AvailableForStates(G4State_PreInit,G4State_Idle);  
 
-  fModerator1SetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetModerator1Material",this);
-  fModerator1SetMaterCmd->SetGuidance("Select material of the moderator1.");
-  fModerator1SetMaterCmd->SetParameterName("choice",false);
-  fModerator1SetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fModeratorSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetModeratorMaterial",this);
+  fModeratorSetMaterCmd->SetGuidance("Select material of the moderator.");
+  fModeratorSetMaterCmd->SetParameterName("choice",false);
+  fModeratorSetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fModerator1GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetModerator1Material", this);
-  fModerator1GetMaterCmd->SetGuidance("Parameterless, returns Moderator1 material.");
-  fModerator1GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fModeratorGetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetModeratorMaterial", this);
+  fModeratorGetMaterCmd->SetGuidance("Parameterless, returns moderator material.");
+  fModeratorGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fModerator2SetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetModerator2Material",this);
-  fModerator2SetMaterCmd->SetGuidance("Select material of the moderator2.");
-  fModerator2SetMaterCmd->SetParameterName("choice",false);
-  fModerator2SetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fFilter1SetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetFilter1Material",this);
+  fFilter1SetMaterCmd->SetGuidance("Select material of the filter 1.");
+  fFilter1SetMaterCmd->SetParameterName("choice",false);
+  fFilter1SetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fModerator2GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetModerator2Material", this);
-  fModerator2GetMaterCmd->SetGuidance("Parameterless, returns Moderator2 material.");
-  fModerator2GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fFilter1GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetFilter1Material", this);
+  fFilter1GetMaterCmd->SetGuidance("Parameterless, returns filter 1 material.");
+  fFilter1GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fFilterSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetFilterMaterial",this);
-  fFilterSetMaterCmd->SetGuidance("Select material of the Filter.");
-  fFilterSetMaterCmd->SetParameterName("choice",false);
-  fFilterSetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fFilter2SetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetFilter2Material",this);
+  fFilter2SetMaterCmd->SetGuidance("Select material of the filter 2.");
+  fFilter2SetMaterCmd->SetParameterName("choice",false);
+  fFilter2SetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fFilterGetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetFilterMaterial", this);
-  fFilterGetMaterCmd->SetGuidance("Parameterless, returns Filter material.");
-  fFilterGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fFilter2GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetFilter2Material", this);
+  fFilter2GetMaterCmd->SetGuidance("Parameterless, returns filter 2 material.");
+  fFilter2GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fFilter3SetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetFilter3Material",this);
+  fFilter3SetMaterCmd->SetGuidance("Select material of the filter 3.");
+  fFilter3SetMaterCmd->SetParameterName("choice",false);
+  fFilter3SetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fFilter3GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetFilter3Material", this);
+  fFilter3GetMaterCmd->SetGuidance("Parameterless, returns Filter material 3.");
+  fFilter3GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   fAbsorberSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetAbsorberMaterial",this);
   fAbsorberSetMaterCmd->SetGuidance("Select material of the Absorber.");
@@ -103,6 +112,77 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fAbsorberGetMaterCmd->SetGuidance("Parameterless, returns Absorber material.");
   fAbsorberGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fPortRefSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetPortRefMaterial",this);
+  fPortRefSetMaterCmd->SetGuidance("Select material of the port reflector.");
+  fPortRefSetMaterCmd->SetParameterName("choice",false);
+  fPortRefSetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fPortRefGetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetPortRefMaterial", this);
+  fPortRefGetMaterCmd->SetGuidance("Parameterless, returns material of the port reflector.");
+  fPortRefGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fReflectorSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetReflectorMaterial",this);
+  fReflectorSetMaterCmd->SetGuidance("Select material of the reflector.");
+  fReflectorSetMaterCmd->SetParameterName("choice",false);
+  fReflectorSetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fReflectorGetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetReflectorMaterial", this);
+  fReflectorGetMaterCmd->SetGuidance("Parameterless, returns material of the reflector.");
+  fReflectorGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+
+
+  //Set Dimension Commands
+  fModeratorHeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setModeratorHeight",this);
+  fModeratorHeightCmd->SetGuidance("Set Height of the moderator");
+  fModeratorHeightCmd->SetParameterName("ModeratorHeight",false);
+  fModeratorHeightCmd->SetRange("ModeratorHeight>0.");
+  fModeratorHeightCmd->SetUnitCategory("Length");
+  fModeratorHeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fFilter1HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setFilter1Height",this);
+  fFilter1HeightCmd->SetGuidance("Set Height of the 1st filter");
+  fFilter1HeightCmd->SetParameterName("Filter1Height",false);
+  fFilter1HeightCmd->SetRange("Filter1Height>0.");
+  fFilter1HeightCmd->SetUnitCategory("Length");
+  fFilter1HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fFilter2HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setFilter2Height",this);
+  fFilter2HeightCmd->SetGuidance("Set Height of the 2nd filter");
+  fFilter2HeightCmd->SetParameterName("Filter2Height",false);
+  fFilter2HeightCmd->SetRange("Filter2Height>0.");
+  fFilter2HeightCmd->SetUnitCategory("Length");
+  fFilter2HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fFilter3HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setFilter3Height",this);
+  fFilter3HeightCmd->SetGuidance("Set Height of the 3rd filter");
+  fFilter3HeightCmd->SetParameterName("Filter3Height",false);
+  fFilter3HeightCmd->SetRange("Filter3Height>0.");
+  fFilter3HeightCmd->SetUnitCategory("Length");
+  fFilter3HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fPortRefThickCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetPortRefThickness",this);
+  fPortRefThickCmd->SetGuidance("Set thickness of the port reflector");
+  fPortRefThickCmd->SetParameterName("RefThickness",false);
+  fPortRefThickCmd->SetRange("RefThickness>0.");
+  fPortRefThickCmd->SetUnitCategory("Length");
+  fPortRefThickCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fReflectorThickCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetReflectorThickness",this);
+  fReflectorThickCmd->SetGuidance("Set thickness of the reflector");
+  fReflectorThickCmd->SetParameterName("RefThickness",false);
+  fReflectorThickCmd->SetRange("RefThickness>0.");
+  fReflectorThickCmd->SetUnitCategory("Length");
+  fReflectorThickCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fNShieldThickCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetShieldThickness",this);
+  fNShieldThickCmd->SetGuidance("Set thickness of the shield");
+  fNShieldThickCmd->SetParameterName("ShieldThickness",false);
+  fNShieldThickCmd->SetRange("ShieldThickness>0.");
+  fNShieldThickCmd->SetUnitCategory("Length");
+  fNShieldThickCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  
+
  
   
   fSizeCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setSize",this);
@@ -112,27 +192,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fSizeCmd->SetUnitCategory("Length");
   fSizeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   
-  fFilterHeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setFilterHeight",this);
-  fFilterHeightCmd->SetGuidance("Set Height of the filter");
-  fFilterHeightCmd->SetParameterName("FilterHeight",false);
-  fFilterHeightCmd->SetRange("FilterHeight>0.");
-  fFilterHeightCmd->SetUnitCategory("Length");
-  fFilterHeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  
-  fModerator1HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setModerator1Height",this);
-  fModerator1HeightCmd->SetGuidance("Set Height of the 1st moderator");
-  fModerator1HeightCmd->SetParameterName("Moderator1Height",false);
-  fModerator1HeightCmd->SetRange("Moderator1Height>0.");
-  fModerator1HeightCmd->SetUnitCategory("Length");
-  fModerator1HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  
-  fModerator2HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setModerator2Height",this);
-  fModerator2HeightCmd->SetGuidance("Set Height of the 2nd moderator");
-  fModerator2HeightCmd->SetParameterName("Moderator2Height",false);
-  fModerator2HeightCmd->SetRange("Moderator2Height>0.");
-  fModerator2HeightCmd->SetUnitCategory("Length");
-  fModerator2HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-       
   fIsotopeCmd = new G4UIcommand("/ddsource/det/setIsotopeMat",this);
   fIsotopeCmd->SetGuidance("Build and select a material with single isotope");
   fIsotopeCmd->SetGuidance("  symbol of isotope, Z, A, density of material");
@@ -172,14 +231,28 @@ DetectorMessenger::~DetectorMessenger()
   delete fMaterCmd;
 
   //Material Commands
-  delete fModerator1SetMaterCmd;
-  delete fModerator1GetMaterCmd;
-  delete fModerator2SetMaterCmd;
-  delete fModerator2GetMaterCmd;
-  delete fFilterSetMaterCmd;
-  delete fFilterGetMaterCmd;
+  delete fModeratorSetMaterCmd;
+  delete fModeratorGetMaterCmd;
+  delete fFilter1SetMaterCmd;
+  delete fFilter1GetMaterCmd;
+  delete fFilter2SetMaterCmd;
+  delete fFilter2GetMaterCmd;
+  delete fFilter3SetMaterCmd;
+  delete fFilter3GetMaterCmd;
   delete fAbsorberSetMaterCmd;
   delete fAbsorberGetMaterCmd;
+  delete fPortRefSetMaterCmd;
+  delete fPortRefGetMaterCmd;
+  delete fReflectorSetMaterCmd;
+  delete fReflectorGetMaterCmd;
+
+  delete fModeratorHeightCmd;
+  delete fFilter1HeightCmd;
+  delete fFilter2HeightCmd;
+  delete fFilter3HeightCmd;
+  delete fPortRefThickCmd;
+  delete fReflectorThickCmd;
+  delete fNShieldThickCmd;
 
   delete fSizeCmd;
   delete fIsotopeCmd;
@@ -196,44 +269,75 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 
   
   //Set and Get Material Commands
-  if( command == fModerator1SetMaterCmd )
-   { fDetector->SetModerator1Material(newValue);}
+  if( command == fModeratorSetMaterCmd )
+   { fDetector->SetModeratorMaterial(newValue);}
 
-  if( command == fModerator1GetMaterCmd )
-   { fDetector->GetModerator1Material();}
+  if( command == fModeratorGetMaterCmd )
+   { fDetector->GetModeratorMaterial();}
 
-  if( command == fModerator2SetMaterCmd )
-   { fDetector->SetModerator2Material(newValue);}
+  if( command == fFilter1SetMaterCmd )
+   { fDetector->SetFilter1Material(newValue);}
 
-  if( command == fModerator2GetMaterCmd )
-   { fDetector->GetModerator2Material();}
+  if( command == fFilter1GetMaterCmd )
+   { fDetector->GetFilter1Material();}
 
-  if( command == fFilterSetMaterCmd )
-   { fDetector->SetFilterMaterial(newValue);}
+  if( command == fFilter2SetMaterCmd )
+   { fDetector->SetFilter2Material(newValue);}
 
-  if( command == fFilterGetMaterCmd )
-   { fDetector->GetFilterMaterial();}
+  if( command == fFilter2GetMaterCmd )
+   { fDetector->GetFilter2Material();}
+
+  if( command == fFilter3SetMaterCmd )
+   { fDetector->SetFilter3Material(newValue);}
+
+  if( command == fFilter3GetMaterCmd )
+   { fDetector->GetFilter3Material();}
 
   if( command == fAbsorberSetMaterCmd )
    { fDetector->SetAbsorberMaterial(newValue);}
 
- if( command == fAbsorberGetMaterCmd )
+  if( command == fAbsorberGetMaterCmd )
    { fDetector->GetAbsorberMaterial();}
 
+  if( command == fPortRefSetMaterCmd )
+   { fDetector->SetPortRefMaterial(newValue);}
+
+  if( command == fPortRefGetMaterCmd )
+   { fDetector->GetPortRefMaterial();}
+
+  if( command == fReflectorSetMaterCmd )
+   { fDetector->SetReflectorMaterial(newValue);}
+
+  if( command == fReflectorGetMaterCmd )
+   { fDetector->GetReflectorMaterial();}
 
 
-  if( command == fSizeCmd )
-   { fDetector->SetSize(fSizeCmd->GetNewDoubleValue(newValue));}
+
    
-  if( command == fFilterHeightCmd )
-   { fDetector->SetFilterHeight(fSizeCmd->GetNewDoubleValue(newValue));}
-
-  if( command == fModerator1HeightCmd )
-   { fDetector->SetModerator1Height(fSizeCmd->GetNewDoubleValue(newValue));}
+  //Set Dimension Commands
+  if( command == fModeratorHeightCmd )
+   { fDetector->SetModeratorHeight(fSizeCmd->GetNewDoubleValue(newValue));}
   
-  if( command == fModerator2HeightCmd )
-   { fDetector->SetModerator2Height(fSizeCmd->GetNewDoubleValue(newValue));}
+  if( command == fFilter1HeightCmd )
+   { fDetector->SetFilter1Height(fSizeCmd->GetNewDoubleValue(newValue));}
+
+  if( command == fFilter2HeightCmd )
+   { fDetector->SetFilter2Height(fSizeCmd->GetNewDoubleValue(newValue));}
+
+  if( command == fFilter3HeightCmd )
+   { fDetector->SetFilter3Height(fSizeCmd->GetNewDoubleValue(newValue));}
+
+  if( command == fPortRefThickCmd )
+   { fDetector->SetPortRefThickness(fSizeCmd->GetNewDoubleValue(newValue));}
+
+  if( command == fReflectorThickCmd )
+   { fDetector->SetReflectorThickness(fSizeCmd->GetNewDoubleValue(newValue));}
+
+  if( command == fNShieldThickCmd )
+   { fDetector->SetNShieldThickness(fSizeCmd->GetNewDoubleValue(newValue));}
         
+  
+
   if (command == fIsotopeCmd)
    {
      G4int Z; G4int A; G4double dens;

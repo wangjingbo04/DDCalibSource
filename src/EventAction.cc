@@ -59,14 +59,19 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
-  fNNeutronEnter_Moderator1 = 0;  
-  fNNeutronExit_Moderator1 = 0;   
+  fNNeutronExit_Generator = 0;
+  
+  fNNeutronEnter_Moderator = 0;  
+  fNNeutronExit_Moderator = 0;   
                               
-  fNNeutronEnter_Moderator2 = 0;  
-  fNNeutronExit_Moderator2 = 0;   
+  fNNeutronEnter_Filter1 = 0;  
+  fNNeutronExit_Filter1 = 0;   
                               
-  fNNeutronEnter_Filter = 0;      
-  fNNeutronExit_Filter = 0;       
+  fNNeutronEnter_Filter2 = 0;      
+  fNNeutronExit_Filter2 = 0; 
+
+  fNNeutronEnter_Filter3 = 0;      
+  fNNeutronExit_Filter3 = 0;      
                               
   fNNeutronEnter_ThermalAbsorber = 0;  
   fNNeutronExit_ThermalAbsorber = 0; 
@@ -78,7 +83,16 @@ void EventAction::BeginOfEventAction(const G4Event*)
   fNNeutronExit_ArBuffer = 0; 
   
   fNNeutronEnter_LArPool = 0;  
-  fNNeutronExit_LArPool = 0; 
+  fNNeutronExit_LArPool = 0;
+
+  fGammaEnter_World = 0;
+  fGammaEnter_Shield = 0;
+  fGammaEnter_Reflector = 0;
+  fGammaEnter_LArPool = 0;
+  fGammaExit_LArPool = 0;
+ 
+  fNNeutronExit_Shield = 0;
+  fNNeutronEnter_World = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

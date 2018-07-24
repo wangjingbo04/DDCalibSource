@@ -25,7 +25,7 @@
 //
 /// \file Run.cc
 /// \brief Implementation of the Run class
-//
+//2q
 // $Id: Run.cc 71376 2013-06-14 07:44:50Z maire $
 // 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -39,6 +39,7 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 Run::Run(DetectorConstruction* det)
@@ -47,7 +48,8 @@ Run::Run(DetectorConstruction* det)
   fNbStep1(0), fNbStep2(0),
   fTrackLen1(0.), fTrackLen2(0.),
   fTime1(0.),fTime2(0.), fNbColMod1(0.), fARCount(0.)
-{ }
+{ 
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 Run::~Run()
@@ -197,6 +199,21 @@ G4int Run::GetCollisionsMod1(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+
+void Run::AddCollisionsF1(){
+
+    fNbColF1++;
+}
+
+
+G4int Run::GetCollisionsF1(){
+
+    return fNbColF1;
+}
+
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 void Run::EndOfRun() 
 {
   G4int prec = 5, wid = prec + 2;  
@@ -284,12 +301,13 @@ void Run::EndOfRun()
 
 
 
-  //Average Nb of Collisions in Moderator 1
+ 
   G4cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
   G4cout << G4endl;
   G4cout << "Total Number of Events: " << numberOfEvent << G4endl;
   G4cout << "Total (57 keV - 1 MeV): " << GetARCount() << G4endl;
-  G4cout << "Average # of Collisions in Moderator 1: " << (GetCollisionsMod1()/numberOfEvent) << G4endl;
+  G4cout << "Average # of Interactions in Moderator 1: " << (GetCollisionsMod1()/numberOfEvent) << G4endl;
+  G4cout << "Average # of Interactions in Filter 1:    " << (GetCollisionsF1()/numberOfEvent) << G4endl;
   G4cout << G4endl;
   G4cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
 

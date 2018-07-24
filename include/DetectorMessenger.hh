@@ -65,19 +65,34 @@ class DetectorMessenger: public G4UImessenger
 
     //Set and Get Commands
     G4UIcmdWithoutParameter*   fGetMaterialTable;
-    G4UIcmdWithAString*        fModerator1SetMaterCmd;
-    G4UIcmdWithoutParameter*   fModerator1GetMaterCmd;
-    G4UIcmdWithAString*        fModerator2SetMaterCmd;
-    G4UIcmdWithoutParameter*   fModerator2GetMaterCmd;
-    G4UIcmdWithAString*        fFilterSetMaterCmd;
-    G4UIcmdWithoutParameter*   fFilterGetMaterCmd;
+    G4UIcmdWithAString*        fModeratorSetMaterCmd;
+    G4UIcmdWithoutParameter*   fModeratorGetMaterCmd;
+    G4UIcmdWithAString*        fFilter1SetMaterCmd;
+    G4UIcmdWithoutParameter*   fFilter1GetMaterCmd;
+    G4UIcmdWithAString*        fFilter2SetMaterCmd;
+    G4UIcmdWithoutParameter*   fFilter2GetMaterCmd;
+    G4UIcmdWithAString*        fFilter3SetMaterCmd;
+    G4UIcmdWithoutParameter*   fFilter3GetMaterCmd;
     G4UIcmdWithAString*        fAbsorberSetMaterCmd;
     G4UIcmdWithoutParameter*   fAbsorberGetMaterCmd;
- 
+    G4UIcmdWithAString*        fPortRefSetMaterCmd;
+    G4UIcmdWithoutParameter*   fPortRefGetMaterCmd;
+    G4UIcmdWithAString*        fReflectorSetMaterCmd;
+    G4UIcmdWithoutParameter*   fReflectorGetMaterCmd;
+
+    //Set Dimesion Commands
+    G4UIcmdWithADoubleAndUnit* fModeratorHeightCmd;
+    G4UIcmdWithADoubleAndUnit* fFilter1HeightCmd;
+    G4UIcmdWithADoubleAndUnit* fFilter2HeightCmd;
+    G4UIcmdWithADoubleAndUnit* fFilter3HeightCmd;
+    G4UIcmdWithADoubleAndUnit* fPortRefThickCmd;
+    G4UIcmdWithADoubleAndUnit* fReflectorThickCmd;
+    G4UIcmdWithADoubleAndUnit* fNShieldThickCmd;
+
     G4UIcmdWithADoubleAndUnit* fSizeCmd;
     G4UIcmdWithADoubleAndUnit* fFilterHeightCmd;
-    G4UIcmdWithADoubleAndUnit* fModerator1HeightCmd;
-    G4UIcmdWithADoubleAndUnit* fModerator2HeightCmd;
+    
+    
     G4UIcommand*               fIsotopeCmd;    
 };
 

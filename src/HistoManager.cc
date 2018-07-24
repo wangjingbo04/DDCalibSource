@@ -33,6 +33,8 @@
 
 #include "HistoManager.hh"
 #include "G4UnitsTable.hh"
+#include "g4root.hh"
+#include <math.h>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -97,63 +99,163 @@ void HistoManager::Book()
   G4int nbins = 100;
   G4double vmin = 0.;
   G4double vmax = 100.;
+
   G4double xmin = -180.;
   G4double xmax = 180.; 
+
+  //Histogram 0 - nb of collisions above 57 keV
   G4int ih = analysisManager->CreateH1("h1.0", "incident neutron: nb of collisions above 57 keV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 1 - total track length above 57 keV
   ih = analysisManager->CreateH1("h1.1", "incident neutron: total track length above 57 keV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 2 - time of light above 57 keV
   ih = analysisManager->CreateH1("h1.2", "incident neutron: time of flight above 57 keV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 3 - nb of collisions bellow 57 keV
   ih = analysisManager->CreateH1("h1.3", "incident neutron: nb of collisions below 57 keV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 4 - total track length below 57 keV
   ih = analysisManager->CreateH1("h1.4", "incident neutron: total track length below 57 keV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 5 - time of flight below 57 keV
   ih = analysisManager->CreateH1("h1.5", "incident neutron: time of flight below 57 keV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 6 - energy distribution for all steps
   ih = analysisManager->CreateH1("h1.6", "Neutron energy distribution for all steps", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.7", "Neutrons from generator to 1st moderator", nbins, vmin, vmax);
+
+  //Histogram 7 - energy spectrum of neutrons from generator
+  ih = analysisManager->CreateH1("h1.7", "Energy Spectrum from Generator", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.8", "Neutrons from 1st moderator to 2nd moderator", nbins, vmin, vmax);
+
+  //Histogram 8 - energy spectrum of neutrons from moderator
+  ih = analysisManager->CreateH1("h1.8", "Energy Spectrum from Moderator", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.9",  "Neutrons from 2nd moderator to filter", nbins, vmin, vmax);
+
+  //Histogram 9 - energy spectrum of neutrons from filter 1
+  ih = analysisManager->CreateH1("h1.9",  "Energy Spectrum from Filter 1", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.10", "Neutrons from filter to thermal absorber", nbins, vmin, vmax);
+
+  //Histogram 10 - energy spectrum of neutrons from filter 2
+  ih = analysisManager->CreateH1("h1.10", "Energy Spectrum from Filter 2", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.11", "Neutrons from thermal absorber to feedthrough port", nbins, vmin, vmax);
+
+  //Histogram 11 - energy spectrum of neutrons from filter 3
+  ih = analysisManager->CreateH1("h1.11", "Energy Spetrum from Fileter 3", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.12", "Neutrons from feedthrough port to gas argon buffer", nbins, vmin, vmax);
+
+  //Histogram 12 - energy spectrum of neutrons from feedthrough port
+  ih = analysisManager->CreateH1("h1.12", "Energy Spectrum from Port", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.13", "Neutrons entering liquid Argon pool", nbins, vmin, vmax);
+
+  //Histogram 13 - energy spectrum of neutrons from thermal absorber
+  ih = analysisManager->CreateH1("h1.13", "Energy Spectrum from Thermal Absorber", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.14", "Theta angle for neutrons entering the port", nbins=360, xmin, xmax, "degree");
+
+  //Histogram 14 - energy spectrum of neutrons entering liquid argon pool
+  ih = analysisManager->CreateH1("h1.14", "Neutrons entering liquid Argon pool", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-  ih = analysisManager->CreateH1("h1.15", "Phi angle for neutrons entering the port", nbins=360, xmin, xmax, "degree");
+
+  //Histogram 15 - Theta angle for neutrons entering the port
+  ih = analysisManager->CreateH1("h1.15", "Theta angle for neutrons entering the port", 360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 16 - Phi angle for neutrons entering the port
+  ih = analysisManager->CreateH1("h1.16", "Phi angle for neutrons entering the port", 360, xmin, xmax, "degree");
+  analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 17 - DD gun neutron initial momentum angle
+  ih = analysisManager->CreateH1("h1.17", "DD gun neutrons initial momentum angle", 360, xmin, xmax, "degree");
+  analysisManager->SetH1Activation(ih, true);
+
+
+
+
+
+
   
   // histos 2D
   //
-  ih = analysisManager->CreateH2("h2.0","neutron capture position in 1st moderator (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  ih = analysisManager->CreateH2("h2.0","neutron capture position in the moderator (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
-  ih = analysisManager->CreateH2("h2.1","neutron capture position in 1st moderator (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
-  analysisManager->SetH2Activation(ih, true);
-  
-  ih = analysisManager->CreateH2("h2.2","neutron capture position in 2nd moderator (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
-  analysisManager->SetH2Activation(ih, true);
-  ih = analysisManager->CreateH2("h2.3","neutron capture position in 2nd moderator (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  ih = analysisManager->CreateH2("h2.1","neutron capture position in the moderator (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
   
-  ih = analysisManager->CreateH2("h2.4","neutron capture position in filter (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  ih = analysisManager->CreateH2("h2.2","neutron capture position in filter 1 (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
-  ih = analysisManager->CreateH2("h2.5","neutron capture position in filter (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
-  analysisManager->SetH2Activation(ih, true);
-  
-  ih = analysisManager->CreateH2("h2.6","neutron capture position in LAr TPC (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
-  analysisManager->SetH2Activation(ih, true);
-  ih = analysisManager->CreateH2("h2.7","neutron capture position in LAr TPC (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  ih = analysisManager->CreateH2("h2.3","neutron capture position in filter 1 (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
   
+  ih = analysisManager->CreateH2("h2.4","neutron capture position in filter 2 (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  analysisManager->SetH2Activation(ih, true);
+  ih = analysisManager->CreateH2("h2.5","neutron capture position in filter 2 (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  analysisManager->SetH2Activation(ih, true);
+
+  ih = analysisManager->CreateH2("h2.6","neutron capture position in filter 3 (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  analysisManager->SetH2Activation(ih, true);
+  ih = analysisManager->CreateH2("h2.7","neutron capture position in filter 3 (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  analysisManager->SetH2Activation(ih, true);
+  
+  ih = analysisManager->CreateH2("h2.8","neutron capture position in  (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  analysisManager->SetH2Activation(ih, true);
+  ih = analysisManager->CreateH2("h2.9","neutron capture position in LAr TPC (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  analysisManager->SetH2Activation(ih, true);
+
+
+
+
+
+
+  //Gamma Histograms
+    
+  G4double maxE = 3;
+  G4double minE = 0;
+  
+  //Histogram 18 - Total gamma energy spectrum
+  ih = analysisManager->CreateH1("h1.18", "Total gamma energy spectrum", nbins, minE, maxE, "MeV");
+  analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 19 - Energy Spectrum of Escaping Gammas
+  ih = analysisManager->CreateH1("h1.19", "Energy Spectrum of Escaped Gammas", nbins, minE, maxE, "MeV");
+  analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 20 - Energy Spectrum of Gammas Entering Shield
+  ih = analysisManager->CreateH1("h1.20", "Energy Spectrum of Gammas Entering Shield", nbins, minE, maxE, "MeV");
+  analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 21 - Energy Spectrum of Gammas Escaping Shield
+  ih = analysisManager->CreateH1("h1.21", "Energy Spectrum of Gammas Escaping Shield", nbins, minE, maxE, "MeV");
+  analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 22 - Energy Spectrum of Gammas Entering LAr Pool
+  ih = analysisManager->CreateH1("h1.22", "Energy Spectrum of Gammas Entering LAr Pool", nbins, minE, maxE, "MeV");
+  analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 23 - Energy Spectrum of Gammas Exiting LAr Pool
+  ih = analysisManager->CreateH1("h1.23", "Energy Spectrum of Gammas Exiting LAr Pool", nbins, minE, maxE, "MeV");
+  analysisManager->SetH1Activation(ih, true);
+
+    
+  //Neutron Radiation Histograms
+
+  //Histogram 24 - Energy Spectrum of Neutrons Entering World
+  ih = analysisManager->CreateH1("h1.24", "Energy Spectrum of Neutrons Entering World", nbins, minE, maxE, "MeV");
+  analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 25 - Energy Spectrum of Neutrons Exiting Shield
+  ih = analysisManager->CreateH1("h1.25", "Energy Spectrum of Gammas Exiting LAr Pool", nbins, minE, maxE, "MeV");
+  analysisManager->SetH1Activation(ih, true);
+
+  
+
+   
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

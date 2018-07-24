@@ -49,14 +49,19 @@ class EventAction : public G4UserEventAction
     virtual void BeginOfEventAction(const G4Event*);
     virtual void   EndOfEventAction(const G4Event*);
     
-    void AddNeutronEnter_Moderator1() {fNNeutronEnter_Moderator1++;};
-    void AddNeutronExit_Moderator1() {fNNeutronExit_Moderator1++;};
+    void AddNeutronExit_Generator() {fNNeutronExit_Generator++;};
     
-    void AddNeutronEnter_Moderator2() {fNNeutronEnter_Moderator2++;};
-    void AddNeutronExit_Moderator2() {fNNeutronExit_Moderator2++;};
+    void AddNeutronEnter_Moderator() {fNNeutronEnter_Moderator++;};
+    void AddNeutronExit_Moderator() {fNNeutronExit_Moderator++;};
     
-    void AddNeutronEnter_Filter() {fNNeutronEnter_Filter++;};
-    void AddNeutronExit_Filter() {fNNeutronEnter_Filter++;};
+    void AddNeutronEnter_Filter1() {fNNeutronEnter_Filter1++;};
+    void AddNeutronExit_Filter1() {fNNeutronExit_Filter1++;};
+    
+    void AddNeutronEnter_Filter2() {fNNeutronEnter_Filter2++;};
+    void AddNeutronExit_Filter2() {fNNeutronEnter_Filter2++;};
+
+    void AddNeutronEnter_Filter3() {fNNeutronEnter_Filter3++;};
+    void AddNeutronExit_Filter3() {fNNeutronEnter_Filter3++;};
     
     void AddNeutronEnter_ThermalAbsorber() {fNNeutronEnter_ThermalAbsorber++;};
     void AddNeutronExit_ThermalAbsorber() {fNNeutronEnter_ThermalAbsorber++;};
@@ -69,15 +74,30 @@ class EventAction : public G4UserEventAction
     
     void AddNeutronEnter_LArPool() {fNNeutronEnter_LArPool++;};
     void AddNeutronExit_LArPool() {fNNeutronEnter_LArPool++;};
+
+    void AddGammaEnter_World() {fGammaEnter_World++;};
+    void AddGammaEnter_Shield() {fGammaEnter_Shield++;};
+    void AddGammaExit_Shield() {fGammaExit_Shield++;};
+    void AddGammaEnter_Reflector() {fGammaEnter_Reflector++;};
+    void AddGammaEnter_LArPool() {fGammaEnter_LArPool++;};
+    void AddGammaExit_LArPool() {fGammaExit_LArPool++;};
+
+    void AddNeutronExit_Shield() {fNNeutronExit_Shield++;};
+    void AddNeutronEnter_World() {fNNeutronEnter_World++;};
+
+    G4int GetNNeutronExit_Generator() {return fNNeutronExit_Generator;};
     
-    G4int GetNNeutronEnter_Moderator1() {return fNNeutronEnter_Moderator1;};
-    G4int GetNNeutronExit_Moderator1() {return fNNeutronExit_Moderator1;};
+    G4int GetNNeutronEnter_Moderator() {return fNNeutronEnter_Moderator;};
+    G4int GetNNeutronExit_Moderator() {return fNNeutronExit_Moderator;};
 
-    G4int GetNNeutronEnter_Moderator2() {return fNNeutronEnter_Moderator2;};
-    G4int GetNNeutronExit_Moderator2() {return fNNeutronExit_Moderator2;};
+    G4int GetNNeutronEnter_Filter1() {return fNNeutronEnter_Filter1;};
+    G4int GetNNeutronExit_Filter1() {return fNNeutronExit_Filter1;};
 
-    G4int GetNNeutronEnter_Filter() {return fNNeutronEnter_Filter;};
-    G4int GetNNeutronExit_Filter() {return fNNeutronEnter_Filter;};
+    G4int GetNNeutronEnter_Filter2() {return fNNeutronEnter_Filter2;};
+    G4int GetNNeutronExit_Filter2() {return fNNeutronEnter_Filter2;};
+
+    G4int GetNNeutronEnter_Filter3() {return fNNeutronEnter_Filter3;};
+    G4int GetNNeutronExit_Filter3() {return fNNeutronEnter_Filter3;};
 
     G4int GetNNeutronEnter_ThermalAbsorber() {return fNNeutronEnter_ThermalAbsorber;};
     G4int GetNNeutronExit_ThermalAbsorber() {return fNNeutronEnter_ThermalAbsorber;};
@@ -90,30 +110,54 @@ class EventAction : public G4UserEventAction
     
     G4int GetNNeutronEnter_LArPool() {return fNNeutronEnter_LArPool;};
     G4int GetNNeutronExit_LArPool() {return fNNeutronEnter_LArPool;};
+
+    G4int GetGammaEnter_World() {return fGammaEnter_World;};
+    G4int GetGammaEnter_Shield() {return fGammaEnter_Shield;};
+    G4int GetGammaExit_Shield() {return fGammaExit_Shield;};
+    G4int GetGammaEnter_Reflector() {return fGammaEnter_Reflector;};
+    G4int GetGammaEnter_LArPool() {return fGammaEnter_LArPool;};
+    G4int GetGammaExit_LArPool() {return fGammaExit_LArPool;};
+
+    G4int GetNNeutronExit_Shield() {return fNNeutronExit_Shield;};
+    G4int GetNNeutronEnter_World() {return fNNeutronEnter_World;};    
                 
   private:                  
-    G4double				fNNeutronEnter_Moderator1;
-    G4double				fNNeutronExit_Moderator1;
-    
-    G4double				fNNeutronEnter_Moderator2;
-    G4double				fNNeutronExit_Moderator2;
-    
-    G4double				fNNeutronEnter_Filter;
-    G4double				fNNeutronExit_Filter;
-    
-    G4double				fNNeutronEnter_ThermalAbsorber;
-    G4double				fNNeutronExit_ThermalAbsorber;  
-    
-    G4double				fNNeutronEnter_Port;
-    G4double				fNNeutronExit_Port;  
-    
-    G4double				fNNeutronEnter_ArBuffer;
-    G4double				fNNeutronExit_ArBuffer;  
-    
-    G4double				fNNeutronEnter_LArPool;
-    G4double				fNNeutronExit_LArPool;  
+    G4int               fNNeutronExit_Generator;
 
+    G4int				fNNeutronEnter_Moderator;
+    G4int				fNNeutronExit_Moderator;
     
+    G4int				fNNeutronEnter_Filter1;
+    G4int				fNNeutronExit_Filter1;
+    
+    G4int				fNNeutronEnter_Filter2;
+    G4int				fNNeutronExit_Filter2;
+
+    G4int				fNNeutronEnter_Filter3;
+    G4int				fNNeutronExit_Filter3;
+    
+    G4int				fNNeutronEnter_ThermalAbsorber;
+    G4int				fNNeutronExit_ThermalAbsorber;  
+    
+    G4int				fNNeutronEnter_Port;
+    G4int				fNNeutronExit_Port;  
+    
+    G4int				fNNeutronEnter_ArBuffer;
+    G4int				fNNeutronExit_ArBuffer;  
+    
+    G4int				fNNeutronEnter_LArPool;
+    G4int				fNNeutronExit_LArPool;
+
+    G4int               fGammaEnter_World;
+    G4int               fGammaEnter_Shield;
+    G4int               fGammaExit_Shield;
+    G4int               fGammaEnter_Reflector;
+    G4int               fGammaEnter_LArPool;
+    G4int               fGammaExit_LArPool;
+    
+    G4int               fNNeutronExit_Shield;
+    G4int               fNNeutronEnter_World;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

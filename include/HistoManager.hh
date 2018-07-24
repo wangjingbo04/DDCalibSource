@@ -35,7 +35,6 @@
 #define HistoManager_h 1
 
 #include "globals.hh"
-
 #include "g4root.hh"
 //#include "g4xml.hh"
 
@@ -46,6 +45,7 @@ class HistoManager
   public:
    HistoManager();
   ~HistoManager();
+   G4double DDrandom();
 
   private:
     void Book();

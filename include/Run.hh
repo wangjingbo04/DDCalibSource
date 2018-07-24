@@ -38,6 +38,7 @@
 #include "G4VProcess.hh"
 #include "globals.hh"
 #include <map>
+#include "g4root.hh"
 
 class DetectorConstruction;
 class G4ParticleDefinition;
@@ -58,8 +59,10 @@ class Run : public G4Run
     void AddARCount();
     void AddCollisionsMod1();
     G4int GetCollisionsMod1();
+    void AddCollisionsF1();
+    G4int GetCollisionsF1();
     void SetPrimary(G4ParticleDefinition* particle, G4double energy);    
-    void EndOfRun(); 
+    void EndOfRun();
             
     virtual void Merge(const G4Run*);
    
@@ -87,7 +90,9 @@ class Run : public G4Run
     G4double fTrackLen1, fTrackLen2;
     G4double fTime1, fTime2;
     G4int fNbColMod1;
-    G4int fARCount;    
+    G4int fARCount;
+    G4int fNbColF1;
+        
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

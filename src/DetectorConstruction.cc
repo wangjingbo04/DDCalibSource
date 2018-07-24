@@ -61,7 +61,7 @@ DetectorConstruction::DetectorConstruction()
 :G4VUserDetectorConstruction(),
  fPWorld(0), fLWorld(0), fMaterial(0), 
  fPhysiPool(0), fLogicPool(0), fPoolMater(0), 
- fPhysiFilter(0), fLogicFilter(0), fFilterMater(0), 
+ fPhysiFilter3(0), fLogicFilter3(0), fFilter3Mater(0), 
  fPhysiReflector(0), fLogicReflector(0), fReflectorMater(0), 
  fPhysiDDGenerator(0), fLogicDDGenerator(0), fDDGeneratorMater(0),
  fPhysiNShield(0), fLogicNShield(0), fNShieldMater(0), 
@@ -96,10 +96,25 @@ DetectorConstruction::DetectorConstruction()
   fInsulatorLength = fPoolLength + 2*fCryostatThickness + 2*fInsulatorThickness;
   fInsulatorWidth = fPoolWidth + 2*fCryostatThickness + 2*fInsulatorThickness;
   fInsulatorHeight= fPoolHeight + fBufferHeight + 2*fCryostatThickness + 2*fInsulatorThickness;
+
+  // 3rd Filter
+  fFilter3Height        = 10.0*cm;
+  fFilter3Radius_top    = 30.0*cm;
+  fFilter3Radius_bottom = 12.5*cm;
   
   // Feedthrough port
   fPortHeight = fInsulatorThickness;
-  fPortRadius = 25.0*cm;
+  fPortOuterRadius = 2*fFilter3Radius_bottom;
+
+  // Thermal neutron absorber
+  fThermalAbsorberHeight = 5*cm;
+  fThermalAbsorberRadius = fPortOuterRadius;
+
+  //Feedthrough port reflector
+  fPortRefHeight = fPortHeight - fThermalAbsorberHeight;
+  fPortRefThickness = 2*cm;
+  fPortRefOuterRadius = fPortOuterRadius;
+  fPortRefInnerRadius =  fPortOuterRadius - fPortRefThickness;
   
   // stainless steel cryostat
   fCryostatThickness = 1.0*cm;
@@ -108,38 +123,30 @@ DetectorConstruction::DetectorConstruction()
   fCryostatHeight= fPoolHeight + fBufferHeight + 2*fCryostatThickness;
   
   // neutron DD generator
-  fDDGeneratorHeight = 10.0*cm;
-  fDDGeneratorRadius = 10.0*cm;
+  fDDGeneratorHeight = 30.0*cm;
+  fDDGeneratorRadius = 30.0*cm;
   
-  // 1st moderator (Fe)
-  fModerator1_Height = 25.0*cm; // must be larger than the DD generator height
-  fModerator1_Radius = 20.0*cm;
-  
-  // 2nd moderator: Fluental 
-  fModerator2_Height = 26.0*cm;
-  fModerator2_comp1_Height = fModerator2_Height/2;
-  fModerator2_comp2_Height = fModerator2_Height/2;
-  fModerator2_comp1_Radius = 40.0*cm;
-  fModerator2_comp2_Rtop = 40.0*cm;
-  fModerator2_comp2_Rbottom = 30*cm;
-  
-  // Thermal neutron absorber
-  fThermalAbsorberHeight = 0.5*cm;
-  fThermalAbsorberRadius = 12.5*cm;
-  
-  // neutron energy filter
-  fFilterHeight    = 10.0*cm;
-  fFilterRadius_top    = 30.0*cm;
-  fFilterRadius_bottom    = 12.5*cm;
+  // Moderator
+  fModerator_Height = 45.0*cm; // must be larger than the DD generator height
+  fModerator_Radius = 40.0*cm;
+
+  // 1st Filter
+  fFilter1Height = 13*cm;
+  fFilter1Radius = 40.0*cm;
+
+  // 2nd Filter
+  fFilter2Height = 13*cm;
+  fFilter2Radius_top = 40.0*cm;
+  fFilter2Radius_bottom = 30*cm;
   
   // neutron reflector
   fReflectorThickness = 20.0*cm;
-  fReflectorHeight = fFilterHeight + fModerator2_comp1_Height + fModerator2_comp2_Height + fModerator1_Height + fReflectorThickness;
-  fReflectorRadius = fModerator2_comp1_Radius + fReflectorThickness;
+  fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
+  fReflectorRadius = fFilter1Radius + fReflectorThickness;
   
   // neutron shield
   fNShieldThickness = 20.0*cm;
-  fNShieldHeight = fThermalAbsorberHeight + fReflectorHeight + fNShieldThickness;
+  fNShieldHeight = fReflectorHeight + fFilter3Height + fFilter2Height + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
   fDetectorMessenger = new DetectorMessenger(this);
 }
@@ -298,6 +305,13 @@ void DetectorConstruction::DefineMaterials()
       CaF2->AddElement(F, natoms=2);
 
 
+  //Lithium Polyethylene
+  G4Material* polyethylene = man->FindOrBuildMaterial("G4_POLYETHYLENE");
+  G4Material* LiPoly = new G4Material("LiPoly", 1.06*g/cm3, ncomponents=2);
+    LiPoly->AddElement (Li, 7.54*perCent);
+    LiPoly->AddMaterial (polyethylene, 92.46*perCent);
+
+
 
   
   
@@ -305,10 +319,13 @@ void DetectorConstruction::DefineMaterials()
   fWorldMater = Air20;
   
   // insulator
-  fInsulatorMater = man->FindOrBuildMaterial("G4_POLYETHYLENE");
+  fInsulatorMater = LiPoly;
 
   // Feedthrough port
   fPortMater = Air20;
+
+  // feedthrough port reflector
+  fPortRefMater = Air20;
   
   // cryostat
   fCryostatMater = StainlessSteel;
@@ -325,20 +342,23 @@ void DetectorConstruction::DefineMaterials()
   // DD generator
   fDDGeneratorMater = Vacuum; 
   
-  // Moderator1: 
-  fModerator1_Mater = Vacuum;
+  // Moderator 
+  fModerator_Mater = Vacuum;
   
-  // Moderator2: 
-  fModerator2_Mater = Vacuum;
+  // Filter 1 
+  fFilter1Mater = Vacuum;
+
+  //Filter 2
+  fFilter2Mater = Vacuum;
    
-  // neutron energy filter
-  fFilterMater = Vacuum;
+  // Filter 3
+  fFilter3Mater = Vacuum;
   
   // neutron thermal absorber
   fThermalAbsorberMater = Vacuum;
   
   // neutron shield
-  fNShieldMater = man->FindOrBuildMaterial("G4_POLYETHYLENE");
+  fNShieldMater = LiPoly;
   
  ///G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
@@ -418,21 +438,52 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
  
   // Feedthrough port
-  G4Tubs*
-  sPort = new G4Tubs("Port",                                                                //its name
-                     0, 2*fFilterRadius_bottom, fInsulatorThickness/2, 0.,CLHEP::twopi );   //its dimensions
-  G4ThreeVector zTransInsulator(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2); 
+  G4Tubs* 
+  sPort = new G4Tubs("Port",                                                                           //its name
+                     0,                                                                                //its inner radius
+                     fPortOuterRadius,                                                                 //its outer radius
+                     fPortHeight/2,                                                                      //its height
+                     0.,                                                                               //spanning angle
+                     CLHEP::twopi );                                                                   //spanning angle
+                
+                     G4ThreeVector zTransInsulator(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2);  
+
   fLogicPort = new G4LogicalVolume(sPort,                      //its shape
                                    fPortMater,                 //its material
                                    "Port_l");                  //its name
 
   fPhysiPort = new G4PVPlacement(0,                                                               //no rotation
-                                 G4ThreeVector(0, 0, fInsulatorHeight/2 - fPortHeight/2),         //at (0,0,0)
+                                 G4ThreeVector(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2),         //at (0,0,0)
                                  fLogicPort,                                                      //its logical volume
                                  "Port_p",                                                        //its name
                                  fLogicInsulator,                                                 //its mother  volume
                                  false,                                                           //no boolean operation
                                  0);                                                              //copy number
+
+
+
+  // Feedthrough port reflector
+  G4Tubs* 
+  sPortRef = new G4Tubs("PortRef",                                //its name
+                        fPortRefInnerRadius,                      //its inner radius
+                        fPortRefOuterRadius,                      //its outer radius
+                        fPortRefHeight/2,                           //its height
+                        0.,                                       //initial angle
+                        CLHEP::twopi);                            //spanning angle
+                
+                       
+
+  fLogicPortRef = new G4LogicalVolume(sPortRef,                   //its shape
+                                      fPortRefMater,              //its material
+                                      "PortRef_l");               //its name
+
+  fPhysiPortRef = new G4PVPlacement(0,                                                           //no rotation
+                                    G4ThreeVector(0, 0, fPortHeight/2 - fPortRefHeight/2),       //at (0,0,0)
+                                    fLogicPortRef,                                               //its logical volume
+                                    "PortRef_p",                                                 //its name
+                                    fLogicPort,                                                  //its mother volume
+                                    false,                                                       //no boolean operation
+                                    0);                                                          //copy number
 
 
 
@@ -522,8 +573,12 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   
   // neutron thermal absorber                        
   G4Tubs* 
-  sThermalAbsorber = new G4Tubs("ThermalAbsorber_s",  
-                                0, fThermalAbsorberRadius, 0.5*fThermalAbsorberHeight, 0.,CLHEP::twopi);
+  sThermalAbsorber = new G4Tubs("ThermalAbsorber_s",                    //name
+                                0,                                      //inner radius
+                                fThermalAbsorberRadius,                 //outer radius
+                                fThermalAbsorberHeight/2,             //height
+                                0.,                                     //intial angle
+                                CLHEP::twopi);                          //spanning angle
 
 
   fLogicThermalAbsorber = new G4LogicalVolume(sThermalAbsorber,                 //shape
@@ -531,12 +586,12 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                               "ThermalAbsorber_l");             //name
                                
   fPhysiThermalAbsorber = new G4PVPlacement(0,                                                                   //no rotation
-                                            G4ThreeVector(0, 0, -fNShieldHeight/2 + fThermalAbsorberHeight/2),  
+                                            G4ThreeVector(0, 0, -fPortHeight/2 + fThermalAbsorberHeight/2),  
                                             fLogicThermalAbsorber,                                               //logical volume
                                             "ThermalAbsorber_p",                                                 //name
-                                            fLogicNShield,                                                       //mother  volume
+                                            fLogicPort,                                                          //mother  volume
                                             false,                                                               //no boolean operation
-                                            0);                                                                  //copy number
+                                            0);                                                                  //copy number help
 
 
 
@@ -544,14 +599,18 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   // neutron reflector
   G4Tubs* 
   sReflector = new G4Tubs("Reflector_s",                                                 //its name
-                          0, fReflectorRadius, 0.5*fReflectorHeight, 0.,CLHEP::twopi);   //its dimensions
+                          0,                                                             //inner radius
+                          fReflectorRadius,                                              //outer radius
+                          fReflectorHeight/2,                                          //height
+                          0.,                                                            //initial angle
+                          CLHEP::twopi);                                                 //final angle
 
   fLogicReflector = new G4LogicalVolume(sReflector,                                      //its shape
                                         fReflectorMater,                                 //its material
                                         "Reflector_l");                                  //its name
 
   fPhysiReflector = new G4PVPlacement(0,                                                 //no rotation
-                                      G4ThreeVector(0, 0, -fNShieldHeight/2 + fThermalAbsorberHeight + fReflectorHeight/2),   
+                                      G4ThreeVector(0, 0, -fNShieldHeight/2 + fReflectorHeight/2 + fFilter3Height + fFilter2Height),   
                                       fLogicReflector ,                                  //its logical volume
                                       "Reflector_p",                                     //its name
                                       fLogicNShield,                                     //its mother  volume
@@ -561,76 +620,100 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 
 
-
-
-  
-  // neutron energy filter                          
-  G4Cons* 
-  sFilter = new G4Cons("Filter_s",  
-                       0, fFilterRadius_bottom, 0, fFilterRadius_top, 0.5*fFilterHeight, 0.,CLHEP::twopi);
-
-
-  fLogicFilter = new G4LogicalVolume(sFilter,                 //shape
-                                     fFilterMater,            //materiald
-                                     "Filter_l");             //name
-                               
-  fPhysiFilter = new G4PVPlacement(0,                         //no rotation
-                                   G4ThreeVector(0, 0, -fReflectorHeight/2 + fFilterHeight/2),  //at (0,0,0)
-                                   fLogicFilter,              //logical volume
-                                   "Filter_p",                //name
-                                   fLogicReflector,           //mother  volume
-                                   false,                     //no boolean operation
-                                   0);                        //copy number
-
-
-
                  
-  // neutron Moderator2                         
+  // Filter 1                        
   G4Tubs* 
-  sModerator2_comp1 = new G4Tubs("Moderator2_comp1_s",  
-                                 0, fModerator2_comp1_Radius, 0.5*fModerator2_comp1_Height, 0.,CLHEP::twopi);
+  sFilter1 = new G4Tubs("Filer1_s",                     //name
+                        0,                              //inner radius
+                        fFilter1Radius,                 //outer radius
+                        fFilter1Height/2,                 //height
+                        0.,                             //initial angle    
+                        CLHEP::twopi);                  //final angle
+
+  fLogicFilter1 = new G4LogicalVolume(sFilter1,         //shape
+                                      fFilter1Mater,    //material
+                                      "Filter1_l");     //name
+
+  fPhysiFilter1 = new G4PVPlacement(0,                                                                //no rotation
+                                    G4ThreeVector(0, 0, -fReflectorHeight/2 + fFilter1Height/2),      //at (0,0,0)
+                                    fLogicFilter1,                                                    //logical volume
+                                    "Filter1_p",                                                      //name
+                                    fLogicReflector,                                                  //mother volume
+                                    false,                                                            //no boolean operation
+                                    0);                                                               //copy number
+
+
+
+  // Filter 2
   G4Cons* 
-  sModerator2_comp2 = new G4Cons("Moderator2_comp2_s",  
-                                 0, fModerator2_comp2_Rbottom, 0, fModerator2_comp2_Rtop, 0.5*fModerator2_comp2_Height, 0.,CLHEP::twopi);
-                
-  G4ThreeVector zTransModerator2(0, 0, - fModerator2_comp1_Height/2 - fModerator2_comp2_Height/2); 
-  
-  G4UnionSolid* sModerator2 = new G4UnionSolid("Moderator2_comp1_s + Moderator2_comp2_s", 
-  											   sModerator2_comp1, sModerator2_comp2, 0, zTransModerator2); 
+  sFilter2 = new G4Cons("Filter3_s",                //name 
+                        0,                          //bottom inner radius
+                        fFilter2Radius_bottom,      //bottom outer radius
+                        0,                          //top inner radius
+                        fFilter2Radius_top,         //top outer radius
+                        fFilter2Height/2,           //height         
+                        0.,                         //start angle
+                        CLHEP::twopi);              //end angle
 
-  fLogicModerator2 = new G4LogicalVolume(sModerator2,                   //shape
-                                         fModerator2_Mater,             //materiald
-                                         "Moderator2_l");               //name
+  fLogicFilter2 = new G4LogicalVolume(sFilter2,                   //shape
+                                      fFilter2Mater,              //material
+                                      "Filter2_l");               //name
                                
-  fPhysiModerator2 = new G4PVPlacement(0,                               //no rotation
-                                       G4ThreeVector(0, 0, -fReflectorHeight/2 + fFilterHeight + fModerator2_comp1_Height/2 + fModerator2_comp2_Height), 
-                                       fLogicModerator2,                //logical volume
-                                       "Moderator2_p",                  //name
-                                       fLogicReflector,                 //mother  volume
-                                       false,                           //no boolean operation
-                                       0);                              //copy number
+  fPhysiFilter2 = new G4PVPlacement(0,                                                                           //no rotation
+                                    G4ThreeVector(0, 0, -fNShieldHeight/2 + fFilter2Height/2 + fFilter3Height),  //position
+                                    fLogicFilter2,                                                               //logical volume
+                                    "Filter2_p",                                                                 //name
+                                    fLogicNShield,                                                               //mother  volume
+                                    false,                                                                       //no boolean operation
+                                    0);                                                                          //copy number
+
+
+
+  // Filter 3                         
+  G4Cons* 
+  sFilter3 = new G4Cons("Filter3_s",  
+                        0, 
+                        fFilter3Radius_bottom, 
+                        0, 
+                        fFilter3Radius_top,
+                        fFilter3Height/2, 
+                        0.,
+                        CLHEP::twopi);
+
+
+  fLogicFilter3 = new G4LogicalVolume(sFilter3,                 //shape
+                                      fFilter3Mater,            //material
+                                      "Filter3_l");             //name
+                               
+  fPhysiFilter3 = new G4PVPlacement(0,                                                         //no rotation
+                                    G4ThreeVector(0, 0, -fNShieldHeight/2 + fFilter3Height/2),  //at (0,0,0)
+                                    fLogicFilter3,                                             //logical volume
+                                    "Filter3_p",                                               //name
+                                    fLogicNShield,                                             //mother  volume
+                                    false,                                                     //no boolean operation
+                                    0);                                                        //copy number
 
 
 
 
   
-  // neutron Moderator1                         
+  // Moderator                         
   G4Tubs* 
-  sModerator1 = new G4Tubs("Moderator1_s",  
-                           0, fModerator1_Radius, 0.5*fModerator1_Height, 0.,CLHEP::twopi);
+  sModerator = new G4Tubs("Moderator_s",  
+                           0, fModerator_Radius, 0.5*fModerator_Height, 0.,CLHEP::twopi);
 
 
-  fLogicModerator1 = new G4LogicalVolume(sModerator1,                   //shape
-                                         fModerator1_Mater,             //materiald
-                                         "Degrader_l");                 //name
+  fLogicModerator = new G4LogicalVolume(sModerator,                   //shape
+                                        fModerator_Mater,             //materiald
+                                        "Degrader_l");                 //name
                                
-  fPhysiModerator1 = new G4PVPlacement(0,                               //no rotation
-                                       G4ThreeVector(0, 0, -fReflectorHeight/2 + fFilterHeight + fModerator2_comp1_Height + fModerator2_comp2_Height + fModerator1_Height/2),             //at (0,0,0)
-                                       fLogicModerator1,                //logical volume
-                                       "Moderator1_p",                  //name
-                                       fLogicReflector,                 //mother  volume
-                                       false,                           //no boolean operation
-                                       0);                              //copy number
+  fPhysiModerator = new G4PVPlacement(0,                               //no rotation
+                                      G4ThreeVector(0, 0, -fReflectorHeight/2 + fFilter1Height + fModerator_Height/2),             //at (0,0,0)
+                                      fLogicModerator,                //logical volume
+                                      "Moderator_p",                  //name
+                                      fLogicReflector,                 //mother  volume
+                                      false,                           //no boolean operation
+                                      0);                              //copy number
 
 
 
@@ -645,10 +728,10 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                           "DDGenerator_l");             //name
                                
   fPhysiDDGenerator = new G4PVPlacement(0,                              //no rotation
-                                        G4ThreeVector(0, 0, fModerator1_Height/2 - fDDGeneratorHeight/2),
+                                        G4ThreeVector(0, 0, fModerator_Height/2 - fDDGeneratorHeight/2),
                                         fLogicDDGenerator,              //logical volume
                                         "DDGenerator_p",                //name
-                                        fLogicModerator1,               //mother  volume
+                                        fLogicModerator,               //mother  volume
                                         false,                          //no boolean operation
                                         0);                             //copy number
 
@@ -664,17 +747,17 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   G4VisAttributes* VisAttBuffer= new G4VisAttributes(G4Colour(0.0, 0.0, 1.0));
   fLogicBuffer->SetVisAttributes(VisAttBuffer);
   
-  G4VisAttributes* VisAttFilter= new G4VisAttributes(G4Colour(1.0, 0.0, 1.0));
-  fLogicFilter->SetVisAttributes(VisAttFilter);
+  G4VisAttributes* VisAttFilter3= new G4VisAttributes(G4Colour(1.0, 0.0, 1.0));
+  fLogicFilter3->SetVisAttributes(VisAttFilter3);
   
   G4VisAttributes* VisAttReflector= new G4VisAttributes(G4Colour(0.0, 1.0, 1.0));
   fLogicReflector->SetVisAttributes(VisAttReflector);
 
-  G4VisAttributes* VisAttModerator1= new G4VisAttributes(G4Colour(1.0, 1.0, 0.0));
-  fLogicModerator1->SetVisAttributes(VisAttModerator1);
+  G4VisAttributes* VisAttModerator= new G4VisAttributes(G4Colour(1.0, 1.0, 0.0));
+  fLogicModerator->SetVisAttributes(VisAttModerator);
   
-  G4VisAttributes* VisAttModerator2= new G4VisAttributes(G4Colour(1.0, 1.0, 1.0));
-  fLogicModerator2->SetVisAttributes(VisAttModerator2);
+  G4VisAttributes* VisAttFilter1= new G4VisAttributes(G4Colour(1.0, 1.0, 1.0));
+  fLogicFilter1->SetVisAttributes(VisAttFilter1);
   
   G4VisAttributes* VisAttDDGenerator = new G4VisAttributes(G4Colour(0.0, 1.0, 0.0));
   fLogicDDGenerator->SetVisAttributes(VisAttDDGenerator);
@@ -729,20 +812,20 @@ void DetectorConstruction::GetMaterialTable(){
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
 
-void DetectorConstruction::SetModerator1Material(G4String materialChoice)
+void DetectorConstruction::SetModeratorMaterial(G4String materialChoice)
 {
   // search the material by its name
   G4Material* pttoMaterial =
      G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   
   if (pttoMaterial) { 
-    if(fModerator1_Mater != pttoMaterial) {
-      fModerator1_Mater = pttoMaterial;
-      if(fLogicModerator1) { fLogicModerator1->SetMaterial(pttoMaterial); }
+    if(fModerator_Mater != pttoMaterial) {
+      fModerator_Mater = pttoMaterial;
+      if(fLogicModerator) { fLogicModerator->SetMaterial(pttoMaterial); }
       G4RunManager::GetRunManager()->PhysicsHasBeenModified();
     }
   } else {
-    G4cout << "\n--> warning from DetectorConstruction::SetModerator1Material : "
+    G4cout << "\n--> warning from DetectorConstruction::SetModeratorMaterial : "
            << materialChoice << " not found" << G4endl;
   }              
 }
@@ -750,57 +833,84 @@ void DetectorConstruction::SetModerator1Material(G4String materialChoice)
 
 
 
-void DetectorConstruction::GetModerator1Material(){
+void DetectorConstruction::GetModeratorMaterial(){
 
-    G4cout << "Moderator1 material is " << fModerator1_Mater->GetName() << G4endl;
+    G4cout << "Moderator material is " << fModerator_Mater->GetName() << G4endl;
 }
 
 
 
 
-void DetectorConstruction::SetModerator2Material(G4String materialChoice)
+void DetectorConstruction::SetFilter1Material(G4String materialChoice)
 {
   // search the material by its name
   G4Material* pttoMaterial =
      G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   
   if (pttoMaterial) { 
-    if(fModerator2_Mater != pttoMaterial) {
-      fModerator2_Mater = pttoMaterial;
-      if(fLogicModerator2) { fLogicModerator2->SetMaterial(pttoMaterial); }
+    if(fFilter1Mater != pttoMaterial) {
+      fFilter1Mater = pttoMaterial;
+      if(fLogicFilter1) { fLogicFilter1->SetMaterial(pttoMaterial); }
       G4RunManager::GetRunManager()->PhysicsHasBeenModified();
     }
   } else {
-    G4cout << "\n--> warning from DetectorConstruction::SetModerator1Material : "
+    G4cout << "\n--> warning from DetectorConstruction::SetFilter1Material : "
            << materialChoice << " not found" << G4endl;
   }              
 }
 
 
 
-void DetectorConstruction::GetModerator2Material(){
+void DetectorConstruction::GetFilter1Material(){
 
-    G4cout << "Moderator2 material is " << fModerator2_Mater->GetName() << G4endl;
+    G4cout << "Filter 1 material is " << fFilter1Mater->GetName() << G4endl;
 }
 
 
 
-
-
-void DetectorConstruction::SetFilterMaterial(G4String materialChoice)
+void DetectorConstruction::SetFilter2Material(G4String materialChoice)
 {
   // search the material by its name
   G4Material* pttoMaterial =
      G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   
   if (pttoMaterial) { 
-    if(fFilterMater != pttoMaterial) {
-      fFilterMater = pttoMaterial;
-      if(fFilterMater) { fLogicFilter->SetMaterial(pttoMaterial); }
+    if(fFilter2Mater != pttoMaterial) {
+      fFilter2Mater = pttoMaterial;
+      if(fLogicFilter2) { fLogicFilter2->SetMaterial(pttoMaterial); }
       G4RunManager::GetRunManager()->PhysicsHasBeenModified();
     }
   } else {
-    G4cout << "\n--> warning from DetectorConstruction::SetModerator1Material : "
+    G4cout << "\n--> warning from DetectorConstruction::SetFilter1Material : "
+           << materialChoice << " not found" << G4endl;
+  }              
+}
+
+
+
+void DetectorConstruction::GetFilter2Material(){
+
+    G4cout << "Filter 2 material is " << fFilter2Mater->GetName() << G4endl;
+}
+
+
+
+
+
+void DetectorConstruction::SetFilter3Material(G4String materialChoice)
+{
+  // search the material by its name
+  G4Material* pttoMaterial =
+     G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
+  
+  if (pttoMaterial) { 
+    if(fFilter3Mater != pttoMaterial) {
+      fFilter3Mater = pttoMaterial;
+      if(fFilter3Mater) { fLogicFilter3->SetMaterial(pttoMaterial); }
+      G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+    }
+  } else {
+    G4cout << "\n--> warning from DetectorConstruction::SetFilter3Material : "
            << materialChoice << " not found" << G4endl;
   }              
 }
@@ -808,9 +918,9 @@ void DetectorConstruction::SetFilterMaterial(G4String materialChoice)
 
 
 
-void DetectorConstruction::GetFilterMaterial(){
+void DetectorConstruction::GetFilter3Material(){
 
-    G4cout << "Filter material is " << fFilterMater->GetName() << G4endl;
+    G4cout << "Filter 3 material is " << fFilter3Mater->GetName() << G4endl;
 }
 
 
@@ -829,7 +939,7 @@ void DetectorConstruction::SetAbsorberMaterial(G4String materialChoice)
       G4RunManager::GetRunManager()->PhysicsHasBeenModified();
     }
   } else {
-    G4cout << "\n--> warning from DetectorConstruction::SetModerator1Material : "
+    G4cout << "\n--> warning from DetectorConstruction::SetModeratorMaterial : "
            << materialChoice << " not found" << G4endl;
   }              
 }
@@ -840,6 +950,62 @@ void DetectorConstruction::SetAbsorberMaterial(G4String materialChoice)
 void DetectorConstruction::GetAbsorberMaterial(){
 
     G4cout << "Absorber material is " << fThermalAbsorberMater->GetName() << G4endl;
+}
+
+
+
+void DetectorConstruction::SetPortRefMaterial(G4String materialChoice)
+{
+  // search the material by its name
+  G4Material* pttoMaterial =
+     G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
+  
+  if (pttoMaterial) { 
+    if(fPortRefMater != pttoMaterial) {
+      fPortRefMater = pttoMaterial;
+      if(fPortRefMater) { fLogicPortRef->SetMaterial(pttoMaterial); }
+      G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+    }
+  } else {
+    G4cout << "\n--> warning from DetectorConstruction::SetModeratorMaterial : "
+           << materialChoice << " not found" << G4endl;
+  }              
+}
+
+
+
+
+void DetectorConstruction::GetPortRefMaterial(){
+
+    G4cout << "Port reflector material is " << fPortRefMater->GetName() << G4endl;
+}
+
+
+
+void DetectorConstruction::SetReflectorMaterial(G4String materialChoice)
+{
+  // search the material by its name
+  G4Material* pttoMaterial =
+     G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
+  
+  if (pttoMaterial) { 
+    if(fReflectorMater != pttoMaterial) {
+      fReflectorMater = pttoMaterial;
+      if(fReflectorMater) { fLogicReflector->SetMaterial(pttoMaterial); }
+      G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+    }
+  } else {
+    G4cout << "\n--> warning from DetectorConstruction::SetModeratorMaterial : "
+           << materialChoice << " not found" << G4endl;
+  }              
+}
+
+
+
+
+void DetectorConstruction::GetReflectorMaterial(){
+
+    G4cout << "Neutron reflector material is " << fReflectorMater << G4endl;
 }
 
 
@@ -866,25 +1032,68 @@ void DetectorConstruction::SetSize(G4double value)
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
-void DetectorConstruction::SetFilterHeight(G4double value)
+
+
+//Set Dimension Functions
+void DetectorConstruction::SetModeratorHeight(G4double value)
 {
-  fFilterHeight = value;
+  fModerator_Height = value;
+  fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
+  fNShieldHeight = fFilter2Height + fFilter3Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
-void DetectorConstruction::SetModerator1Height(G4double value)
+void DetectorConstruction::SetFilter1Height(G4double value)
 {
-  fModerator1_Height = value;
-  fReflectorHeight = fFilterHeight + fModerator2_comp1_Height + fModerator2_comp2_Height + fModerator1_Height + fReflectorThickness;
-  fNShieldHeight = fThermalAbsorberHeight + fReflectorHeight + fNShieldThickness;
+  fFilter1Height = value;
+  fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
+  fNShieldHeight = fFilter2Height + fFilter3Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
-void DetectorConstruction::SetModerator2Height(G4double value)
+void DetectorConstruction::SetFilter2Height(G4double value)
 {
-  fModerator2_Height = value;
+  fFilter2Height = value;
+  fNShieldHeight = fFilter2Height + fFilter3Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
+
+void DetectorConstruction::SetFilter3Height(G4double value)
+{
+  fFilter3Height = value;
+  fNShieldHeight = fFilter2Height + fFilter3Height + fReflectorHeight + fNShieldThickness;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void DetectorConstruction::SetPortRefThickness(G4double value)
+{
+  fPortRefThickness = value;
+  fPortRefInnerRadius =  fPortOuterRadius - fPortRefThickness;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void DetectorConstruction::SetReflectorThickness(G4double value)
+{
+  fReflectorThickness = value;
+  fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
+  fReflectorRadius = fFilter1Radius + fReflectorThickness;
+  fNShieldHeight = fReflectorHeight + fFilter3Height + fFilter2Height + fNShieldThickness;
+  fNShieldRadius = fReflectorRadius + fNShieldThickness;
+
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void DetectorConstruction::SetNShieldThickness(G4double value)
+{
+  fNShieldThickness = value;
+  fNShieldHeight = fReflectorHeight + fFilter3Height + fFilter2Height + fNShieldThickness;
+  fNShieldRadius = fReflectorRadius + fNShieldThickness;
+
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+
+
 
 
 

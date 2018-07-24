@@ -88,89 +88,134 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   }
   
 
+  /*
   // neutrons from generator to 1st moderator
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
-//  	&& aStep->GetTrack()->GetTrackID() == 1
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicDDGenerator() 
-  	&& endVolume == fDetector->GetLogicModerator1()) {
-    //G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
-    fEventAction->AddNeutronEnter_Moderator1();
-    if(fEventAction->GetNNeutronEnter_Moderator1() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
+  	&& endVolume == fDetector->GetLogicModerator()) {
+    
+      fEventAction->AddNeutronEnter_Moderator();
+      if(fEventAction->GetNNeutronEnter_Moderator() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
   }
+  */
 
 
-
-  //Number of Collisions in 1st moderator
+  // neutrons from generator to 1st moderator
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
-   && fEventAction->GetNNeutronEnter_Moderator2()== 1
-   && preVolume == fDetector->GetLogicModerator1() 
-   || endVolume == fDetector->GetLogicModerator1()) {
+  	&& postPoint->GetStepStatus() == fGeomBoundary 
+  	&& preVolume == fDetector->GetLogicDDGenerator() 
+  	&& endVolume != fDetector->GetLogicDDGenerator()) {
+    
+      fEventAction->AddNeutronExit_Generator();
+      if(fEventAction->GetNNeutronExit_Generator() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
+  }
+  
+
+
+  //Number of Collisions in the moderator
+  if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+   && fEventAction->GetNNeutronEnter_Moderator()== 1
+   && preVolume == fDetector->GetLogicModerator() 
+   || endVolume == fDetector->GetLogicModerator()) {
 
          Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
          run->AddCollisionsMod1();
   }
 
   
-  // neutrons from 1st moderator to 2nd moderator
+  // neutrons from moderator to filter 1
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
-//  	&& aStep->GetTrack()->GetTrackID() == 1
   	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicModerator1() 
-  	&& endVolume == fDetector->GetLogicModerator2()) {  
-    //G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
-    fEventAction->AddNeutronEnter_Moderator2();
-    if(fEventAction->GetNNeutronEnter_Moderator2() == 1) G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
-    Run* run = static_cast<Run*>(
-        G4RunManager::GetRunManager()->GetNonConstCurrentRun());
-    if(kinEnergy >= 57*keV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Moderator2() == 1) run->AddARCount();
+  	&& preVolume == fDetector->GetLogicModerator() 
+  	&& endVolume == fDetector->GetLogicFilter1()) {  
+    
+      fEventAction->AddNeutronEnter_Filter1();
+      if(fEventAction->GetNNeutronEnter_Filter1() == 1) G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
+      Run* run = static_cast<Run*>(
+          G4RunManager::GetRunManager()->GetNonConstCurrentRun());
+      if(kinEnergy >= 57*keV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Filter1() == 1) run->AddARCount();
   }
-  
-  // neutrons from 2nd moderator to filter
-  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
-  	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicModerator2() 
-  	&& endVolume == fDetector->GetLogicFilter()) {  
-  	//G4AnalysisManager::Instance()->FillH1(9,kinEnergy);
-  	fEventAction->AddNeutronEnter_Filter();
-    if(fEventAction->GetNNeutronEnter_Filter() == 1) G4AnalysisManager::Instance()->FillH1(9,kinEnergy);
-  }
-  
-  // neutrons from filter to thermal absorber
-  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
-  	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicFilter() 
-  	&& endVolume == fDetector->GetLogicThermalAbsorber()) {
-    //G4AnalysisManager::Instance()->FillH1(10,kinEnergy);
-    fEventAction->AddNeutronEnter_ThermalAbsorber();
-    if(fEventAction->GetNNeutronEnter_ThermalAbsorber() == 1) G4AnalysisManager::Instance()->FillH1(10,kinEnergy);
-  }
-  
-  // neutrons from thermal neutron absorber to feedthrough port
-  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
-  	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicThermalAbsorber()
-  	&& endVolume == fDetector->GetLogicPort()) {  
-        //G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
 
-        G4ThreeVector p = aStep->GetTrack()->GetMomentumDirection();
-        if (p.x() != 0 && p.z() != 0)
-            G4AnalysisManager::Instance()->FillH1(14, GetTheta(p.x(), p.z()));
-        if (p.x() != 0 && p.y() != 0)
-            G4AnalysisManager::Instance()->FillH1(15, GetPhi(p.x(), p.y()));
+
+
+  //Number of Collisions in filter 1
+  if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+   && fEventAction->GetNNeutronEnter_Filter1()== 1
+   && preVolume == fDetector->GetLogicFilter1() 
+   || endVolume == fDetector->GetLogicFilter1()) {
+
+         Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
+         run->AddCollisionsF1();
+  }
+
+
+  
+  // neutrons from filter 1 to filter 2
+  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& postPoint->GetStepStatus() == fGeomBoundary 
+  	&& preVolume == fDetector->GetLogicFilter1() 
+  	&& endVolume == fDetector->GetLogicFilter2()) {  
+  	
+  	  fEventAction->AddNeutronEnter_Filter2();
+      if(fEventAction->GetNNeutronEnter_Filter2() == 1) G4AnalysisManager::Instance()->FillH1(9,kinEnergy);
+  }
+  
+  // neutrons from filter 2 to filter 3
+  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& postPoint->GetStepStatus() == fGeomBoundary 
+  	&& preVolume == fDetector->GetLogicFilter2() 
+  	&& endVolume == fDetector->GetLogicFilter3()) {
+    
+      fEventAction->AddNeutronEnter_Filter3();
+      if(fEventAction->GetNNeutronEnter_Filter3() == 1) G4AnalysisManager::Instance()->FillH1(10,kinEnergy);
+  }
+
+  
+  // neutrons from filter 3 to port
+  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& postPoint->GetStepStatus() == fGeomBoundary 
+  	&& preVolume == fDetector->GetLogicFilter3() 
+  	&& endVolume == fDetector->GetLogicPort()) {
 
         fEventAction->AddNeutronEnter_Port();
+        
+        if(fEventAction->GetNNeutronEnter_Port()==1){
+            G4ThreeVector p = aStep->GetTrack()->GetMomentumDirection();
+            if (p.x() == 0 && p.z() == 0){}
+                else{
+                    G4double angle1 = GetTheta(p.x(), p.z());
+                    G4AnalysisManager::Instance()->FillH1(15, angle1);
+                }
+            if (p.x() == 0 && p.y() == 0){}
+                else{
+                    G4double angle2 = GetPhi(p.x(), p.y());
+                    G4AnalysisManager::Instance()->FillH1(16, angle2);
+                }
+        }
+        
         if(fEventAction->GetNNeutronEnter_Port() == 1) G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
   }
+
   
-  // neutrons from feedthrough port to gas argon buffer
+  // neutrons from port to thermal absorber
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicPort()
+  	&& endVolume == fDetector->GetLogicThermalAbsorber()) {  
+        
+      fEventAction->AddNeutronEnter_ThermalAbsorber();
+      if(fEventAction->GetNNeutronEnter_ThermalAbsorber() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
+  }
+  
+  // neutrons from thermal absorber to gas argon buffer
+  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& postPoint->GetStepStatus() == fGeomBoundary 
+  	&& preVolume == fDetector->GetLogicThermalAbsorber()
   	&& endVolume == fDetector->GetLogicBuffer()) {  
-    //G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
-    fEventAction->AddNeutronEnter_ArBuffer();
-    if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
+    
+      fEventAction->AddNeutronEnter_ArBuffer();
+      if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(13,kinEnergy);
   }
   
   // neutrons entering liquid Argon pool
@@ -178,10 +223,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicBuffer()
   	&& endVolume == fDetector->GetLogicPool()) {  
-    //G4AnalysisManager::Instance()->FillH1(13,kinEnergy);
-    fEventAction->AddNeutronEnter_LArPool();
-    if(fEventAction->GetNNeutronEnter_LArPool() == 1) G4AnalysisManager::Instance()->FillH1(13,kinEnergy);	
+    
+      fEventAction->AddNeutronEnter_LArPool();
+      if(fEventAction->GetNNeutronEnter_LArPool() == 1) G4AnalysisManager::Instance()->FillH1(14,kinEnergy);	
   }
+
+  
   
   // count processes
   // 
@@ -193,7 +240,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4String procName = process->GetProcessName();  
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& procName == "nCapture" 
-  	&& endVolume == fDetector->GetLogicModerator1()) {
+  	&& endVolume == fDetector->GetLogicModerator()) {
   	G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
   	G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
   	G4AnalysisManager::Instance()->FillH2(0,x, y);
@@ -203,21 +250,35 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   procName = process->GetProcessName();  
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& procName == "nCapture" 
-  	&& endVolume == fDetector->GetLogicModerator2()) {
-  	G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
-  	G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
-  	G4AnalysisManager::Instance()->FillH2(2,x, y);
-  	G4AnalysisManager::Instance()->FillH2(3,x, z);	
+  	&& endVolume == fDetector->GetLogicFilter1()) {
+
+  	  G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
+  	  G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
+  	  G4AnalysisManager::Instance()->FillH2(2,x, y);
+  	  G4AnalysisManager::Instance()->FillH2(3,x, z);	
   }
+
+  procName = process->GetProcessName();  
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& procName == "nCapture" 
+  	&& endVolume == fDetector->GetLogicFilter2()) {
+
+  	  G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
+  	  G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
+  	  G4AnalysisManager::Instance()->FillH2(4,x, y);
+  	  G4AnalysisManager::Instance()->FillH2(5,x, z);	
+  }
+
   
   procName = process->GetProcessName();  
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& procName == "nCapture" 
-  	&& endVolume == fDetector->GetLogicFilter()) {
-  	G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
-  	G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
-  	G4AnalysisManager::Instance()->FillH2(4,x, y);
-  	G4AnalysisManager::Instance()->FillH2(5,x, z);	
+  	&& endVolume == fDetector->GetLogicFilter3()) {
+
+  	  G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
+  	  G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
+  	  G4AnalysisManager::Instance()->FillH2(6,x, y);
+  	  G4AnalysisManager::Instance()->FillH2(7,x, z);	
   }
   
   procName = process->GetProcessName();  
@@ -226,12 +287,120 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& endVolume == fDetector->GetLogicPool()) {
   	G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
   	G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
-  	G4AnalysisManager::Instance()->FillH2(6,x, y);
-  	G4AnalysisManager::Instance()->FillH2(7,x, z);	
+  	G4AnalysisManager::Instance()->FillH2(8,x, y);
+  	G4AnalysisManager::Instance()->FillH2(9,x, z);	
   }  
-}
+
+
+
+
+
+
+
+
+
+
+/*                      Gamma Study                                  */
+
+  
+
+  //Energy Spectrum for all gamma events
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "gamma"
+   && postPoint->GetStepStatus() == fGeomBoundary){
+    
+     G4AnalysisManager::Instance()->FillH1(18, kinEnergy);
+  }
+
+  //Energy Spectrum of Escaped gammas
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "gamma"
+   && postPoint->GetStepStatus() == fGeomBoundary
+   && preVolume != fDetector->GetLogicWorld()
+   && endVolume == fDetector->GetLogicWorld()
+   && fEventAction->GetGammaEnter_World() == 0){
+  
+     G4AnalysisManager::Instance()->FillH1(19, kinEnergy);
+     fEventAction->AddGammaEnter_World();
+  }
+
+  //Energy Spectrum of Gammas Entering Shield
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "gamma"
+   && postPoint->GetStepStatus() == fGeomBoundary
+   && preVolume != fDetector->GetLogicShield()
+   && endVolume == fDetector->GetLogicShield()
+   && fEventAction->GetGammaEnter_Shield() == 0){
+
+     G4AnalysisManager::Instance()->FillH1(20, kinEnergy);
+     fEventAction->AddGammaEnter_Shield();
+  }
+
+  //Energy Spectrum of Gammas Exiting Shield
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "gamma"
+   && postPoint->GetStepStatus() == fGeomBoundary
+   && preVolume == fDetector->GetLogicShield()
+   && endVolume == fDetector->GetLogicWorld()
+   && fEventAction->GetGammaEnter_Shield() == 0){
+
+     G4AnalysisManager::Instance()->FillH1(21, kinEnergy);
+     fEventAction->AddGammaExit_Shield();
+  }
+
+  //Energy Spectrum of Gammas Entering LAr Pool
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "gamma"
+   && postPoint->GetStepStatus() == fGeomBoundary
+   && preVolume != fDetector->GetLogicPool()
+   && endVolume == fDetector->GetLogicPool()
+   && fEventAction->GetGammaEnter_Shield() == 0){
+
+     G4AnalysisManager::Instance()->FillH1(22, kinEnergy);
+     fEventAction->AddGammaExit_Shield();
+  }
+
+  //Energy Spectrum of Gammas Exiting LAr Pool
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "gamma"
+   && postPoint->GetStepStatus() == fGeomBoundary
+   && preVolume == fDetector->GetLogicPool()
+   && endVolume != fDetector->GetLogicPool()
+   && fEventAction->GetGammaEnter_Shield() == 0){
+
+     G4AnalysisManager::Instance()->FillH1(23, kinEnergy);
+     fEventAction->AddGammaExit_Shield();
+  }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+/*                           Neutron Radiation Study                           */
+
+  //Energy Spectrum of Neutrons Escaping Shield
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+   && postPoint->GetStepStatus() == fGeomBoundary
+   && preVolume == fDetector->GetLogicShield()
+   && endVolume == fDetector->GetLogicWorld()
+   && fEventAction->GetNNeutronExit_Shield() == 0){
+
+     G4AnalysisManager::Instance()->FillH1(24, kinEnergy);
+     fEventAction->AddNeutronExit_Shield();
+  }
+
+  //Energy Spectrum of Neutrons Entering World
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+   && postPoint->GetStepStatus() == fGeomBoundary
+   && preVolume != fDetector->GetLogicWorld()
+   && endVolume == fDetector->GetLogicWorld()
+   && fEventAction->GetNNeutronEnter_World() == 0){
+
+     G4AnalysisManager::Instance()->FillH1(25, kinEnergy);
+     fEventAction->AddNeutronEnter_World();
+  }
+
+
+
+
+}
+
+
+
+
+
 
 
 
@@ -239,7 +408,6 @@ G4double SteppingAction::GetTheta(G4double dx, G4double dz){
 
     const G4double pi = 3.14159265;
     G4double theta = std::atan(dz/dx) * (180/pi);
-
 
     if(dx > 0 && dz > 0)
         theta = theta + 90;
@@ -249,11 +417,19 @@ G4double SteppingAction::GetTheta(G4double dx, G4double dz){
         theta = theta + 90;
     else if(dx < 0 && dz > 0)
         theta = theta - 90;
+    else if(dz == 0 && dx > 0)
+        theta = 90;
+    else if(dz == 0 && dx < 0)
+        theta = -90;
+    else if(dx == 0 && dz < 0)
+        theta = 0;
+    else if(dx == 0 && dz > 0)
+        theta = 180;
 
-    if(theta > 180 || theta < -180)
+    if(theta > 90 || theta < -90)
         G4cout << "Error - SteppingAction::GetTheta()  " << "dx = " << dx << ", dz = " << dz << G4endl;
 
-    return theta;
+    return theta*degree;
 }
 
 
@@ -267,7 +443,6 @@ G4double SteppingAction::GetPhi(G4double dx, G4double dy){
     const G4double pi = 3.14159265;
     G4double phi = std::atan(dy/dx) * (180/pi);
 
-    G4cout << "Phi1: " << phi << G4endl;
 
     if(dx > 0 && dy > 0)
         phi = phi + 90;
@@ -277,10 +452,19 @@ G4double SteppingAction::GetPhi(G4double dx, G4double dy){
         phi = phi + 90;
     else if(dx < 0 && dy > 0)
         phi = phi - 90;
+    else if(dy == 0 && dx > 0)
+        phi = 90;
+    else if(dy == 0 && dx < 0)
+        phi = -90;
+    else if(dx == 0 && dy < 0)
+        phi = 0;
+    else if(dx == 0 && dy > 0)
+        phi = 180;
         
    if(phi > 180 || phi < -180)
         G4cout << "Error - SteppingAction::GetPhi() " << "dx = " << dx << ", dy = " << dy << G4endl;
-    return phi;
+
+    return phi*degree;
 }
 
 

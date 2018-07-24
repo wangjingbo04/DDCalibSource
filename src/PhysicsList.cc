@@ -143,7 +143,7 @@ void PhysicsList::SetCuts()
   SetCutValue(10*mm, "proton");
   SetCutValue(10*mm, "e-");
   SetCutValue(10*mm, "e+");
-  SetCutValue(10*mm, "gamma"); 
+  SetCutValue(0.*eV, "gamma"); 
   SetCutValue(0.*eV, "neutron"); 
 }
 

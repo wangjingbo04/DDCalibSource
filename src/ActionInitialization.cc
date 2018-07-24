@@ -60,7 +60,8 @@ void ActionInitialization::BuildForMaster() const
 
 void ActionInitialization::Build() const
 {
-  PrimaryGeneratorAction* primary = new PrimaryGeneratorAction(fDetector);
+  size_t nbins = 360;
+  PrimaryGeneratorAction* primary = new PrimaryGeneratorAction(fDetector, nbins);
   SetUserAction(primary);
     
   RunAction* runAction = new RunAction(fDetector, primary );

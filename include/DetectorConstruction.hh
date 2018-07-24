@@ -59,57 +59,76 @@ class DetectorConstruction : public G4VUserDetectorConstruction
          
     void SetSize     (G4double);              
     void SetWorldMaterial (G4String);
-    void SetFilterHeight(G4double);
-    void SetModerator1Height(G4double);
-    void SetModerator2Height(G4double);
     
+    
+    
+    //Set and Get Material Functions
     void GetMaterialTable();
-    void SetModerator1Material (G4String);
-    void GetModerator1Material ();
-    void SetModerator2Material (G4String);
-    void GetModerator2Material ();
-    void SetFilterMaterial (G4String);
-    void GetFilterMaterial ();
+    void SetModeratorMaterial (G4String);
+    void GetModeratorMaterial ();
+    void SetFilter1Material (G4String);
+    void GetFilter1Material ();
+    void SetFilter2Material (G4String);
+    void GetFilter2Material ();
+    void SetFilter3Material (G4String);
+    void GetFilter3Material ();
     void SetAbsorberMaterial (G4String);
     void GetAbsorberMaterial ();
+    void SetPortRefMaterial (G4String);
+    void GetPortRefMaterial ();
+    void SetReflectorMaterial (G4String);
+    void GetReflectorMaterial ();
+
+    //Set Dimension Functions
+    void SetModeratorHeight(G4double);
+    void SetFilter1Height(G4double);
+    void SetFilter2Height(G4double);
+    void SetFilter3Height(G4double);
+    void SetPortRefThickness(G4double);
+    void SetReflectorThickness(G4double);
+    void SetNShieldThickness(G4double);
     
 
   public:
   
      const
-     G4VPhysicalVolume* GetWorld()      {return fPWorld;};   
-     G4VPhysicalVolume* GetPhysiPool() {return fPhysiPool;};  
-     G4VPhysicalVolume* GetPhysiBuffer() {return fPhysiBuffer;}; 
-     G4VPhysicalVolume* GetPhysiPort() {return fPhysiPort;}; 
-     G4VPhysicalVolume* GetPhysif() {return fPhysiNShield;};  
-     G4VPhysicalVolume* GetPhysiDDGenerator() {return fPhysiDDGenerator;};
-     G4VPhysicalVolume* GetPhysiReflector() {return fPhysiReflector;};  
-     G4VPhysicalVolume* GetPhysiModerator1() {return fPhysiModerator1;};   
-     G4VPhysicalVolume* GetPhysiModerator2() {return fPhysiModerator2;};  
-     G4VPhysicalVolume* GetPhysiFilter() {return fPhysiFilter;};  
+     G4VPhysicalVolume* GetWorld()              {return fPWorld;};   
+     G4VPhysicalVolume* GetPhysiPool()          {return fPhysiPool;};  
+     G4VPhysicalVolume* GetPhysiBuffer()        {return fPhysiBuffer;}; 
+     G4VPhysicalVolume* GetPhysiPort()          {return fPhysiPort;}; 
+     G4VPhysicalVolume* GetPhysif()             {return fPhysiNShield;};  
+     G4VPhysicalVolume* GetPhysiDDGenerator()   {return fPhysiDDGenerator;};
+     G4VPhysicalVolume* GetPhysiReflector()     {return fPhysiReflector;};  
+     G4VPhysicalVolume* GetPhysiModerator()     {return fPhysiModerator;};   
+     G4VPhysicalVolume* GetPhysiFilter1()       {return fPhysiFilter1;};
+     G4VPhysicalVolume* GetPhysiFilter2()       {return fPhysiFilter2;};  
+     G4VPhysicalVolume* GetPhysiFilter3()       {return fPhysiFilter3;};  
       
      
-     G4LogicalVolume* GetLogicWorld() {return fLWorld;};   
-     G4LogicalVolume* GetLogicPool() {return fLogicPool;}; 
-     G4LogicalVolume* GetLogicBuffer() {return fLogicBuffer;}; 
-     G4LogicalVolume* GetLogicPort() {return fLogicPort;}; 
-     G4LogicalVolume* GetLogicShield() {return fLogicNShield;}; 
-     G4LogicalVolume* GetLogicReflector() {return fLogicReflector;};  
-     G4LogicalVolume* GetLogicDDGenerator() {return fLogicDDGenerator;}; 
-     G4LogicalVolume* GetLogicModerator1() {return fLogicModerator1;};   
-     G4LogicalVolume* GetLogicModerator2() {return fLogicModerator2;}; 
+     G4LogicalVolume* GetLogicWorld()           {return fLWorld;};   
+     G4LogicalVolume* GetLogicPool()            {return fLogicPool;}; 
+     G4LogicalVolume* GetLogicBuffer()          {return fLogicBuffer;}; 
+     G4LogicalVolume* GetLogicPort()            {return fLogicPort;}; 
+     G4LogicalVolume* GetLogicShield()          {return fLogicNShield;}; 
+     G4LogicalVolume* GetLogicReflector()       {return fLogicReflector;};  
+     G4LogicalVolume* GetLogicDDGenerator()     {return fLogicDDGenerator;}; 
+     G4LogicalVolume* GetLogicModerator()       {return fLogicModerator;};   
+     G4LogicalVolume* GetLogicFilter1()         {return fLogicFilter1;};
+     G4LogicalVolume* GetLogicFilter2()         {return fLogicFilter2;};
+     G4LogicalVolume* GetLogicFilter3()         {return fLogicFilter3;}; 
      G4LogicalVolume* GetLogicThermalAbsorber() {return fLogicThermalAbsorber;}; 
-     G4LogicalVolume* GetLogicFilter() {return fLogicFilter;};              
+                   
                     
-     G4double           GetSize()       {return fWorldSize;};      
-     G4Material*        GetMaterial()   {return fMaterial;}; 
-     G4double           GetPoolHeight()       {return fPoolHeight;};
-     G4double           GetFilterHeight()       {return fFilterHeight;};
-     G4double           GetModerator1Height()       {return fModerator1_Height;};
-     G4double           GetModerator2Height()       {return fModerator2_Height;};
-     G4double           GetDDGeneratorHeight()       {return fDDGeneratorHeight;};
-     G4double           GetInsulatorHeight()       {return fInsulatorHeight;};
-     G4double           GetThermalAbsorberHeight()       {return fThermalAbsorberHeight;};
+     G4double           GetSize()                   {return fWorldSize;};      
+     G4Material*        GetMaterial()               {return fMaterial;}; 
+     G4double           GetPoolHeight()             {return fPoolHeight;};
+     G4double           GetModeratorHeight()        {return fModerator_Height;};
+     G4double           GetFilter1Height()          {return fFilter1Height;};
+     G4double           GetFilter2Height()          {return fFilter2Height;};
+     G4double           GetFilter3Height()          {return fFilter3Height;};
+     G4double           GetDDGeneratorHeight()      {return fDDGeneratorHeight;};
+     G4double           GetInsulatorHeight()        {return fInsulatorHeight;};
+     G4double           GetThermalAbsorberHeight()  {return fThermalAbsorberHeight;};
      
      
      void               PrintParameters();
@@ -136,10 +155,19 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      
      // Feedthrough port
      G4double						fPortHeight;
-  	 G4double						fPortRadius;
+  	 G4double						fPortOuterRadius;
   	 G4LogicalVolume*   fLogicPort;
      G4VPhysicalVolume* fPhysiPort;
      G4Material*        fPortMater;
+    
+     // Feedthrough port reflector
+     G4double fPortRefHeight; 
+     G4double fPortRefThickness;
+     G4double fPortRefOuterRadius; 
+     G4double fPortRefInnerRadius;
+     G4LogicalVolume* fLogicPortRef;
+     G4VPhysicalVolume* fPhysiPortRef;
+     G4Material* fPortRefMater;
      
      // stainless steel cryostat
      G4double           fCryostatThickness; 
@@ -173,23 +201,35 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4VPhysicalVolume* fPhysiDDGenerator;
      G4Material*        fDDGeneratorMater;  
      
-     // Moderator1: 
-     G4double           fModerator1_Height;
-     G4double           fModerator1_Radius;
-     G4LogicalVolume*   fLogicModerator1;
-     G4VPhysicalVolume* fPhysiModerator1;
-     G4Material*        fModerator1_Mater; 
+     // Moderator: 
+     G4double           fModerator_Height;
+     G4double           fModerator_Radius;
+     G4LogicalVolume*   fLogicModerator;
+     G4VPhysicalVolume* fPhysiModerator;
+     G4Material*        fModerator_Mater; 
      
-     // Moderator2: 
-     G4double           fModerator2_Height;
-     G4double           fModerator2_comp1_Height; //UI
-     G4double           fModerator2_comp1_Radius; //UI
-     G4double           fModerator2_comp2_Height;
-  	 G4double           fModerator2_comp2_Rbottom;
-  	 G4double           fModerator2_comp2_Rtop;
-     G4LogicalVolume*   fLogicModerator2;
-     G4VPhysicalVolume* fPhysiModerator2;
-     G4Material*        fModerator2_Mater;
+     // Filter1: 
+     G4double           fFilter1Height;
+     G4double           fFilter1Radius;
+     G4LogicalVolume*   fLogicFilter1;
+     G4VPhysicalVolume* fPhysiFilter1;
+     G4Material*        fFilter1Mater;
+
+     // Filter2: 
+     G4double           fFilter2Height;
+     G4double           fFilter2Radius_top;
+     G4double           fFilter2Radius_bottom;
+     G4LogicalVolume*   fLogicFilter2;
+     G4VPhysicalVolume* fPhysiFilter2;
+     G4Material*        fFilter2Mater;
+
+     // Filter3:
+     G4double           fFilter3Height;
+  	 G4double           fFilter3Radius_top;
+  	 G4double           fFilter3Radius_bottom; 	 
+     G4LogicalVolume*   fLogicFilter3;
+     G4VPhysicalVolume* fPhysiFilter3;
+     G4Material*        fFilter3Mater;
      
      // Thermal neutron absorber
   	 G4double						fThermalAbsorberHeight;
@@ -205,14 +245,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume*   fLogicReflector;
      G4VPhysicalVolume* fPhysiReflector;
      G4Material*        fReflectorMater; 
-     
-     // neutron energy filter
-     G4double           fFilterHeight;
-  	 G4double           fFilterRadius_top;
-  	 G4double           fFilterRadius_bottom; 	 
-     G4LogicalVolume*   fLogicFilter;
-     G4VPhysicalVolume* fPhysiFilter;
-     G4Material*        fFilterMater;
      
      // neutron shield
      G4double						fNShieldThickness;
