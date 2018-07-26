@@ -129,6 +129,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4double           GetDDGeneratorHeight()      {return fDDGeneratorHeight;};
      G4double           GetInsulatorHeight()        {return fInsulatorHeight;};
      G4double           GetThermalAbsorberHeight()  {return fThermalAbsorberHeight;};
+     G4double           GetPortHeight()  						{return fPortHeight;};
+     G4double           GetThermalAbsorborHeight()	{return fThermalAbsorberHeight;};
      
      
      void               PrintParameters();

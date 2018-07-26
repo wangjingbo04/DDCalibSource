@@ -99,22 +99,22 @@ DetectorConstruction::DetectorConstruction()
 
   // 3rd Filter
   fFilter3Height        = 10.0*cm;
-  fFilter3Radius_top    = 20.*cm;
-  fFilter3Radius_bottom = 30.*cm;
+  fFilter3Radius_top    = 12.5*cm;
+  fFilter3Radius_bottom = 12.5*cm;
   
   // Feedthrough port
   fPortHeight = fInsulatorThickness;
-  fPortOuterRadius = 35.0*cm;
+  fPortOuterRadius = 2*fFilter3Radius_bottom;
 
   // Thermal neutron absorber
-  fThermalAbsorberHeight = 5.*cm;
+  fThermalAbsorberHeight = 5*cm;
   fThermalAbsorberRadius = fPortOuterRadius;
 
-//  //Feedthrough port reflector
-//  fPortRefHeight = fPortHeight - fThermalAbsorberHeight;
-//  fPortRefThickness = 3.*cm;
-//  fPortRefOuterRadius = fPortOuterRadius;
-//  fPortRefInnerRadius =  fPortOuterRadius - fPortRefThickness;
+  //Feedthrough port reflector
+  fPortRefHeight = fPortHeight - fThermalAbsorberHeight;
+  fPortRefThickness = 2*cm;
+  fPortRefOuterRadius = fPortOuterRadius;
+  fPortRefInnerRadius =  fPortOuterRadius - fPortRefThickness;
   
   // stainless steel cryostat
   fCryostatThickness = 1.0*cm;
@@ -132,20 +132,20 @@ DetectorConstruction::DetectorConstruction()
 
   // 1st Filter
   fFilter1Height = 13*cm;
-  fFilter1Radius = 14.0*cm;
+  fFilter1Radius = 20.0*cm;
 
   // 2nd Filter
-  fFilter2Height = 10*cm;
-  fFilter2Radius_top = 14.0*cm;
-  fFilter2Radius_bottom = 20.*cm;
+  fFilter2Height = 87*cm;
+  fFilter2Radius_top = 20.0*cm;
+  fFilter2Radius_bottom = 12.5*cm;
   
   // neutron reflector
   fReflectorThickness = 10.0*cm;
   fReflectorHeight = fFilter2Height + fFilter1Height + fModerator_Height + fReflectorThickness;
-  fReflectorRadius = fModerator_Radius + fReflectorThickness;
+  fReflectorRadius = fFilter1Radius + fReflectorThickness;
   
   // neutron shield
-  fNShieldThickness = 10.0*cm;
+  fNShieldThickness = 20.0*cm;
   fNShieldHeight = fReflectorHeight + fFilter3Height + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
   fDetectorMessenger = new DetectorMessenger(this);
@@ -180,6 +180,8 @@ void DetectorConstruction::DefineMaterials()
     Air20->AddElement(N, fractionmass=0.7);
     Air20->AddElement(O, fractionmass=0.3);
 
+
+  
   // vacuum
   G4double atomicNumber = 1.;
   G4double massOfMole = 1.008*g/mole;
@@ -188,6 +190,7 @@ void DetectorConstruction::DefineMaterials()
   G4double pressure = 3.e-18*pascal;
   G4Material* Vacuum = new G4Material("interGalactic", atomicNumber, massOfMole, density, kStateGas, temperature, pressure);
 
+ 
   
   // Define elements for all materials not found in the NIST database  
   G4NistManager* man = G4NistManager::Instance();
@@ -322,7 +325,7 @@ void DetectorConstruction::DefineMaterials()
   fPortMater = Air20;
 
   // feedthrough port reflector
-  fPortRefMater = man->FindOrBuildMaterial("G4_S");
+  fPortRefMater = Air20;
   
   // cryostat
   fCryostatMater = StainlessSteel;
@@ -459,28 +462,28 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 
 
-//  // Feedthrough port reflector
-//  G4Tubs* 
-//  sPortRef = new G4Tubs("PortRef",                                //its name
-//                        fPortRefInnerRadius,                      //its inner radius
-//                        fPortRefOuterRadius,                      //its outer radius
-//                        fPortRefHeight/2,                           //its height
-//                        0.,                                       //initial angle
-//                        CLHEP::twopi);                            //spanning angle
-//                
-//                       
-//
-//  fLogicPortRef = new G4LogicalVolume(sPortRef,                   //its shape
-//                                      fPortRefMater,              //its material
-//                                      "PortRef_l");               //its name
-//
-//  fPhysiPortRef = new G4PVPlacement(0,                                                           //no rotation
-//                                    G4ThreeVector(0, 0, fPortHeight/2 - fPortRefHeight/2),       //at (0,0,0)
-//                                    fLogicPortRef,                                               //its logical volume
-//                                    "PortRef_p",                                                 //its name
-//                                    fLogicPort,                                                  //its mother volume
-//                                    false,                                                       //no boolean operation
-//                                    0);                                                          //copy number
+  // Feedthrough port reflector
+  G4Tubs* 
+  sPortRef = new G4Tubs("PortRef",                                //its name
+                        fPortRefInnerRadius,                      //its inner radius
+                        fPortRefOuterRadius,                      //its outer radius
+                        fPortRefHeight/2,                           //its height
+                        0.,                                       //initial angle
+                        CLHEP::twopi);                            //spanning angle
+                
+                       
+
+  fLogicPortRef = new G4LogicalVolume(sPortRef,                   //its shape
+                                      fPortRefMater,              //its material
+                                      "PortRef_l");               //its name
+
+  fPhysiPortRef = new G4PVPlacement(0,                                                           //no rotation
+                                    G4ThreeVector(0, 0, fPortHeight/2 - fPortRefHeight/2),       //at (0,0,0)
+                                    fLogicPortRef,                                               //its logical volume
+                                    "PortRef_p",                                                 //its name
+                                    fLogicPort,                                                  //its mother volume
+                                    false,                                                       //no boolean operation
+                                    0);                                                          //copy number
 
   // cryostat
   
@@ -552,7 +555,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       "NShield_l");                                 //its name
 
   fPhysiNShield = new G4PVPlacement(0,                                                              //no rotation
-                                    G4ThreeVector(0, 0,  fInsulatorHeight/2 + fNShieldHeight/2 - fPortHeight + fThermalAbsorberHeight),      
+                                    G4ThreeVector(0, 0,  fInsulatorHeight/2 + fNShieldHeight/2),      
                                     fLogicNShield ,                                                 //its logical volume
                                     "NShield_p",                                                    //its name
                                     fLWorld,                                                        //its mother  volume
@@ -1019,30 +1022,30 @@ void DetectorConstruction::SetSize(G4double value)
 void DetectorConstruction::SetModeratorHeight(G4double value)
 {
   fModerator_Height = value;
-  fReflectorHeight = fFilter1Height + fFilter2Height + fModerator_Height + fReflectorThickness;
-  fNShieldHeight = fFilter3Height + fReflectorHeight + fNShieldThickness;
+  fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
+  fNShieldHeight = fFilter2Height + fFilter3Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
 void DetectorConstruction::SetFilter1Height(G4double value)
 {
   fFilter1Height = value;
-  fReflectorHeight = fFilter1Height + fFilter2Height + fModerator_Height + fReflectorThickness;
-  fNShieldHeight = fFilter3Height + fReflectorHeight + fNShieldThickness;
+  fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
+  fNShieldHeight = fFilter2Height + fFilter3Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
 void DetectorConstruction::SetFilter2Height(G4double value)
 {
   fFilter2Height = value;
-  fNShieldHeight = fFilter3Height + fReflectorHeight + fNShieldThickness;
+  fNShieldHeight = fFilter2Height + fFilter3Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
 void DetectorConstruction::SetFilter3Height(G4double value)
 {
   fFilter3Height = value;
-  fNShieldHeight = fFilter3Height + fReflectorHeight + fNShieldThickness;
+  fNShieldHeight = fFilter2Height + fFilter3Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
@@ -1056,9 +1059,9 @@ void DetectorConstruction::SetPortRefThickness(G4double value)
 void DetectorConstruction::SetReflectorThickness(G4double value)
 {
   fReflectorThickness = value;
-  fReflectorHeight = fFilter1Height + fFilter2Height + fModerator_Height + fReflectorThickness;
+  fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
   fReflectorRadius = fFilter1Radius + fReflectorThickness;
-  fNShieldHeight = fReflectorHeight + fFilter3Height + fNShieldThickness;
+  fNShieldHeight = fReflectorHeight + fFilter3Height + fFilter2Height + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
 
   G4RunManager::GetRunManager()->ReinitializeGeometry();
@@ -1067,7 +1070,7 @@ void DetectorConstruction::SetReflectorThickness(G4double value)
 void DetectorConstruction::SetNShieldThickness(G4double value)
 {
   fNShieldThickness = value;
-  fNShieldHeight = fReflectorHeight + fFilter3Height + fNShieldThickness;
+  fNShieldHeight = fReflectorHeight + fFilter3Height + fFilter2Height + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
 
   G4RunManager::GetRunManager()->ReinitializeGeometry();
