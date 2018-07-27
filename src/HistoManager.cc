@@ -160,11 +160,11 @@ void HistoManager::Book()
   analysisManager->SetH1Activation(ih, true);
 
   //Histogram 15 - Theta angle for neutrons entering the port
-  ih = analysisManager->CreateH1("h1.14", "Theta angle for neutrons entering the port", 360, xmin, xmax, "degree");
+  ih = analysisManager->CreateH1("h1.14", "Theta angle for neutrons entering the TPC", 360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
 
   //Histogram 16 - Phi angle for neutrons entering the port
-  ih = analysisManager->CreateH1("h1.15", "Phi angle for neutrons entering the port", 360, xmin, xmax, "degree");
+  ih = analysisManager->CreateH1("h1.15", "Phi angle for neutrons entering the TPC", 360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
 
   //Histogram 17 - DD gun neutron initial momentum angle

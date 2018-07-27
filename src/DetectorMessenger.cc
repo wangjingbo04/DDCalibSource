@@ -112,14 +112,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fAbsorberGetMaterCmd->SetGuidance("Parameterless, returns Absorber material.");
   fAbsorberGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fPortRefSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetPortRefMaterial",this);
-  fPortRefSetMaterCmd->SetGuidance("Select material of the port reflector.");
-  fPortRefSetMaterCmd->SetParameterName("choice",false);
-  fPortRefSetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-
-  fPortRefGetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetPortRefMaterial", this);
-  fPortRefGetMaterCmd->SetGuidance("Parameterless, returns material of the port reflector.");
-  fPortRefGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   fReflectorSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetReflectorMaterial",this);
   fReflectorSetMaterCmd->SetGuidance("Select material of the reflector.");
@@ -161,17 +153,10 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fFilter3HeightCmd->SetUnitCategory("Length");
   fFilter3HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fPortRefThickCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetPortRefThickness",this);
-  fPortRefThickCmd->SetGuidance("Set thickness of the port reflector");
-  fPortRefThickCmd->SetParameterName("RefThickness",false);
-  fPortRefThickCmd->SetRange("RefThickness>0.");
-  fPortRefThickCmd->SetUnitCategory("Length");
-  fPortRefThickCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-
-  fReflectorThickCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetReflectorThickness",this);
-  fReflectorThickCmd->SetGuidance("Set thickness of the reflector");
-  fReflectorThickCmd->SetParameterName("RefThickness",false);
-  fReflectorThickCmd->SetRange("RefThickness>0.");
+  fReflectorThickCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetReflectorHeight",this);
+  fReflectorThickCmd->SetGuidance("Set height of the reflector");
+  fReflectorThickCmd->SetParameterName("RefHeight",false);
+  fReflectorThickCmd->SetRange("RefHeight>0.");
   fReflectorThickCmd->SetUnitCategory("Length");
   fReflectorThickCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
@@ -299,12 +284,6 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
   if( command == fAbsorberGetMaterCmd )
    { fDetector->GetAbsorberMaterial();}
 
-  if( command == fPortRefSetMaterCmd )
-   { fDetector->SetPortRefMaterial(newValue);}
-
-  if( command == fPortRefGetMaterCmd )
-   { fDetector->GetPortRefMaterial();}
-
   if( command == fReflectorSetMaterCmd )
    { fDetector->SetReflectorMaterial(newValue);}
 
@@ -327,11 +306,8 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
   if( command == fFilter3HeightCmd )
    { fDetector->SetFilter3Height(fSizeCmd->GetNewDoubleValue(newValue));}
 
-  if( command == fPortRefThickCmd )
-   { fDetector->SetPortRefThickness(fSizeCmd->GetNewDoubleValue(newValue));}
-
   if( command == fReflectorThickCmd )
-   { fDetector->SetReflectorThickness(fSizeCmd->GetNewDoubleValue(newValue));}
+   { fDetector->SetReflectorHeight(fSizeCmd->GetNewDoubleValue(newValue));}
 
   if( command == fNShieldThickCmd )
    { fDetector->SetNShieldThickness(fSizeCmd->GetNewDoubleValue(newValue));}

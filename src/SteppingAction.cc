@@ -101,7 +101,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   */
 
 
-  // neutrons from generator to 1st moderator
+  // neutrons from generator
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicDDGenerator() 
@@ -111,7 +111,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(fEventAction->GetNNeutronExit_Generator() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
   }
   
-
 
   //Number of Collisions in the moderator
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
@@ -196,12 +195,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             if (p.x() == 0 && p.z() == 0){}
                 else{
                     G4double angle1 = GetTheta(p.x(), p.z());
-                    G4AnalysisManager::Instance()->FillH1(15, angle1);
+                    G4AnalysisManager::Instance()->FillH1(14, angle1);
                 }
             if (p.x() == 0 && p.y() == 0){}
                 else{
                     G4double angle2 = GetPhi(p.x(), p.y());
-                    G4AnalysisManager::Instance()->FillH1(16, angle2);
+                    G4AnalysisManager::Instance()->FillH1(15, angle2);
                 }
         }
       
