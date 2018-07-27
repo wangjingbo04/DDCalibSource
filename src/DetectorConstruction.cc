@@ -100,19 +100,19 @@ DetectorConstruction::DetectorConstruction()
 
   // 1st Filter
   fFilter1Height = 2*cm;
-  fFilter1Radius = 12.5*cm;
+  fFilter1Radius = 10.0*cm;
 
   // 2nd Filter
   fFilter2Height = 20*cm;
-  fFilter2Radius = 12.5*cm;
+  fFilter2Radius = 10.0*cm;
   
   // 3rd Filter
   fFilter3Height = 2.0*cm;
-  fFilter3Radius = 12.5*cm;
+  fFilter3Radius = 10.0*cm;
 
   // Thermal neutron absorber
   fThermalAbsorberHeight = 5.*cm;
-  fThermalAbsorberRadius = 12.5*cm;
+  fThermalAbsorberRadius = 10.0*cm;
 
 //  //Feedthrough port reflector
 //  fPortRefHeight = fPortHeight - fThermalAbsorberHeight;
@@ -132,17 +132,17 @@ DetectorConstruction::DetectorConstruction()
   
   // Moderator
   fModerator_Height = 15.0*cm; // must be not smaller than the DD generator height
-  fModerator_Radius = 12.5*cm;
+  fModerator_Radius = 10.0*cm;
   
   // neutron reflector
   fReflectorHeight = 30.0*cm;
   fReflectorRadius_Inner = fDDGeneratorRadius;
-  fReflectorRadius_Outer = 12.5*cm;
+  fReflectorRadius_Outer = 10.0*cm;
   
   // neutron shield
   fNShieldThickness = 10.0*cm;
   fNShieldHeight = fDDGeneratorHeight - fReflectorHeight + fNShieldThickness;
-  fNShieldRadius = 12.5*cm;
+  fNShieldRadius = 10.0*cm;
   fDetectorMessenger = new DetectorMessenger(this);
   
   // neutron DD generator housing
