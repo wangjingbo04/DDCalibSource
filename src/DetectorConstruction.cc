@@ -141,11 +141,11 @@ DetectorConstruction::DetectorConstruction()
   
   // neutron reflector
   fReflectorThickness = 10.0*cm;
-  fReflectorHeight = fFilter2Height + fFilter1Height + fModerator_Height + fReflectorThickness;
-  fReflectorRadius = fModerator_Radius + fReflectorThickness;
+  fReflectorHeight = fFilter1Height + fFilter2Height + fModerator_Height + fReflectorThickness;
+  fReflectorRadius = fFilter1Radius + fReflectorThickness;
   
   // neutron shield
-  fNShieldThickness = 10.0*cm;
+  fNShieldThickness = 12.0*cm;
   fNShieldHeight = fReflectorHeight + fFilter3Height + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
   fDetectorMessenger = new DetectorMessenger(this);
@@ -334,7 +334,7 @@ void DetectorConstruction::DefineMaterials()
   fBufferMater = man->FindOrBuildMaterial("G4_Ar");
   
   // neutron reflectorMater
-  fReflectorMater = man->FindOrBuildMaterial("G4_Pb");
+  fReflectorMater = man->FindOrBuildMaterial("G4_Ni");
   
   // DD generator
   fDDGeneratorMater = Vacuum; 
@@ -436,12 +436,12 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
  
   // Feedthrough port
   G4Tubs* 
-  sPort = new G4Tubs("Port",                                                                           //its name
-                     0,                                                                                //its inner radius
-                     fPortOuterRadius,                                                                 //its outer radius
-                     fPortHeight/2,                                                                      //its height
-                     0.,                                                                               //spanning angle
-                     CLHEP::twopi );                                                                   //spanning angle
+  sPort = new G4Tubs("Port",                                                                            //its name
+                     0,                                                                                 //its inner radius
+                     fPortOuterRadius,                                                                  //its outer radius
+                     fPortHeight/2,                                                                     //its height
+                     0.,                                                                                //spanning angle
+                     CLHEP::twopi );                                                                    //spanning angle
                 
                      G4ThreeVector zTransInsulator(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2);  
 
@@ -449,13 +449,13 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                    fPortMater,                 //its material
                                    "Port_l");                  //its name
 
-  fPhysiPort = new G4PVPlacement(0,                                                               //no rotation
-                                 G4ThreeVector(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2),         //at (0,0,0)
-                                 fLogicPort,                                                      //its logical volume
-                                 "Port_p",                                                        //its name
-                                 fLogicInsulator,                                                 //its mother  volume
-                                 false,                                                           //no boolean operation
-                                 0);                                                              //copy number
+  fPhysiPort = new G4PVPlacement(0,                                                                         //no rotation
+                                 G4ThreeVector(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2),           //at (0,0,0)
+                                 fLogicPort,                                                                //its logical volume
+                                 "Port_p",                                                                  //its name
+                                 fLogicInsulator,                                                           //its mother  volume
+                                 false,                                                                     //no boolean operation
+                                 0);                                                                        //copy number
 
 
 
@@ -600,7 +600,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                         "Reflector_l");                                  //its name
 
   fPhysiReflector = new G4PVPlacement(0,                                                 //no rotation
-                                      G4ThreeVector(0, 0, -fNShieldHeight/2 + fReflectorHeight/2 + fFilter3Height /*+ fFilter2Height*/),   
+                                      G4ThreeVector(0, 0, -fNShieldHeight/2 + fReflectorHeight/2 + fFilter3Height),   
                                       fLogicReflector ,                                  //its logical volume
                                       "Reflector_p",                                     //its name
                                       fLogicNShield,                                     //its mother  volume
@@ -698,7 +698,6 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       false,                           //no boolean operation
                                       0);                              //copy number
 
-                            
   // neutron DD generator                         
   G4Tubs* 
   sDDGenerator = new G4Tubs("DDGenerator_s",  

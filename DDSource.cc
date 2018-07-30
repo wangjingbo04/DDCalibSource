@@ -60,6 +60,8 @@ int main(int argc,char** argv) {
  
   //choose the Random engine
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
+  G4long seed = time(NULL);
+  G4Random::setTheSeed(seed);
  
   // Construct the default run manager
 #ifdef G4MULTITHREADED

@@ -196,16 +196,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             if (p.x() == 0 && p.z() == 0){}
                 else{
                     G4double angle1 = GetTheta(p.x(), p.z());
-                    G4AnalysisManager::Instance()->FillH1(15, angle1);
+                    G4AnalysisManager::Instance()->FillH1(14, angle1);
                 }
             if (p.x() == 0 && p.y() == 0){}
                 else{
                     G4double angle2 = GetPhi(p.x(), p.y());
-                    G4AnalysisManager::Instance()->FillH1(16, angle2);
+                    G4AnalysisManager::Instance()->FillH1(15, angle2);
                 }
         }
-      
-      if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
+        
+        if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
   }
   
   // neutrons entering liquid Argon pool
@@ -215,6 +215,19 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& endVolume == fDetector->GetLogicPool()) {  
     
       fEventAction->AddNeutronEnter_LArPool();
+      if(fEventAction->GetNNeutronEnter_LArPool()==1){
+            G4ThreeVector q = aStep->GetTrack()->GetMomentumDirection();
+            if (q.x() == 0 && q.z() == 0){}
+            else{
+                G4double angle3 = GetTheta(q.x(), q.z());
+                G4AnalysisManager::Instance()->FillH1(25, angle3);
+            }
+            if (q.x() == 0 && q.y() == 0){}
+            else{
+                G4double angle4 = GetPhi(q.x(), q.y());
+                G4AnalysisManager::Instance()->FillH1(26, angle4);
+            }
+        }
       if(fEventAction->GetNNeutronEnter_LArPool() == 1) G4AnalysisManager::Instance()->FillH1(13,kinEnergy);	
   }
 
@@ -283,8 +296,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
 
 /*                      Gamma Study                                  */
-
-  
 
   //Energy Spectrum for all gamma events
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "gamma"

@@ -151,27 +151,25 @@ void HistoManager::Book()
   ih = analysisManager->CreateH1("h1.11", "Energy Spetrum from Fileter 3", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 13 - energy spectrum of neutrons from thermal absorber
+  //Histogram 12 - energy spectrum of neutrons from thermal absorber
   ih = analysisManager->CreateH1("h1.12", "Energy Spectrum from Thermal Absorber", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 14 - energy spectrum of neutrons entering liquid argon pool
+  //Histogram 13 - energy spectrum of neutrons entering liquid argon pool (from gas buffer)
   ih = analysisManager->CreateH1("h1.13", "Neutrons entering liquid Argon pool", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 15 - Theta angle for neutrons entering the port
-  ih = analysisManager->CreateH1("h1.14", "Theta angle for neutrons entering the port", 360, xmin, xmax, "degree");
+  //Histogram 14 - Theta angle for neutrons entering the port
+  ih = analysisManager->CreateH1("h1.14", "Theta angle for neutrons entering the gas buffer", 360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 16 - Phi angle for neutrons entering the port
-  ih = analysisManager->CreateH1("h1.15", "Phi angle for neutrons entering the port", 360, xmin, xmax, "degree");
+  //Histogram 15 - Phi angle for neutrons entering the port
+  ih = analysisManager->CreateH1("h1.15", "Phi angle for neutrons entering the gas buffer", 360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 17 - DD gun neutron initial momentum angle
+  //Histogram 16 - DD gun neutron initial momentum angle
   ih = analysisManager->CreateH1("h1.16", "DD gun neutrons initial momentum angle", 360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
-
-
 
 
 
@@ -214,39 +212,49 @@ void HistoManager::Book()
   G4double maxE = 3;
   G4double minE = 0;
   
-  //Histogram 18 - Total gamma energy spectrum
+  //Histogram 17 - Total gamma energy spectrum
   ih = analysisManager->CreateH1("h1.17", "Total gamma energy spectrum", nbins, minE, maxE, "MeV");
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 19 - Energy Spectrum of Escaping Gammas
+  //Histogram 18 - Energy Spectrum of Escaping Gammas
   ih = analysisManager->CreateH1("h1.18", "Energy Spectrum of Escaped Gammas", nbins, minE, maxE, "MeV");
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 20 - Energy Spectrum of Gammas Entering Shield
+  //Histogram 19 - Energy Spectrum of Gammas Entering Shield
   ih = analysisManager->CreateH1("h1.19", "Energy Spectrum of Gammas Entering Shield", nbins, minE, maxE, "MeV");
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 21 - Energy Spectrum of Gammas Escaping Shield
+  //Histogram 20 - Energy Spectrum of Gammas Escaping Shield
   ih = analysisManager->CreateH1("h1.20", "Energy Spectrum of Gammas Escaping Shield", nbins, minE, maxE, "MeV");
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 22 - Energy Spectrum of Gammas Entering LAr Pool
+  //Histogram 21 - Energy Spectrum of Gammas Entering LAr Pool
   ih = analysisManager->CreateH1("h1.21", "Energy Spectrum of Gammas Entering LAr Pool", nbins, minE, maxE, "MeV");
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 23 - Energy Spectrum of Gammas Exiting LAr Pool
+  //Histogram 22 - Energy Spectrum of Gammas Exiting LAr Pool
   ih = analysisManager->CreateH1("h1.22", "Energy Spectrum of Gammas Exiting LAr Pool", nbins, minE, maxE, "MeV");
   analysisManager->SetH1Activation(ih, true);
 
     
   //Neutron Radiation Histograms
 
-  //Histogram 24 - Energy Spectrum of Neutrons Entering World
-  ih = analysisManager->CreateH1("h1.23", "Energy Spectrum of Neutrons Entering World", nbins, minE, maxE, "MeV");
+  //Histogram 23 - Energy Spectrum of Neutrons Entering World
+  ih = analysisManager->CreateH1("h1.23", "Energy Spectrum of Escaping Shield", nbins, minE, maxE, "MeV");
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 25 - Energy Spectrum of Neutrons Exiting Shield
-  ih = analysisManager->CreateH1("h1.24", "Energy Spectrum of Gammas Exiting LAr Pool", nbins, minE, maxE, "MeV");
+  //Histogram 24 - Energy Spectrum of Neutrons Exiting Shield
+  ih = analysisManager->CreateH1("h1.24", "Energy Spectrum of Neutrons Entering World", nbins, minE, maxE, "MeV");
+  analysisManager->SetH1Activation(ih, true);
+
+
+  //Neutron Angles into LAr Pool
+  //Histogram 25 - Theta angle for neutrons entering LAr Pool
+  ih = analysisManager->CreateH1("h1.25", "Theta angle for neutrons entering LAr Pool", 360, -180, 180, "degree");
+  analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 26 - Phi angle for neutrons entering LAr Pool
+  ih = analysisManager->CreateH1("h1.26", "Phi angle for neutrons entering LAr Pool", 360, -180, 180, "degree");
   analysisManager->SetH1Activation(ih, true);
 
   
