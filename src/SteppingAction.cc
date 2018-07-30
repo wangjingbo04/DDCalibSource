@@ -188,9 +188,19 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicThermalAbsorber()
   	&& endVolume == fDetector->GetLogicBuffer()) {  
-    
+      
       fEventAction->AddNeutronEnter_ArBuffer();
-      if(fEventAction->GetNNeutronEnter_ArBuffer() == 1){
+      if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
+  }
+  
+  // neutrons entering liquid Argon pool
+  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& postPoint->GetStepStatus() == fGeomBoundary 
+  	&& preVolume == fDetector->GetLogicBuffer()
+  	&& endVolume == fDetector->GetLogicPool()) {  
+    
+      fEventAction->AddNeutronEnter_LArPool();
+      if(fEventAction->GetNNeutronEnter_LArPool() == 1){
             G4ThreeVector p = aStep->GetTrack()->GetMomentumDirection();
             if (p.x() == 0 && p.z() == 0){}
                 else{
@@ -203,17 +213,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                     G4AnalysisManager::Instance()->FillH1(15, angle2);
                 }
         }
-      
-      if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
-  }
-  
-  // neutrons entering liquid Argon pool
-  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
-  	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicBuffer()
-  	&& endVolume == fDetector->GetLogicPool()) {  
-    
-      fEventAction->AddNeutronEnter_LArPool();
       if(fEventAction->GetNNeutronEnter_LArPool() == 1) G4AnalysisManager::Instance()->FillH1(13,kinEnergy);	
   }
 

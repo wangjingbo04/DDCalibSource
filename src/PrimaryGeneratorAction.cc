@@ -90,7 +90,7 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
    G4double theta = DDrandom()*degree;
-   G4AnalysisManager::Instance()->FillH1(17,theta);
+   G4AnalysisManager::Instance()->FillH1(16,theta);
    G4double phi = (G4UniformRand()*2*pi)*degree;
 
    G4double dx, dy, dz;
