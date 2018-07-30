@@ -178,8 +178,6 @@ void HistoManager::Book()
 
 
 
-
-
   
   // histos 2D
   //
@@ -251,6 +249,16 @@ void HistoManager::Book()
 
   //Histogram 25 - Energy Spectrum of Neutrons Exiting Shield
   ih = analysisManager->CreateH1("h1.25", "Energy Spectrum of Gammas Exiting LAr Pool", nbins, minE, maxE, "MeV");
+  analysisManager->SetH1Activation(ih, true);
+
+
+  //Neutron Angles into LAr Pool
+  //Histogram 26 - Theta angle for neutrons entering LAr Pool
+  ih = analysisManager->CreateH1("h1.26", "Theta angle for neutrons entering LAr Pool", 360, -180, 180, "degree");
+  analysisManager->SetH1Activation(ih, true);
+
+  //Histogram 27 - Phi angle for neutrons entering LAr Pool
+  ih = analysisManager->CreateH1("h1.27", "Phi angle for neutrons entering LAr Pool", 360, -180, 180, "degree");
   analysisManager->SetH1Activation(ih, true);
 
   

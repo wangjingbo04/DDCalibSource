@@ -203,8 +203,22 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicPort()
   	&& endVolume == fDetector->GetLogicThermalAbsorber()) {  
-        
+       
       fEventAction->AddNeutronEnter_ThermalAbsorber();
+
+      if(fEventAction->GetNNeutronEnter_ThermalAbsorber()==1){
+            G4ThreeVector q = aStep->GetTrack()->GetMomentumDirection();
+            if (q.x() == 0 && q.z() == 0){}
+            else{
+                G4double angle3 = GetTheta(q.x(), q.z());
+                G4AnalysisManager::Instance()->FillH1(26, angle3);
+            }
+            if (q.x() == 0 && q.y() == 0){}
+            else{
+                G4double angle4 = GetPhi(q.x(), q.y());
+                G4AnalysisManager::Instance()->FillH1(27, angle4);
+            }
+        }
       if(fEventAction->GetNNeutronEnter_ThermalAbsorber() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
   }
   

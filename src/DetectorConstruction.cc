@@ -141,12 +141,12 @@ DetectorConstruction::DetectorConstruction()
   
   // neutron reflector
   fReflectorThickness = 20.0*cm;
-  fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
+  fReflectorHeight = fFilter1Height + fFilter2Height + fModerator_Height + fReflectorThickness;
   fReflectorRadius = fFilter1Radius + fReflectorThickness;
   
   // neutron shield
   fNShieldThickness = 20.0*cm;
-  fNShieldHeight = fReflectorHeight + fFilter3Height + fFilter2Height + fNShieldThickness;
+  fNShieldHeight = fReflectorHeight + fFilter3Height + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
   fDetectorMessenger = new DetectorMessenger(this);
 }
@@ -337,7 +337,7 @@ void DetectorConstruction::DefineMaterials()
   fBufferMater = man->FindOrBuildMaterial("G4_Ar");
   
   // neutron reflectorMater
-  fReflectorMater = man->FindOrBuildMaterial("G4_Pb");
+  fReflectorMater = man->FindOrBuildMaterial("G4_Ni");
   
   // DD generator
   fDDGeneratorMater = Vacuum; 
@@ -439,12 +439,12 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
  
   // Feedthrough port
   G4Tubs* 
-  sPort = new G4Tubs("Port",                                                                           //its name
-                     0,                                                                                //its inner radius
-                     fPortOuterRadius,                                                                 //its outer radius
-                     fPortHeight/2,                                                                      //its height
-                     0.,                                                                               //spanning angle
-                     CLHEP::twopi );                                                                   //spanning angle
+  sPort = new G4Tubs("Port",                                                                            //its name
+                     0,                                                                                 //its inner radius
+                     fPortOuterRadius,                                                                  //its outer radius
+                     fPortHeight/2,                                                                     //its height
+                     0.,                                                                                //spanning angle
+                     CLHEP::twopi );                                                                    //spanning angle
                 
                      G4ThreeVector zTransInsulator(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2);  
 
@@ -452,13 +452,13 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                    fPortMater,                 //its material
                                    "Port_l");                  //its name
 
-  fPhysiPort = new G4PVPlacement(0,                                                               //no rotation
-                                 G4ThreeVector(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2),         //at (0,0,0)
-                                 fLogicPort,                                                      //its logical volume
-                                 "Port_p",                                                        //its name
-                                 fLogicInsulator,                                                 //its mother  volume
-                                 false,                                                           //no boolean operation
-                                 0);                                                              //copy number
+  fPhysiPort = new G4PVPlacement(0,                                                                         //no rotation
+                                 G4ThreeVector(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2),           //at (0,0,0)
+                                 fLogicPort,                                                                //its logical volume
+                                 "Port_p",                                                                  //its name
+                                 fLogicInsulator,                                                           //its mother  volume
+                                 false,                                                                     //no boolean operation
+                                 0);                                                                        //copy number
 
 
 
@@ -610,7 +610,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                         "Reflector_l");                                  //its name
 
   fPhysiReflector = new G4PVPlacement(0,                                                 //no rotation
-                                      G4ThreeVector(0, 0, -fNShieldHeight/2 + fReflectorHeight/2 + fFilter3Height + fFilter2Height),   
+                                      G4ThreeVector(0, 0, -fNShieldHeight/2 + fReflectorHeight/2 + fFilter3Height),   
                                       fLogicReflector ,                                  //its logical volume
                                       "Reflector_p",                                     //its name
                                       fLogicNShield,                                     //its mother  volume
@@ -634,13 +634,13 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       fFilter1Mater,    //material
                                       "Filter1_l");     //name
 
-  fPhysiFilter1 = new G4PVPlacement(0,                                                                //no rotation
-                                    G4ThreeVector(0, 0, -fReflectorHeight/2 + fFilter1Height/2),      //at (0,0,0)
-                                    fLogicFilter1,                                                    //logical volume
-                                    "Filter1_p",                                                      //name
-                                    fLogicReflector,                                                  //mother volume
-                                    false,                                                            //no boolean operation
-                                    0);                                                               //copy number
+  fPhysiFilter1 = new G4PVPlacement(0,                                                                                  //no rotation
+                                    G4ThreeVector(0, 0, -fReflectorHeight/2 + fFilter2Height + fFilter1Height/2),       //at (0,0,0)
+                                    fLogicFilter1,                                                                      //logical volume
+                                    "Filter1_p",                                                                        //name
+                                    fLogicReflector,                                                                    //mother volume
+                                    false,                                                                              //no boolean operation
+                                    0);                                                                                 //copy number
 
 
 
@@ -660,10 +660,10 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       "Filter2_l");               //name
                                
   fPhysiFilter2 = new G4PVPlacement(0,                                                                           //no rotation
-                                    G4ThreeVector(0, 0, -fNShieldHeight/2 + fFilter2Height/2 + fFilter3Height),  //position
+                                    G4ThreeVector(0, 0, -fReflectorHeight/2 + fFilter2Height/2),                 //position
                                     fLogicFilter2,                                                               //logical volume
                                     "Filter2_p",                                                                 //name
-                                    fLogicNShield,                                                               //mother  volume
+                                    fLogicReflector,                                                             //mother  volume
                                     false,                                                                       //no boolean operation
                                     0);                                                                          //copy number
 
@@ -707,13 +707,13 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                         fModerator_Mater,             //materiald
                                         "Degrader_l");                 //name
                                
-  fPhysiModerator = new G4PVPlacement(0,                               //no rotation
-                                      G4ThreeVector(0, 0, -fReflectorHeight/2 + fFilter1Height + fModerator_Height/2),             //at (0,0,0)
-                                      fLogicModerator,                //logical volume
-                                      "Moderator_p",                  //name
-                                      fLogicReflector,                 //mother  volume
-                                      false,                           //no boolean operation
-                                      0);                              //copy number
+  fPhysiModerator = new G4PVPlacement(0,                                                                                                            //no rotation
+                                      G4ThreeVector(0, 0, -fReflectorHeight/2 + fFilter1Height + fFilter2Height + fModerator_Height/2),             //at (0,0,0)
+                                      fLogicModerator,                                                                                              //logical volume
+                                      "Moderator_p",                                                                                                //name
+                                      fLogicReflector,                                                                                              //mother  volume
+                                      false,                                                                                                        //no boolean operation
+                                      0);                                                                                                           //copy number
 
 
 
