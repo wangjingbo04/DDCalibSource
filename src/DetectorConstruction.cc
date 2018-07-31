@@ -319,7 +319,7 @@ void DetectorConstruction::DefineMaterials()
   fWorldMater = Air20;
   
   // insulator
-  fInsulatorMater = LiPoly;
+  fInsulatorMater = man->FindOrBuildMaterial("G4_POLYETHYLENE");
 
   // Feedthrough port
   fPortMater = Air20;
