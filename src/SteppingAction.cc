@@ -134,7 +134,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(fEventAction->GetNNeutronEnter_Filter1() == 1) G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
       Run* run = static_cast<Run*>(
           G4RunManager::GetRunManager()->GetNonConstCurrentRun());
-      if(kinEnergy >= 57*keV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Filter1() == 1) run->AddARCount();
+      if(kinEnergy >= 1*eV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Filter1() == 1) run->AddARCount();
   }
 
 

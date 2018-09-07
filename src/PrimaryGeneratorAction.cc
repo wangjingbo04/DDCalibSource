@@ -89,15 +89,15 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-   G4double theta = DDrandom()*degree;
-   G4AnalysisManager::Instance()->FillH1(17,theta);
+   G4double theta = std::abs(DDrandom()*degree);
+   G4AnalysisManager::Instance()->FillH1(16,theta);
    G4double phi = (G4UniformRand()*2*pi)*degree;
 
    G4double dx, dy, dz;
 
-   dx = std::sin(theta) * std::cos(phi);
-   dy = std::sin(theta) * std::sin(phi);
-   dz = std::cos(theta);
+   dx = std::sin(theta + pi) * std::cos(phi);
+   dy = std::sin(theta + pi) * std::sin(phi);
+   dz = std::cos(theta + pi);
 
    fParticleGun->SetParticleEnergy(2.5*MeV);
    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));

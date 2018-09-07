@@ -61,7 +61,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track*)
 void TrackingAction::UpdateTrackInfo(G4double ekin,G4double trackl,
                                      G4double time)
 {
-  const G4double antiresonance = 57*keV;
+  const G4double antiresonance = 1*eV;
   if (ekin > antiresonance) {
     fNbStep1++; fTrackLen1 = trackl; fTime1 = time;    
   } else {

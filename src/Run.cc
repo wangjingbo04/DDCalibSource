@@ -257,8 +257,8 @@ void Run::EndOfRun()
  G4double meanCollision2  = (G4double)fNbStep2/numberOfEvent;
  G4double meanCollisTota  = meanCollision1 + meanCollision2;
 
- G4cout << "\n   nb of collisions    E>57*keV= " << meanCollision1
-        << "      E<57*keV= " << meanCollision2
+ G4cout << "\n   nb of collisions    E>1*eV= " << meanCollision1
+        << "      E<1*eV= " << meanCollision2
         << "       total= " << meanCollisTota;        
         
  G4double meanTrackLen1  = fTrackLen1/numberOfEvent;
@@ -266,8 +266,8 @@ void Run::EndOfRun()
  G4double meanTrackLtot  =  meanTrackLen1 + meanTrackLen2;  
 
  G4cout 
-   << "\n   track length        E>57*keV= " << G4BestUnit(meanTrackLen1,"Length")
-   << "  E<57*keV= " << G4BestUnit(meanTrackLen2, "Length")
+   << "\n   track length        E>1*eV= " << G4BestUnit(meanTrackLen1,"Length")
+   << "  E<1*eV= " << G4BestUnit(meanTrackLen2, "Length")
    << "   total= " << G4BestUnit(meanTrackLtot, "Length");   
    
  G4double meanTime1  = fTime1/numberOfEvent;
@@ -275,8 +275,8 @@ void Run::EndOfRun()
  G4double meanTimeTo = meanTime1 + meanTime2;  
 
  G4cout 
-   << "\n   time of flight      E>57*keV= " << G4BestUnit(meanTime1,"Time")
-   << "  E<57*keV= " << G4BestUnit(meanTime2, "Time")
+   << "\n   time of flight      E>1*eV= " << G4BestUnit(meanTime1,"Time")
+   << "  E<1*eV= " << G4BestUnit(meanTime2, "Time")
    << "   total= " << G4BestUnit(meanTimeTo, "Time") << G4endl;   
  
  //particles count

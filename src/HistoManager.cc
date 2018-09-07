@@ -68,12 +68,12 @@ void HistoManager::Book()
   const G4String id[] = {"0","N collision","Track length","ToF","N collision","Track length","ToF","E at all collision","E degrader1","E degrader2","E filter","E LAr pool"};
   const G4String title[] = 
                 { "dummy",                                           //0
-                  "incident neutron: nb of collisions above 57 keV",   //1
-                  "incident neutron: total track length above 57 keV", //2
-                  "incident neutron: time of flight above 57 keV",     //3
-                  "incident neutron: nb of collisions below 57 keV",   //4
-                  "incident neutron: total track length below 57 keV", //5
-                  "incident neutron: time of flight below 57 keV",     //6
+                  "incident neutron: nb of collisions above 1 eV",   //1
+                  "incident neutron: total track length above 1 eV", //2
+                  "incident neutron: time of flight above 1 eV",     //3
+                  "incident neutron: nb of collisions below 1 eV",   //4
+                  "incident neutron: total track length below 1 eV", //5
+                  "incident neutron: time of flight below 1 eV",     //6
                   "incident neutron: energy distribution for all steps", //7
                   "neutron entering degrader1",                				 //8
                   "neutron entering degrader2",                				 //9
@@ -103,28 +103,28 @@ void HistoManager::Book()
   G4double xmin = -180.;
   G4double xmax = 180.; 
 
-  //Histogram 0 - nb of collisions above 57 keV
-  G4int ih = analysisManager->CreateH1("h1.0", "incident neutron: nb of collisions above 57 keV", nbins, vmin, vmax);
+  //Histogram 0 - nb of collisions above 1 eV
+  G4int ih = analysisManager->CreateH1("h1.0", "incident neutron: nb of collisions above 1 eV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 1 - total track length above 57 keV
-  ih = analysisManager->CreateH1("h1.1", "incident neutron: total track length above 57 keV", nbins, vmin, vmax);
+  //Histogram 1 - total track length above 1 eV
+  ih = analysisManager->CreateH1("h1.1", "incident neutron: total track length above 1 eV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 2 - time of light above 57 keV
-  ih = analysisManager->CreateH1("h1.2", "incident neutron: time of flight above 57 keV", nbins, vmin, vmax);
+  //Histogram 2 - time of light above 1 eV
+  ih = analysisManager->CreateH1("h1.2", "incident neutron: time of flight above 1 eV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 3 - nb of collisions bellow 57 keV
-  ih = analysisManager->CreateH1("h1.3", "incident neutron: nb of collisions below 57 keV", nbins, vmin, vmax);
+  //Histogram 3 - nb of collisions bellow 1 eV
+  ih = analysisManager->CreateH1("h1.3", "incident neutron: nb of collisions below 1 eV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 4 - total track length below 57 keV
-  ih = analysisManager->CreateH1("h1.4", "incident neutron: total track length below 57 keV", nbins, vmin, vmax);
+  //Histogram 4 - total track length below 1 eV
+  ih = analysisManager->CreateH1("h1.4", "incident neutron: total track length below 1 eV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 5 - time of flight below 57 keV
-  ih = analysisManager->CreateH1("h1.5", "incident neutron: time of flight below 57 keV", nbins, vmin, vmax);
+  //Histogram 5 - time of flight below 1 eV
+  ih = analysisManager->CreateH1("h1.5", "incident neutron: time of flight below 1 eV", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
   //Histogram 6 - energy distribution for all steps

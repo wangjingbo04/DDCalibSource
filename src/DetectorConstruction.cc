@@ -414,48 +414,52 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 
   // insulator
-  
+
   G4Box*
-  sInsulator = new G4Box("Insulator",                                                 //its name
-                         fInsulatorLength/2,fInsulatorWidth/2, fInsulatorHeight/2);   //its dimensions
+  sInsulator1 = new G4Box("Insulator1",                         //its name
+                   fInsulatorLength/2,fInsulatorWidth/2, fInsulatorHeight/2);   //its dimensions
+  G4Tubs*
+  sInsulator2 = new G4Tubs("Insulator2",                         //its name
+                   0, fPortOuterRadius, fInsulatorThickness/2, 0.,CLHEP::twopi );   //its dimensions
+  G4ThreeVector zTransInsulator(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2); 
+  G4SubtractionSolid* sInsulator =
+  new G4SubtractionSolid("Insulator1-Insulator2", sInsulator1, sInsulator2, 0, zTransInsulator); 
   
   fLogicInsulator = new G4LogicalVolume(sInsulator,                     //its shape
-                                        fInsulatorMater,                //its material
-                                        "Insulator_l");                 //its name
+                             fInsulatorMater,                 //its material
+                             "Insulator_l");     //its name
 
   fPhysiInsulator = new G4PVPlacement(0,                          //no rotation
-                                      G4ThreeVector(0, 0, 0),     //its placement
-                                      fLogicInsulator,            //its logical volume
-                                      "Insulator_p",              //its name
-                                      fLWorld,                    //its mother  volume
-                                      false,                      //no boolean operation
-                                      0);                         //copy number
-
-
+                            G4ThreeVector(0, 0, 0),            //at (0,0,0)
+                            fLogicInsulator,                      //its logical volume
+                            "Insulator_p",      //its name
+                            fLWorld,                          //its mother  volume
+                            false,                      //no boolean operation
+                            0);                         //copy number
 
  
-  // Feedthrough port
-  G4Tubs* 
-  sPort = new G4Tubs("Port",                                                                            //its name
-                     0,                                                                                 //its inner radius
-                     fPortOuterRadius,                                                                  //its outer radius
-                     fPortHeight/2,                                                                     //its height
-                     0.,                                                                                //spanning angle
-                     CLHEP::twopi );                                                                    //spanning angle
-                
-                     G4ThreeVector zTransInsulator(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2);  
-
-  fLogicPort = new G4LogicalVolume(sPort,                      //its shape
-                                   fPortMater,                 //its material
-                                   "Port_l");                  //its name
-
-  fPhysiPort = new G4PVPlacement(0,                                                                         //no rotation
-                                 G4ThreeVector(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2),           //at (0,0,0)
-                                 fLogicPort,                                                                //its logical volume
-                                 "Port_p",                                                                  //its name
-                                 fLogicInsulator,                                                           //its mother  volume
-                                 false,                                                                     //no boolean operation
-                                 0);                                                                        //copy number
+//  // Feedthrough port
+//  G4Tubs* 
+//  sPort = new G4Tubs("Port",                                                                            //its name
+//                     0,                                                                                 //its inner radius
+//                     fPortOuterRadius,                                                                  //its outer radius
+//                     fPortHeight/2,                                                                     //its height
+//                     0.,                                                                                //spanning angle
+//                     CLHEP::twopi );                                                                    //spanning angle
+//                
+//                     G4ThreeVector zTransInsulator(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2);  
+//
+//  fLogicPort = new G4LogicalVolume(sPort,                      //its shape
+//                                   fPortMater,                 //its material
+//                                   "Port_l");                  //its name
+//
+//  fPhysiPort = new G4PVPlacement(0,                                                                         //no rotation
+//                                 G4ThreeVector(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2),           //at (0,0,0)
+//                                 fLogicPort,                                                                //its logical volume
+//                                 "Port_p",                                                                  //its name
+//                                 fLogicInsulator,                                                           //its mother  volume
+//                                 false,                                                                     //no boolean operation
+//                                 0);                                                                        //copy number
 
 
 
@@ -576,13 +580,12 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                               "ThermalAbsorber_l");             //name
                                
   fPhysiThermalAbsorber = new G4PVPlacement(0,                                                                   //no rotation
-                                            G4ThreeVector(0, 0, -fPortHeight/2 + fThermalAbsorberHeight/2),  
+                                            G4ThreeVector(0, 0, fInsulatorHeight/2 - fPortHeight + fThermalAbsorberHeight/2),  
                                             fLogicThermalAbsorber,                                               //logical volume
                                             "ThermalAbsorber_p",                                                 //name
-                                            fLogicPort,                                                          //mother  volume
+                                            fLWorld,                                                          //mother  volume
                                             false,                                                               //no boolean operation
                                             0);                                                                  //copy number help
-
 
 
   
@@ -606,8 +609,6 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       fLogicNShield,                                     //its mother  volume
                                       false,                                             //no boolean operation
                                       0);                                                //copy number
-
-
 
                  
   // Filter 1                        

@@ -108,6 +108,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume* GetLogicWorld()           {return fLWorld;};   
      G4LogicalVolume* GetLogicPool()            {return fLogicPool;}; 
      G4LogicalVolume* GetLogicBuffer()          {return fLogicBuffer;}; 
+     G4LogicalVolume* GetLogicCryostat()          {return fLogicCryostat;};
      G4LogicalVolume* GetLogicPort()            {return fLogicPort;}; 
      G4LogicalVolume* GetLogicShield()          {return fLogicNShield;}; 
      G4LogicalVolume* GetLogicReflector()       {return fLogicReflector;};  
