@@ -101,6 +101,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
    fParticleGun->SetParticleEnergy(2.5*MeV);
    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));
+   //fParticleGun->SetParticleEnergy(57*keV);
+   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1));
    fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
@@ -113,9 +115,6 @@ void PrimaryGeneratorAction::UpdateGunPosition() {
                + fDetector->GetFilter1Height() + fDetector->GetModeratorHeight() - fDetector->GetDDGeneratorHeight() + 10.0*cm;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));	
 }
-
-
-
 
 
 void PrimaryGeneratorAction::populateProbDist(){

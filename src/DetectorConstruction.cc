@@ -91,7 +91,13 @@ DetectorConstruction::DetectorConstruction()
   fBufferWidth      = 14.5*m;
   fBufferHeight      = 0.8*m;
   
-  // polypropylene insulator
+    // stainless steel cryostat
+  fCryostatThickness = 1.2*mm;
+  fCryostatLength = fPoolLength + 2*fCryostatThickness;
+  fCryostatWidth = fPoolWidth + 2*fCryostatThickness;
+  fCryostatHeight= fPoolHeight + fBufferHeight + 2*fCryostatThickness;
+  
+  // Polyethylene insulator
   fInsulatorThickness = 90*cm;
   fInsulatorLength = fPoolLength + 2*fCryostatThickness + 2*fInsulatorThickness;
   fInsulatorWidth = fPoolWidth + 2*fCryostatThickness + 2*fInsulatorThickness;
@@ -99,15 +105,15 @@ DetectorConstruction::DetectorConstruction()
 
   // 3rd Filter
   fFilter3Height        = 10.0*cm;
-  fFilter3Radius_top    = 20.*cm;
-  fFilter3Radius_bottom = 30.*cm;
+  fFilter3Radius_top    = 14.*cm;
+  fFilter3Radius_bottom = 14.*cm;
   
   // Feedthrough port
   fPortHeight = fInsulatorThickness;
   fPortOuterRadius = 35.0*cm;
 
   // Thermal neutron absorber
-  fThermalAbsorberHeight = 5.*cm;
+  fThermalAbsorberHeight = 1.*cm;
   fThermalAbsorberRadius = fPortOuterRadius;
 
 //  //Feedthrough port reflector
@@ -115,12 +121,6 @@ DetectorConstruction::DetectorConstruction()
 //  fPortRefThickness = 3.*cm;
 //  fPortRefOuterRadius = fPortOuterRadius;
 //  fPortRefInnerRadius =  fPortOuterRadius - fPortRefThickness;
-  
-  // stainless steel cryostat
-  fCryostatThickness = 1.0*cm;
-  fCryostatLength = fPoolLength + 2*fCryostatThickness;
-  fCryostatWidth = fPoolWidth + 2*fCryostatThickness;
-  fCryostatHeight= fPoolHeight + fBufferHeight + 2*fCryostatThickness;
   
   // neutron DD generator
   fDDGeneratorHeight = 50.0*cm;
@@ -137,7 +137,7 @@ DetectorConstruction::DetectorConstruction()
   // 2nd Filter
   fFilter2Height = 10*cm;
   fFilter2Radius_top = 14.0*cm;
-  fFilter2Radius_bottom = 20.*cm;
+  fFilter2Radius_bottom = 14*cm;
   
   // neutron reflector
   fReflectorThickness = 10.0*cm;
@@ -727,6 +727,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   
   G4VisAttributes* VisAttBuffer= new G4VisAttributes(G4Colour(0.0, 0.0, 1.0));
   fLogicBuffer->SetVisAttributes(VisAttBuffer);
+  
+  G4VisAttributes* VisAttCryostat= new G4VisAttributes(G4Colour(0.0, 1.0, 1.0));
+  fLogicCryostat->SetVisAttributes(VisAttCryostat);
   
   G4VisAttributes* VisAttFilter3= new G4VisAttributes(G4Colour(1.0, 0.0, 1.0));
   fLogicFilter3->SetVisAttributes(VisAttFilter3);
