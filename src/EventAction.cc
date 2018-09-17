@@ -79,6 +79,9 @@ void EventAction::BeginOfEventAction(const G4Event*)
   fNNeutronEnter_Port = 0;  
   fNNeutronExit_Port = 0; 
   
+  fNNeutronEnter_Cryostat = 0;
+  fNNeutronExit_Cryostat = 0;
+  
   fNNeutronEnter_ArBuffer = 0;  
   fNNeutronExit_ArBuffer = 0; 
   

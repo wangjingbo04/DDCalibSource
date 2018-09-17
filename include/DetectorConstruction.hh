@@ -95,6 +95,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4VPhysicalVolume* GetWorld()              {return fPWorld;};   
      G4VPhysicalVolume* GetPhysiPool()          {return fPhysiPool;};  
      G4VPhysicalVolume* GetPhysiBuffer()        {return fPhysiBuffer;}; 
+     G4VPhysicalVolume* GetPhysiCryostat()        {return fPhysiCryostat;}; 
      G4VPhysicalVolume* GetPhysiPort()          {return fPhysiPort;}; 
      G4VPhysicalVolume* GetPhysif()             {return fPhysiNShield;};  
      G4VPhysicalVolume* GetPhysiDDGenerator()   {return fPhysiDDGenerator;};

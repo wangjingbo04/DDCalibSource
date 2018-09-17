@@ -86,7 +86,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     fTrackingAction->UpdateTrackInfo(ekin,trackl,time);
     G4AnalysisManager::Instance()->FillH1(6,ekin); // fill the energy of each step to the histogram
   }
-  
 
   /*
   // neutrons from generator to 1st moderator
@@ -108,7 +107,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& endVolume != fDetector->GetLogicDDGenerator()) {
     
       fEventAction->AddNeutronExit_Generator();
-      if(fEventAction->GetNNeutronExit_Generator() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
+      if(fEventAction->GetNNeutronExit_Generator() == 1) std::cout<<"existing generator"<<std::endl;G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
   }
   
 
@@ -122,7 +121,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
          run->AddCollisionsMod1();
   }
-
   
   // neutrons from moderator to filter 1
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
@@ -137,8 +135,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(kinEnergy >= 1*eV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Filter1() == 1) run->AddARCount();
   }
 
-
-
   //Number of Collisions in filter 1
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
    && fEventAction->GetNNeutronEnter_Filter1()== 1
@@ -148,8 +144,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
          run->AddCollisionsF1();
   }
-
-
   
   // neutrons from filter 1 to filter 2
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
@@ -182,12 +176,21 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         
         if(fEventAction->GetNNeutronEnter_ThermalAbsorber() == 1) G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
   }
-
   
-  // neutrons from thermal absorber to gas argon buffer
+  // neutrons from Li absorber to cryostat memberane
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicThermalAbsorber()
+  	&& preVolume == fDetector->GetLogicThermalAbsorber() 
+  	&& endVolume == fDetector->GetLogicCryostat()) {
+        fEventAction->AddNeutronEnter_Cryostat();        
+        if(fEventAction->GetNNeutronEnter_Cryostat() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
+  }
+
+  
+  // neutrons from cryostat memberane to gas argon buffer
+  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& postPoint->GetStepStatus() == fGeomBoundary 
+  	&& preVolume == fDetector->GetLogicCryostat()
   	&& endVolume == fDetector->GetLogicBuffer()) {  
     
       fEventAction->AddNeutronEnter_ArBuffer();
@@ -196,16 +199,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             if (p.x() == 0 && p.z() == 0){}
                 else{
                     G4double angle1 = GetTheta(p.x(), p.z());
-                    G4AnalysisManager::Instance()->FillH1(14, angle1);
+                    G4AnalysisManager::Instance()->FillH1(15, angle1);
                 }
             if (p.x() == 0 && p.y() == 0){}
                 else{
                     G4double angle2 = GetPhi(p.x(), p.y());
-                    G4AnalysisManager::Instance()->FillH1(15, angle2);
+                    G4AnalysisManager::Instance()->FillH1(16, angle2);
                 }
         }
         
-        if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
+        if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(13,kinEnergy);
   }
   
   // neutrons entering liquid Argon pool
@@ -220,15 +223,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             if (q.x() == 0 && q.z() == 0){}
             else{
                 G4double angle3 = GetTheta(q.x(), q.z());
-                G4AnalysisManager::Instance()->FillH1(25, angle3);
+                G4AnalysisManager::Instance()->FillH1(26, angle3);
             }
             if (q.x() == 0 && q.y() == 0){}
             else{
                 G4double angle4 = GetPhi(q.x(), q.y());
-                G4AnalysisManager::Instance()->FillH1(26, angle4);
+                G4AnalysisManager::Instance()->FillH1(27, angle4);
             }
         }
-      if(fEventAction->GetNNeutronEnter_LArPool() == 1) G4AnalysisManager::Instance()->FillH1(13,kinEnergy);	
+      if(fEventAction->GetNNeutronEnter_LArPool() == 1) G4AnalysisManager::Instance()->FillH1(14,kinEnergy);	
   }
 
   
@@ -301,7 +304,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "gamma"
    && postPoint->GetStepStatus() == fGeomBoundary){
     
-     G4AnalysisManager::Instance()->FillH1(17, kinEnergy);
+     G4AnalysisManager::Instance()->FillH1(18, kinEnergy);
   }
 
   //Energy Spectrum of Escaped gammas
@@ -311,7 +314,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
    && endVolume == fDetector->GetLogicWorld()
    && fEventAction->GetGammaEnter_World() == 0){
   
-     G4AnalysisManager::Instance()->FillH1(18, kinEnergy);
+     G4AnalysisManager::Instance()->FillH1(19, kinEnergy);
      fEventAction->AddGammaEnter_World();
   }
 
@@ -322,7 +325,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
    && endVolume == fDetector->GetLogicShield()
    && fEventAction->GetGammaEnter_Shield() == 0){
 
-     G4AnalysisManager::Instance()->FillH1(19, kinEnergy);
+     G4AnalysisManager::Instance()->FillH1(20, kinEnergy);
      fEventAction->AddGammaEnter_Shield();
   }
 
@@ -333,7 +336,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
    && endVolume == fDetector->GetLogicWorld()
    && fEventAction->GetGammaEnter_Shield() == 0){
 
-     G4AnalysisManager::Instance()->FillH1(20, kinEnergy);
+     G4AnalysisManager::Instance()->FillH1(21, kinEnergy);
      fEventAction->AddGammaExit_Shield();
   }
 
@@ -344,7 +347,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
    && endVolume == fDetector->GetLogicPool()
    && fEventAction->GetGammaEnter_Shield() == 0){
 
-     G4AnalysisManager::Instance()->FillH1(21, kinEnergy);
+     G4AnalysisManager::Instance()->FillH1(22, kinEnergy);
      fEventAction->AddGammaExit_Shield();
   }
 
@@ -355,7 +358,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
    && endVolume != fDetector->GetLogicPool()
    && fEventAction->GetGammaEnter_Shield() == 0){
 
-     G4AnalysisManager::Instance()->FillH1(22, kinEnergy);
+     G4AnalysisManager::Instance()->FillH1(23, kinEnergy);
      fEventAction->AddGammaExit_Shield();
   }
 
@@ -370,7 +373,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
    && endVolume == fDetector->GetLogicWorld()
    && fEventAction->GetNNeutronExit_Shield() == 0){
 
-     G4AnalysisManager::Instance()->FillH1(23, kinEnergy);
+     G4AnalysisManager::Instance()->FillH1(24, kinEnergy);
      fEventAction->AddNeutronExit_Shield();
   }
 
@@ -381,7 +384,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
    && endVolume == fDetector->GetLogicWorld()
    && fEventAction->GetNNeutronEnter_World() == 0){
 
-     G4AnalysisManager::Instance()->FillH1(24, kinEnergy);
+     G4AnalysisManager::Instance()->FillH1(25, kinEnergy);
      fEventAction->AddNeutronEnter_World();
   }
 

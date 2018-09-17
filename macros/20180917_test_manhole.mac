@@ -1,0 +1,58 @@
+#TEST
+/random/setSeeds 575841909 838392900
+/control/verbose 2
+/run/verbose 2
+/tracking/verbose 0
+/run/initialize
+/process/list
+/gun/particle neutron
+/gun/energy 2.5 MeV
+#==================== Analysis ========================
+/analysis/setFileName test_manhole
+/analysis/h1/set 0  100  0. 100. none	#nb colli >57keV
+/analysis/h1/set 1  100  0. 100. cm	#track len >57keV
+/analysis/h1/set 2  100  0. 5. us	#time of flight >57keV
+/analysis/h1/set 3  100  0. 1000. none	#nb colli <57keV
+/analysis/h1/set 4  100  0. 500. cm	#track len <57keV
+/analysis/h1/set 5  100  0. 1000. us	#time of flight <57keV
+/analysis/h1/set 6  3000  0. 3 MeV	#step energy of the primary neutron
+/analysis/h1/set 7  3000  0. 3 MeV #neutron entering moderator
+/analysis/h1/set 8  3000  0. 3 MeV #neutron entering filter 1
+/analysis/h1/set 9  3000  0. 3 MeV #neutron entering filter 2
+/analysis/h1/set 10  3000  0. 3 MeV #neutron entering filter 3
+/analysis/h1/set 11  3000  0. 3 MeV #neutron entering thermal absorber
+/analysis/h1/set 12  3000  0. 3 MeV #neutron entering cryostat membrane
+/analysis/h1/set 13  3000  0. 3 MeV #neutron entering argon gas buffer
+/analysis/h1/set 14  3000  0. 3 MeV #neutron entering lAr pool
+/analysis/h1/set 15  360  -180 180 degree #Angular Distribution in the x-z plane
+/analysis/h1/set 16  360  -180 180 degree #Angular Distribution in the x-y plane
+/analysis/h1/set 17  360  -180 180 degree #DD gun initial momentum angle distribution
+/analysis/h2/set 0 100 -50 50 cm none linear 100 -50 50 cm none linear #neutron capture position in the moderator y:x (top view)
+/analysis/h2/set 1 100 -50 50 cm none linear 100 550 650 cm none linear #neutron capture position in the moderator z:x (side view)
+/analysis/h2/set 2 100 -50 50 cm none linear 100 -50 50 cm none linear #neutron capture position in filter 1 y:x (top view)
+/analysis/h2/set 3 100 -50 50 cm none linear 100 520 580 cm none linear #neutron capture position in filter 1:x (side view)
+/analysis/h2/set 4 50 -15 15 cm none linear 50 -15 15 cm none linear #neutron capture position in filter 2 y:x (top view)
+/analysis/h2/set 5 50 -15 15 cm none linear 100 480 550 cm none linear #neutron capture position in filter 2 z:x (side view)
+/analysis/h2/set 6 50 -15 15 cm none linear 100 480 550 cm none linear #neutron capture position in filter 3 z:x (side view)
+/analysis/h2/set 7 50 -15 15 cm none linear 100 480 550 cm none linear #neutron capture position in filter 3 z:x (side view)
+/analysis/h2/set 8 100 -30 30 m none linear 100 -8 8 m none linear #neutron capture position in LAr TPC y:x (top view)
+/analysis/h2/set 9 100 -30 30 m none linear 100 -8 8 m none linear #neutron capture position in LAr TPC z:x (side view)
+#=======================================================
+/ddsource/det/SetModeratorMaterial G4_Fe
+/ddsource/det/SetReflectorMaterial G4_Ni
+/ddsource/det/SetFilter1Material G4_S
+/ddsource/det/SetFilter2Material G4_S
+/ddsource/det/SetFilter3Material G4_S
+#/ddsource/det/SetAbsorberMaterial G4_Li
+
+/ddsource/det/SetReflectorThickness 10 cm
+/ddsource/det/setModeratorHeight 62 cm
+/ddsource/det/setFilter1Height 2 cm
+/ddsource/det/setFilter2Height 20 cm
+/ddsource/det/setFilter3Height 2 cm
+
+#/primary/updateGunPosition
+
+/run/printProgress 1
+#
+/run/beamOn 10000
