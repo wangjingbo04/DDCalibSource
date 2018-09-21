@@ -70,13 +70,13 @@ void ActionInitialization::Build() const
   EventAction* event = new EventAction();
   SetUserAction(event);
   
-  TrackingAction* trackingAction = new TrackingAction();
+  TrackingAction* trackingAction = new TrackingAction(fDetector, event);
   SetUserAction(trackingAction);
   
   SteppingAction* steppingAction = new SteppingAction(fDetector, trackingAction, event);
   SetUserAction(steppingAction);
   
-  StackingAction* stackingAction = new StackingAction(fDetector);
+  StackingAction* stackingAction = new StackingAction(fDetector, event);
   SetUserAction(stackingAction);    
 }  
 

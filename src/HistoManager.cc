@@ -174,7 +174,7 @@ void HistoManager::Book()
   //Histogram 16 - DD gun neutron initial momentum angle
   ih = analysisManager->CreateH1("h1.17", "DD gun neutrons initial momentum angle", 360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
-
+  
 
 
 
@@ -260,6 +260,55 @@ void HistoManager::Book()
   //Histogram 26 - Phi angle for neutrons entering LAr Pool
   ih = analysisManager->CreateH1("h1.27", "Phi angle for neutrons entering LAr Pool", 360, -180, 180, "degree");
   analysisManager->SetH1Activation(ih, true);
+  
+  
+  
+  // gamma cascade simulation
+  ih = analysisManager->CreateH1("h1.28","All primary emission spectrum (MeV)", nbins, vmin, vmax);
+  analysisManager->SetH1Activation(ih, true);  
+  
+  ih = analysisManager->CreateH1("h1.29","energy spectrum (%): e+ e-", 
+                       nbins, vmin, vmax);
+  analysisManager->SetH1Activation(ih, true);
+  
+  ih = analysisManager->CreateH1("h1.30","energy spectrum (%): gamma",
+                       nbins, vmin, vmax);
+  analysisManager->SetH1Activation(ih, true);
+  
+  
+  // nTuples
+  //       
+  analysisManager->CreateNtuple("PrimaryParticles", "Primary Particles"); //id = 0
+  analysisManager->CreateNtupleDColumn("x");       //column 0
+  analysisManager->CreateNtupleDColumn("y");       //column 1
+  analysisManager->CreateNtupleDColumn("z");       //column 2
+  analysisManager->CreateNtupleDColumn("energy");       //column 3
+  analysisManager->CreateNtupleDColumn("x_det");       //column 4
+  analysisManager->CreateNtupleDColumn("y_det");       //column 5
+  analysisManager->CreateNtupleDColumn("z_det");       //column 6
+  analysisManager->FinishNtuple();
+  
+  analysisManager->CreateNtuple("SecondaryParticles", "Secondary Particles"); //id = 1
+  analysisManager->CreateNtupleDColumn("pid");       //column 0
+  analysisManager->CreateNtupleDColumn("x");       //column 1
+  analysisManager->CreateNtupleDColumn("y");       //column 2
+  analysisManager->CreateNtupleDColumn("z");       //column 3
+  analysisManager->CreateNtupleDColumn("energy");    //column 4
+  analysisManager->CreateNtupleDColumn("time");      //column 5
+  analysisManager->CreateNtupleDColumn("weight");    //column 6
+  analysisManager->FinishNtuple();
+  
+  analysisManager->CreateNtuple("EnergyDeposition", "Energy depositions"); // Id = 2
+  analysisManager->CreateNtupleDColumn("energy");    //column 0
+  analysisManager->CreateNtupleDColumn("time");      //column 1
+  analysisManager->CreateNtupleDColumn("weight");    //column 2
+  analysisManager->FinishNtuple();
+  
+  analysisManager->CreateNtuple("Event", "Event"); // Id = 3
+  analysisManager->CreateNtupleIColumn("NumberOfElectrons");    //column 0
+  analysisManager->FinishNtuple();
+  
+  analysisManager->SetNtupleActivation(true);       
 
   
 

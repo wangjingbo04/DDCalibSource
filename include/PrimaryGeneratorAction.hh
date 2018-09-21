@@ -42,7 +42,9 @@
 #include "globals.hh"
 #include "DetectorConstruction.hh"
 #include "G4GenericMessenger.hh"
+#include "G4HEPEvtInterface.hh"
 
+class G4VPrimaryGenerator;
 class G4Event;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -60,6 +62,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
   private:
     G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
+    G4VPrimaryGenerator* HEPEvt;				//pointer to G4HEPEvtInterface
     DetectorConstruction* fDetector;       //pointer to the detector class
     G4GenericMessenger* fMessenger;      //pinter to generic messanger class
     G4double* probDist;

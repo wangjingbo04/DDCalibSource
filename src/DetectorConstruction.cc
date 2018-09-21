@@ -86,6 +86,9 @@ DetectorConstruction::DetectorConstruction()
   fPoolWidth      = 14.5*m;
   fPoolHeight      = 12.0*m;
   
+  // Lar region
+  fPoolRegion = new G4Region("LArPool_Region");
+  
   // DUNE Gas argon buffer
   fBufferLength      = 58.0*m;
   fBufferWidth      = 14.5*m;
@@ -522,9 +525,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                  fLogicCryostat,                                                                //its mother  volume
                                  false,                                                                         //no boolean operation
                                  0);                                                                            //copy number
-
-
-
+	// add to region
+	fLogicPool->SetRegionRootFlag(true);
+	fPoolRegion->AddRootLogicalVolume(fLogicPool);
   	                        
   
   // gas argon buffer
@@ -963,8 +966,6 @@ void DetectorConstruction::GetPortRefMaterial(){
 
     G4cout << "Port reflector material is " << fPortRefMater->GetName() << G4endl;
 }
-
-
 
 void DetectorConstruction::SetReflectorMaterial(G4String materialChoice)
 {

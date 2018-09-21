@@ -37,16 +37,18 @@
 #include "G4UserStackingAction.hh"
 #include "globals.hh"
 #include "DetectorConstruction.hh"
+#include "EventAction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class StackingAction : public G4UserStackingAction
 {
   public:
-    StackingAction(DetectorConstruction* det);
+    StackingAction(DetectorConstruction* det, EventAction* evt);
    ~StackingAction();
   private:
   	DetectorConstruction* fDetector;  
+  	EventAction* fEvent;
      
     virtual G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track*);
 };

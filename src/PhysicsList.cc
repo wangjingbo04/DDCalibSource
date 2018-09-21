@@ -50,6 +50,10 @@
 #include "G4IonINCLXXPhysics.hh"
 #include "GammaPhysics.hh"
 
+#include "G4EmLivermorePhysics.hh"
+#include "G4EmPenelopePhysics.hh"
+#include "G4EmLowEPPhysics.hh"
+
 // particles
 
 #include "G4BosonConstructor.hh"
@@ -59,6 +63,8 @@
 #include "G4BaryonConstructor.hh"
 #include "G4IonConstructor.hh"
 #include "G4ShortLivedConstructor.hh"
+#include "G4Region.hh"
+#include "G4RegionStore.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -78,7 +84,11 @@ PhysicsList::PhysicsList()
   RegisterPhysics( new NeutronHPphysics("neutronHP")); 
   
   // EM physics
-  RegisterPhysics(new EmStandardPhysics());
+  //RegisterPhysics(new EmStandardPhysics());
+  
+  // Low E Physics
+  RegisterPhysics(new G4EmLivermorePhysics());
+  //RegisterPhysics(new G4EmPenelopePhysics());
   
   // Decay
   //RegisterPhysics(new G4DecayPhysics());
@@ -139,11 +149,31 @@ void PhysicsList::ConstructParticle()
 
 void PhysicsList::SetCuts()
 {
-  SetCutValue(10*mm, "proton");
-  SetCutValue(10*mm, "e-");
-  SetCutValue(10*mm, "e+");
-  SetCutValue(0.*eV, "gamma"); 
+	SetCutsWithDefault();
+//  SetCutValue(1*mm, "proton");
+//  SetCutValue(1*nm, "e-");
+//  SetCutValue(1*mm, "e+");
+//  //SetCutValue(6*MeV, "e-");
+//  //SetCutValue(6*MeV, "e+");
+//  SetCutValue(0.*eV, "gamma"); 
   SetCutValue(0.*eV, "neutron"); 
+  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(250*eV, 1*GeV); 
+  
+  
+  // Production thresholds for detector regions
+  G4Region* region;
+  G4String regName;
+  G4ProductionCuts* cuts;
+  regName = "LArPool_Region";
+  region = G4RegionStore::GetInstance()->GetRegion(regName);
+  if(region!=0){
+    cuts = new G4ProductionCuts;
+    cuts->SetProductionCut(1.0*nm, "e-"); 
+    cuts->SetProductionCut(1.0*nm, "e+"); 
+    cuts->SetProductionCut(1.0*mm, "gamma"); 
+    region->SetProductionCuts(cuts);
+  }
+  else std::cout<<"Can't find region!"<<std::endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

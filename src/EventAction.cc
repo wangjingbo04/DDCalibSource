@@ -59,6 +59,8 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
+  fEdep1 = fEdep2 = fWeight1 = fWeight2 = 0.;
+  
   fNNeutronExit_Generator = 0;
   
   fNNeutronEnter_Moderator = 0;  
@@ -96,6 +98,15 @@ void EventAction::BeginOfEventAction(const G4Event*)
  
   fNNeutronExit_Shield = 0;
   fNNeutronEnter_World = 0;
+  
+//  if(fElectronList!=NULL){
+//    for(G4int i=0; i<fElectronList->size(); i++) {
+//      delete fElectronList->at(i);  fElectronList->at(i) = 0;
+//      fElectronList->clear();
+//    }
+//  }
+  
+  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -103,7 +114,35 @@ void EventAction::BeginOfEventAction(const G4Event*)
 void EventAction::EndOfEventAction(const G4Event* evt)
 {
 //----------------------------------------------------------------- 
+   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+   	
+   //count electrons created in this event
+   //G4cout<< "\n Number of electron tracks in this event = "<<fElectronList.size()<< G4endl;
+   analysisManager->FillNtupleIColumn(3, 0, fElectronList.size());
+   analysisManager->AddNtupleRow(3);   
 }
+
+void EventAction::AddEdep(G4int iVol, G4double edep,
+                                      G4double time, G4double weight) //add energy doposition from all the tracks within 1us
+{
+  // initialize t0
+  if (fTime0 < 0.) fTime0 = time;
+  
+  // out of time window ?
+  const G4double TimeWindow (1*microsecond);
+  
+  if (std::fabs(time - fTime0) > TimeWindow) return;
+  if (iVol == 1) { fEdep1 += edep; fWeight1 += edep*weight;}
+  else {
+  	fEdep2 += edep; fWeight2 += edep*weight;
+  }  
+  	
+}
+
+//std::vector<RecoCluster*>* EventAction::RecoClusters(std::vector<Electron*>* myElectronList) {
+//  return 0;
+//}
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

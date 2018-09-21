@@ -41,11 +41,11 @@
 #include "G4SystemOfUnits.hh"
 
 #include<cmath>
-                           
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::SteppingAction(DetectorConstruction* det, TrackingAction* TrAct, EventAction* event)
-: G4UserSteppingAction(),fDetector(det),fTrackingAction(TrAct), fEventAction(event)
+: G4UserSteppingAction(),fTrackingAction(TrAct), fDetector(det),fEventAction(event)
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -76,6 +76,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4LogicalVolume* endVolume = postPoint->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
   G4Track* track         = aStep->GetTrack();
   G4double kinEnergy     = track->GetKineticEnergy();
+  
+  //which volume ?
+  //
+  G4int iVol = 0;
+  if (preVolume == fDetector->GetLogicPool())   iVol = 1;
+  else iVol = 0;
+  
   
   // incident neutron
   //
@@ -132,7 +139,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(fEventAction->GetNNeutronEnter_Filter1() == 1) G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
       Run* run = static_cast<Run*>(
           G4RunManager::GetRunManager()->GetNonConstCurrentRun());
-      if(kinEnergy >= 1*eV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Filter1() == 1) run->AddARCount();
+      if(kinEnergy >= 40*keV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Filter1() == 1) run->AddARCount();
   }
 
   //Number of Collisions in filter 1
@@ -243,6 +250,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         G4RunManager::GetRunManager()->GetNonConstCurrentRun());
   run->CountProcesses(process);
   
+  
+  // Boundary crossing energy
   G4String procName = process->GetProcessName();  
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& procName == "nCapture" 
@@ -388,7 +397,21 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
      fEventAction->AddNeutronEnter_World();
   }
 
-
+  // energy deposit
+  // 
+  G4double edepStep = 0;
+  if(iVol == 1) edepStep = aStep->GetTotalEnergyDeposit();
+  else edepStep = 0;
+  G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();
+  G4double weight = aStep->GetPreStepPoint()->GetWeight(); 
+  fEventAction->AddEdep(iVol, edepStep, time, weight);
+  
+  //fill ntuple id = 3
+  G4int id = 2;   
+  G4AnalysisManager::Instance()->FillNtupleDColumn(id,0, edepStep);
+  G4AnalysisManager::Instance()->FillNtupleDColumn(id,1, time/s);
+  G4AnalysisManager::Instance()->FillNtupleDColumn(id,2, weight);
+  G4AnalysisManager::Instance()->AddNtupleRow(id);      
 
 
 }

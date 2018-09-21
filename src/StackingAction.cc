@@ -41,8 +41,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-StackingAction::StackingAction(DetectorConstruction* det)
-:G4UserStackingAction(), fDetector(det)
+StackingAction::StackingAction(DetectorConstruction* det, EventAction* evt)
+:G4UserStackingAction(), fDetector(det), fEvent(evt)
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

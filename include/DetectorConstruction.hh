@@ -36,6 +36,7 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "G4Region.hh"
 
 class G4LogicalVolume;
 class G4Material;
@@ -189,6 +190,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume*   fLogicPool;
      G4VPhysicalVolume* fPhysiPool;
      G4Material*        fPoolMater; 
+     
+     // liquid argon region
+     G4Region* fPoolRegion;
      
      // gas argon
      G4double           fBufferHeight; 

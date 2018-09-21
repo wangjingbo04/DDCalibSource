@@ -35,14 +35,16 @@
 #define TrackingAction_h 1
 
 #include "G4UserTrackingAction.hh"
+#include "DetectorConstruction.hh"
 #include "globals.hh"
+#include "EventAction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class TrackingAction : public G4UserTrackingAction {
 
   public:  
-    TrackingAction();
+    TrackingAction(DetectorConstruction* det, EventAction* EA);
    ~TrackingAction() {};
    
     virtual void  PreUserTrackingAction(const G4Track*);   
@@ -54,6 +56,9 @@ class TrackingAction : public G4UserTrackingAction {
     G4int fNbStep1, fNbStep2;
     G4double fTrackLen1, fTrackLen2;
     G4double fTime1, fTime2;
+    DetectorConstruction* fDetector;
+    EventAction* fEvent;
+    G4double fCharge, fMass;  
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -35,7 +35,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "PrimaryGeneratorAction.hh"
-
+#include "G4HEPEvtInterface.hh"
 #include "G4Event.hh"
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
@@ -51,30 +51,30 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det, size_t Size)
-: G4VUserPrimaryGeneratorAction(),fParticleGun(0), fDetector(det)
+: G4VUserPrimaryGeneratorAction(),fParticleGun(0), HEPEvt(0), fDetector(det)
 {
   size = Size;
   probDist = new G4double[size];
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle); 
   
+  const char* filename = "Ar41_decays_HEPEvt_G4_10k.dat";
+  //const char* filename = "Test.dat";
+  HEPEvt = new G4HEPEvtInterface(filename);
+  
   // default particle kinematic
-
   G4ParticleDefinition* particle
-           = G4ParticleTable::GetParticleTable()->FindParticle("neutron");
+           = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
   fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,0.));
-  fParticleGun->SetParticleEnergy(2.5*MeV);
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
+  fParticleGun->SetParticleEnergy(6.1*MeV);
   G4double x = 0.*cm;
   G4double y = 0.*cm;
-  G4double z = det->GetInsulatorHeight()/2 - det->GetPortHeight() + det->GetThermalAbsorborHeight() + det->GetFilter3Height() + det->GetFilter2Height() 
-               + det->GetFilter1Height() + det->GetModeratorHeight() - det->GetDDGeneratorHeight() + 10.0*cm;
+  G4double z = 0.*cm;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
 
   fMessenger = new G4GenericMessenger(this,"/primary/", "...doc...");
   fMessenger->DeclareMethod("updateGunPosition", &PrimaryGeneratorAction::UpdateGunPosition, "...doc...");
-
-  populateProbDist();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -83,27 +83,20 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
   delete fParticleGun;
   delete [] probDist;
+  delete HEPEvt;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
+void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)             
 {
-   G4double theta = std::abs(DDrandom()*degree);
-   G4AnalysisManager::Instance()->FillH1(16,theta);
-   G4double phi = (G4UniformRand()*2*pi)*degree;
-
-   G4double dx, dy, dz;
-
-   dx = std::sin(theta + pi) * std::cos(phi);
-   dy = std::sin(theta + pi) * std::sin(phi);
-   dz = std::cos(theta + pi);
-
-   fParticleGun->SetParticleEnergy(2.5*MeV);
-   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));
-   //fParticleGun->SetParticleEnergy(57*keV);
-   //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1));
+   fParticleGun->SetParticleEnergy(4.7*MeV);
+   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
    fParticleGun->GeneratePrimaryVertex(anEvent);
+//   HEPEvt->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm,0.*cm));
+//   HEPEvt->GeneratePrimaryVertex(anEvent);
+//   anEvent->GetPrimaryVertex()->Print();
+   
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -115,7 +108,6 @@ void PrimaryGeneratorAction::UpdateGunPosition() {
                + fDetector->GetFilter1Height() + fDetector->GetModeratorHeight() - fDetector->GetDDGeneratorHeight() + 10.0*cm;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));	
 }
-
 
 void PrimaryGeneratorAction::populateProbDist(){
 
@@ -138,9 +130,6 @@ void PrimaryGeneratorAction::populateProbDist(){
     }
 
 }
-
-
-
 
 
 G4double PrimaryGeneratorAction::DDrandom(){

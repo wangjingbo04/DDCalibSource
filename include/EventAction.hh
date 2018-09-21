@@ -35,7 +35,9 @@
 #define EventAction_h 1
 
 #include "G4UserEventAction.hh"
+#include "G4Track.hh"
 #include "globals.hh"
+#include "Run.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -46,8 +48,11 @@ class EventAction : public G4UserEventAction
    ~EventAction();
 
   public:
+  	
     virtual void BeginOfEventAction(const G4Event*);
     virtual void   EndOfEventAction(const G4Event*);
+    
+    void AddEdep (G4int iVol, G4double Edep, G4double time, G4double weight);
     
     void AddNeutronExit_Generator() {fNNeutronExit_Generator++;};
     
@@ -125,7 +130,17 @@ class EventAction : public G4UserEventAction
     G4int GetGammaExit_LArPool() {return fGammaExit_LArPool;};
 
     G4int GetNNeutronExit_Shield() {return fNNeutronExit_Shield;};
-    G4int GetNNeutronEnter_World() {return fNNeutronEnter_World;};    
+    G4int GetNNeutronEnter_World() {return fNNeutronEnter_World;};  
+    
+    void AddElectron(Electron e) {fElectronList.push_back(e);}
+    
+    std::vector<Electron> fElectronList;
+//    std::vector<RecoCluster*>* RecoClusters(std::vector<Electron*>* myElectronList);
+//    std::vector<RecoCluster*> vClusterList;
+//    std::vector<RecoClusterElectron*> vClusterElectronList;
+//    std::vector<RecoClusterElectron*> vClusterElectronCollection;
+    
+    
                 
   private:                  
     G4int       fNNeutronExit_Generator;
@@ -166,7 +181,21 @@ class EventAction : public G4UserEventAction
     
     G4int               fNNeutronExit_Shield;
     G4int               fNNeutronEnter_World;
-
+    
+    G4double        fEvisTot;
+    G4double 		fEdep1,   fEdep2;
+    G4double 		fWeight1, fWeight2;
+    G4double 		fTime0;    
+    
+    // gamma cascade parameters
+    G4int fNumberOfClusters = 0;
+    G4int fNumberOfElectrons = 0;
+    G4int fNumberOfPrimaryElectrons = 0;
+    G4int fNumberOfSecondaryElectrons = 0;
+    G4int fNumberOfMissingElectrons = 0;
+    G4int fENL = 200; // equivalent noise level: 200 e-
+          
+    
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -100,8 +100,7 @@ void Run::ParticleCount(G4String name, G4double Ekin)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void Run::AddARCount(){
-
-    fARCount++;
+    fARCount++; 
 }
 
 G4int Run::GetARCount(){
@@ -290,7 +289,7 @@ void Run::EndOfRun()
     G4int count = data.fCount;
     G4double eMean = data.fEmean/count;
     G4double eMin = data.fEmin;
-    G4double eMax = data.fEmax;    
+    G4double eMax = data.fEmax;   
          
     G4cout << "  " << std::setw(13) << name << ": " << std::setw(7) << count
            << "  Emean = " << std::setw(wid) << G4BestUnit(eMean, "Energy")
@@ -325,5 +324,4 @@ void Run::EndOfRun()
   //restore default format         
   G4cout.precision(dfprec);   
 }
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
