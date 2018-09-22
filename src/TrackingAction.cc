@@ -96,8 +96,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   //energy spectrum
   
   if (name == "e-" ) {
-  	//Electron*  electron = new Electron(vertex.x(), vertex.y(), vertex.z(), time/s);
-  	Electron  electron(vertex.x(), vertex.y(), vertex.z(), time/s);
+  	RecoElectron*  electron = new RecoElectron(vertex.x(), vertex.y(), vertex.z(), time/s, 0);
   	fEvent->AddElectron(electron);
   	analysisManager->FillH1(29, energy);
   	analysisManager->FillNtupleDColumn(1, 0, double(pid));

@@ -43,44 +43,44 @@
 class DetectorConstruction;
 class G4ParticleDefinition;
 
-static struct Electron {
-     Electron(): fX(0), fY(0.), fZ(0.), fT(0.) {}
-     Electron(G4double x, G4double y, G4double z, G4double t): fX(x), fY(y), fZ(z), fT(t) {}
-     void SetValues(G4double x, G4double y, G4double z, G4double t) {
-       fX = x;
-       fY = y;
-       fZ = z;
-       fT = t;	
-     }    
-     G4double  fX;
-     G4double  fY;
-     G4double  fZ;
-     G4double  fT;
-};  
-
-static struct RecoClusterElectron {
-  	RecoClusterElectron(Electron* recoElectron) {
-      fIsClustered = 0;
-      fIsAllClustered = 0;   
-      fRecoElectron = recoElectron;    
-      fClusterElectronList = new std::vector<RecoClusterElectron*>;    
-    }
-    G4bool fIsClustered;
-    G4bool fIsAllClustered;    
-    Electron* fRecoElectron;   
-    std::vector<RecoClusterElectron*>* fClusterElectronList;
-};
-
-static struct RecoCluster {
-     RecoCluster() {}
-     std::vector<Electron> fElectronList;
-     G4int fNElectrons;
-     G4double fX;
-     G4double fY;
-     G4double fZ;
-     void AddElectron(Electron electron);
-     G4int GetNElectron() {return fElectronList.size();}
-};
+//static struct Electron {
+//     Electron(): fX(0), fY(0.), fZ(0.), fT(0.) {}
+//     Electron(G4double x, G4double y, G4double z, G4double t): fX(x), fY(y), fZ(z), fT(t) {}
+//     void SetValues(G4double x, G4double y, G4double z, G4double t) {
+//       fX = x;
+//       fY = y;
+//       fZ = z;
+//       fT = t;	
+//     }    
+//     G4double  fX;
+//     G4double  fY;
+//     G4double  fZ;
+//     G4double  fT;
+//};  
+//
+//static struct RecoClusterElectron {
+//  	RecoClusterElectron(Electron* recoElectron) {
+//      fIsClustered = 0;
+//      fIsAllClustered = 0;   
+//      fRecoElectron = recoElectron;    
+//      fClusterElectronList = new std::vector<RecoClusterElectron*>;    
+//    }
+//    G4bool fIsClustered;
+//    G4bool fIsAllClustered;    
+//    Electron* fRecoElectron;   
+//    std::vector<RecoClusterElectron*>* fClusterElectronList;
+//};
+//
+//static struct RecoCluster {
+//     RecoCluster() {}
+//     std::vector<Electron> fElectronList;
+//     G4int fNElectrons;
+//     G4double fX;
+//     G4double fY;
+//     G4double fZ;
+//     void AddElectron(Electron electron);
+//     G4int GetNElectron() {return fElectronList.size();}
+//};
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

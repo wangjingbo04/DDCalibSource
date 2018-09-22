@@ -306,6 +306,13 @@ void HistoManager::Book()
   
   analysisManager->CreateNtuple("Event", "Event"); // Id = 3
   analysisManager->CreateNtupleIColumn("NumberOfElectrons");    //column 0
+  analysisManager->CreateNtupleIColumn("NumberOfClusters");    //column 1
+  analysisManager->CreateNtupleIColumn("NumberOfClustersOverThreshold");    //column 1
+  analysisManager->FinishNtuple();
+  
+  analysisManager->CreateNtuple("Cluster", "Cluster"); // Id = 4
+  analysisManager->CreateNtupleIColumn("NumberOfElectronsPerCluster");    //column 0
+  analysisManager->CreateNtupleIColumn("NumberOfElectronsPerClusterOverThreshold");    //column 1
   analysisManager->FinishNtuple();
   
   analysisManager->SetNtupleActivation(true);       

@@ -38,6 +38,9 @@
 #include "G4Track.hh"
 #include "globals.hh"
 #include "Run.hh"
+#include "RecoElectron.hh"
+#include "RecoClusterElectron.hh"
+#include "RecoCluster.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -132,13 +135,13 @@ class EventAction : public G4UserEventAction
     G4int GetNNeutronExit_Shield() {return fNNeutronExit_Shield;};
     G4int GetNNeutronEnter_World() {return fNNeutronEnter_World;};  
     
-    void AddElectron(Electron e) {fElectronList.push_back(e);}
+    void AddElectron(RecoElectron *e) {fRecoElectronList->push_back(e);}
     
-    std::vector<Electron> fElectronList;
-//    std::vector<RecoCluster*>* RecoClusters(std::vector<Electron*>* myElectronList);
-//    std::vector<RecoCluster*> vClusterList;
-//    std::vector<RecoClusterElectron*> vClusterElectronList;
-//    std::vector<RecoClusterElectron*> vClusterElectronCollection;
+    std::vector<RecoElectron*>* ResetElectrons(std::vector<RecoElectron*>* electronlist);
+    
+    std::vector<RecoCluster*>* RecoClusters(std::vector<RecoElectron*>* electronlist);
+    
+    std::vector<RecoElectron*> *fRecoElectronList = 0;
     
     
                 
@@ -187,6 +190,11 @@ class EventAction : public G4UserEventAction
     G4double 		fWeight1, fWeight2;
     G4double 		fTime0;    
     
+    G4double fClusterRadius;
+    G4int fMinClusterElectrons;
+    G4int fMinElectronsPerCluster;
+    
+    
     // gamma cascade parameters
     G4int fNumberOfClusters = 0;
     G4int fNumberOfElectrons = 0;
@@ -194,6 +202,14 @@ class EventAction : public G4UserEventAction
     G4int fNumberOfSecondaryElectrons = 0;
     G4int fNumberOfMissingElectrons = 0;
     G4int fENL = 200; // equivalent noise level: 200 e-
+    
+    // internal containers
+  std::vector<G4double> vNdigitsCluster;  
+  std::vector<RecoCluster*> vClusterList;
+  std::vector<RecoClusterElectron*> vClusterElectronList;
+  std::vector<RecoClusterElectron*> vClusterElectronCollection;
+  	// vectors of clusters
+  std::vector<RecoCluster*>* fClusterList;
           
     
 };
