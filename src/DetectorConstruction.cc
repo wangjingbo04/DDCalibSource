@@ -325,7 +325,7 @@ void DetectorConstruction::DefineMaterials()
   fPortRefMater = man->FindOrBuildMaterial("G4_S");
   
   // cryostat
-  fCryostatMater = StainlessSteel;
+  fCryostatMater = Vacuum;
   
   // liquid argon pool
   fPoolMater = man->FindOrBuildMaterial("G4_lAr");

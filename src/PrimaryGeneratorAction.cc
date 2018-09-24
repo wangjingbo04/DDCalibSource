@@ -99,7 +99,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
    dy = std::sin(theta + pi) * std::sin(phi);
    dz = std::cos(theta + pi);
 
-   fParticleGun->SetParticleEnergy(2.5*MeV);
+   fParticleGun->SetParticleEnergy(57*keV);
    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));
    //fParticleGun->SetParticleEnergy(57*keV);
    //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1));

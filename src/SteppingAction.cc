@@ -82,10 +82,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if (aStep->GetTrack()->GetTrackID() == 1) { 
     G4double ekin  = postPoint->GetKineticEnergy();
     G4double trackl = aStep->GetTrack()->GetTrackLength();
-    G4double time   = aStep->GetTrack()->GetLocalTime();           
-    fTrackingAction->UpdateTrackInfo(ekin,trackl,time);
+    G4double time   = aStep->GetTrack()->GetLocalTime();  
+    const G4VProcess* process   = postPoint->GetProcessDefinedStep();
+    G4String procName = process->GetProcessName();       
+    G4String endVolumeName  = endVolume->GetName();
+    fTrackingAction->UpdateTrackInfo(ekin,trackl,time, procName, endVolumeName);
     G4AnalysisManager::Instance()->FillH1(6,ekin); // fill the energy of each step to the histogram
   }
+  
 
   /*
   // neutrons from generator to 1st moderator
@@ -107,7 +111,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& endVolume != fDetector->GetLogicDDGenerator()) {
     
       fEventAction->AddNeutronExit_Generator();
-      if(fEventAction->GetNNeutronExit_Generator() == 1) std::cout<<"existing generator"<<std::endl;G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
+      if(fEventAction->GetNNeutronExit_Generator() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
   }
   
 

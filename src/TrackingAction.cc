@@ -59,7 +59,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track*)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void TrackingAction::UpdateTrackInfo(G4double ekin,G4double trackl,
-                                     G4double time)
+                                     G4double time, G4String procname, G4String volumename)
 {
   const G4double antiresonance = 1*eV;
   if (ekin > antiresonance) {
@@ -67,6 +67,8 @@ void TrackingAction::UpdateTrackInfo(G4double ekin,G4double trackl,
   } else {
     fNbStep2++; fTrackLen2 = trackl - fTrackLen1; fTime2 = time - fTime1;  
   }
+  fProcessName = procname;
+  fEndVolumnName = volumename;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -91,7 +93,7 @@ void TrackingAction::PostUserTrackingAction(const G4Track* track)
  analysisManager->FillH1(2,fTime1); 
  analysisManager->FillH1(3,fNbStep2);
  analysisManager->FillH1(4,fTrackLen2);
- analysisManager->FillH1(5,fTime2);     
+ if(fProcessName == "nCapture" && fEndVolumnName == "LarPool_l") analysisManager->FillH1(5,fTime2);     
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

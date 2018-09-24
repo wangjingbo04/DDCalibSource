@@ -48,12 +48,14 @@ class TrackingAction : public G4UserTrackingAction {
     virtual void  PreUserTrackingAction(const G4Track*);   
     virtual void PostUserTrackingAction(const G4Track*);
     
-    void UpdateTrackInfo(G4double, G4double, G4double);    
+    void UpdateTrackInfo(G4double, G4double, G4double, G4String, G4String);    
     
   private:
     G4int fNbStep1, fNbStep2;
     G4double fTrackLen1, fTrackLen2;
     G4double fTime1, fTime2;
+    G4String fProcessName;
+    G4String fEndVolumnName;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
