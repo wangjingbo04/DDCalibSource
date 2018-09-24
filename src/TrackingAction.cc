@@ -39,6 +39,7 @@
 #include "G4RunManager.hh"
 #include "G4Track.hh"
 #include "G4SystemOfUnits.hh"
+#include "TreeMaker.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -59,6 +60,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   // gamma cascade simulation
   Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+  TreeMaker* treemaker = TreeMaker::Instance();
   //which volume ?
   G4LogicalVolume* lVolume = track->GetVolume()->GetLogicalVolume();
   G4int iVol = 0;
@@ -85,26 +87,29 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   
   //primary particles
   if(parentID == 0) {
-  	analysisManager->FillNtupleDColumn(0, 0, vertex.x());
-  	analysisManager->FillNtupleDColumn(0, 1, vertex.y());
-  	analysisManager->FillNtupleDColumn(0, 2, vertex.z());
-  	analysisManager->FillNtupleDColumn(0, 3, energy);
-  	analysisManager->AddNtupleRow(0);
+  	treemaker->AddPrimaryGamma(vertex.x()/cm, vertex.y()/cm, vertex.z()/cm, time/ns, energy/MeV);
+//  	analysisManager->FillNtupleDColumn(0, 0, vertex.x());
+//  	analysisManager->FillNtupleDColumn(0, 1, vertex.y());
+//  	analysisManager->FillNtupleDColumn(0, 2, vertex.z());
+//  	analysisManager->FillNtupleDColumn(0, 3, energy);
+//  	analysisManager->AddNtupleRow(0);
+  	
   	return; 
   }
   //secondary particles only
   //energy spectrum
   
   if (name == "e-" ) {
-  	RecoElectron*  electron = new RecoElectron(vertex.x(), vertex.y(), vertex.z(), time/s, 0);
+  	RecoElectron*  electron = new RecoElectron(vertex.x()/cm, vertex.y()/cm, vertex.z()/cm, time/ns, energy/eV, 0);
   	fEvent->AddElectron(electron);
-  	analysisManager->FillH1(29, energy);
-  	analysisManager->FillNtupleDColumn(1, 0, double(pid));
-  	analysisManager->FillNtupleDColumn(1, 1, vertex.x());
-  	analysisManager->FillNtupleDColumn(1, 2, vertex.y());
-  	analysisManager->FillNtupleDColumn(1, 3, vertex.z());
-  	analysisManager->FillNtupleDColumn(1, 4, energy);
-  	analysisManager->AddNtupleRow(1);
+//  	treemaker->AddElectron(vertex.x()/cm, vertex.y()/cm, vertex.z()/cm, time/ns, energy/keV, weight, 0, 0);
+//  	analysisManager->FillH1(29, energy);
+//  	analysisManager->FillNtupleDColumn(1, 0, double(pid));
+//  	analysisManager->FillNtupleDColumn(1, 1, vertex.x()/cm);
+//  	analysisManager->FillNtupleDColumn(1, 2, vertex.y()/cm);
+//  	analysisManager->FillNtupleDColumn(1, 3, vertex.z()/cm);
+//  	analysisManager->FillNtupleDColumn(1, 4, energy);
+//  	analysisManager->AddNtupleRow(1);
   }
   if (name == "gamma") analysisManager->FillH1(30, energy);    
 }

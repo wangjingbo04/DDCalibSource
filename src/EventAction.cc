@@ -99,11 +99,15 @@ void EventAction::BeginOfEventAction(const G4Event*)
   fNNeutronExit_Shield = 0;
   fNNeutronEnter_World = 0;
   
-  fClusterRadius = 20.0*cm;    // clustering window (cm) //Ioana... initia 300.0
+  fClusterRadius = 20.;    // clustering window (cm) 
   fMinClusterElectrons = 50;    // minimum clustered digits
   fMinElectronsPerCluster = 0;
   fRecoElectronList = new std::vector<RecoElectron*>;
   fClusterList = new std::vector<RecoCluster*>;
+  	
+  TreeMaker* treemaker = TreeMaker::Instance();
+  treemaker->Reset();
+  treemaker->AddEventNumber();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -116,28 +120,50 @@ void EventAction::EndOfEventAction(const G4Event* evt)
    // run clustering algorithm
    // ========================
    this->RecoClusters(fRecoElectronList);
-   	
-   //count electrons created in this event
-   //G4cout<< "\n Number of electron tracks in this event = "<<fElectronList.size()<< G4endl;
-   analysisManager->FillNtupleIColumn(3, 0, fRecoElectronList->size());
-   analysisManager->FillNtupleIColumn(3, 1, fClusterList->size());
-   int NCluster = 0;
-   for(G4int i=0;i<fClusterList->size();i++) {
-     if(fClusterList->at(i)->GetNElectrons()>420 ) NCluster;
-   }
-   analysisManager->FillNtupleIColumn(3, 2, fClusterList->size());
-   analysisManager->AddNtupleRow(3);
    
+   // Fill tree
+   TreeMaker* treemaker = TreeMaker::Instance();
+   treemaker->SetNumberOfElectrons(fRecoElectronList->size());
+   treemaker->SetNumberOfClusters(fClusterList->size());
+//   for(G4int i=0;i<fClusterList->size();i++) {
+//   	 G4int nelectron = fClusterList->at(i)->GetNElectrons();
+//   	 treemaker->AddNelectronsInCluster(nelectron);
+//   	 for(G4int j=0;j<nelectron;j++) {
+//   	   	RecoElectron* e = fClusterList->at(i)->GetElectron(j);
+//   	   	treemaker->AddElectron(e->GetX(), e->GetY(), e->GetZ(), e->GetTime(), e->GetEnergy(), i, 1, 0, 0);
+//   	 }
+//   }
    for(G4int i=0;i<fClusterList->size();i++) {
-   	 analysisManager->FillNtupleIColumn(4, 0, fClusterList->at(i)->GetNElectrons());
-     analysisManager->AddNtupleRow(4);
+   	 G4int nelectron = fClusterList->at(i)->GetNElectrons();
+   	 treemaker->AddNelectronsInCluster(nelectron);
    }
-   for(G4int i=0;i<fClusterList->size();i++) {
-     if(fClusterList->at(i)->GetNElectrons()>420 ) {
-     	 analysisManager->FillNtupleIColumn(4, 1, fClusterList->at(i)->GetNElectrons());
-       analysisManager->AddNtupleRow(4);
-     }
+   for(G4int i=0;i<fRecoElectronList->size();i++) {
+     RecoElectron* e = fRecoElectronList->at(i);	
+     treemaker->AddElectron(e->GetX(), e->GetY(), e->GetZ(), e->GetTime(), e->GetEnergy(), e->GetClusterID(), 1, 0, 0);
    }
+   treemaker->Fill();
+   	
+//   //count electrons created in this event
+//   //G4cout<< "\n Number of electron tracks in this event = "<<fElectronList.size()<< G4endl;
+//   analysisManager->FillNtupleIColumn(3, 0, fRecoElectronList->size());
+//   analysisManager->FillNtupleIColumn(3, 1, fClusterList->size());
+//   int NCluster = 0;
+//   for(G4int i=0;i<fClusterList->size();i++) {
+//     if(fClusterList->at(i)->GetNElectrons()>420 ) NCluster;
+//   }
+//   analysisManager->FillNtupleIColumn(3, 2, fClusterList->size());
+//   analysisManager->AddNtupleRow(3);
+//   
+//   for(G4int i=0;i<fClusterList->size();i++) {
+//   	 analysisManager->FillNtupleIColumn(4, 0, fClusterList->at(i)->GetNElectrons());
+//     analysisManager->AddNtupleRow(4);
+//   }
+//   for(G4int i=0;i<fClusterList->size();i++) {
+//     if(fClusterList->at(i)->GetNElectrons()>420 ) {
+//     	 analysisManager->FillNtupleIColumn(4, 1, fClusterList->at(i)->GetNElectrons());
+//       analysisManager->AddNtupleRow(4);
+//     }
+//   }
   if(fRecoElectronList){
     fRecoElectronList->clear();
     delete fRecoElectronList; fRecoElectronList = 0;
@@ -191,9 +217,6 @@ std::vector<RecoCluster*>* EventAction::RecoClusters(std::vector<RecoElectron*>*
   }
   vClusterList.clear();
 
-  // clear vector clusters
-  // =====================
-  fClusterList->clear();
   
   //histClusters->Fill(1.0);
 
@@ -235,12 +258,12 @@ std::vector<RecoCluster*>* EventAction::RecoClusters(std::vector<RecoElectron*>*
   // collect up clusters
   // ===================
   G4bool carryon = 0;
+  G4int clusterID = -1;
 
   for( G4int ielectron=0; ielectron<vClusterElectronList.size(); ielectron++ ){
     RecoClusterElectron* felectron = (RecoClusterElectron*)(vClusterElectronList.at(ielectron));
 
-    if( felectron->IsClustered()==0
-     && felectron->GetNClusterElectrons()>0 ){
+    if( felectron->IsClustered()==0 && felectron->GetNClusterElectrons()>0 ){
         
       vClusterElectronCollection.clear();
       vClusterElectronCollection.push_back(felectron);
@@ -276,11 +299,13 @@ std::vector<RecoCluster*>* EventAction::RecoClusters(std::vector<RecoElectron*>*
       if( (G4int)vClusterElectronCollection.size()>=fMinClusterElectrons ){
         RecoCluster* cluster = new RecoCluster();
         fClusterList->push_back(cluster);
+        clusterID++;       
         vClusterList.push_back(cluster);
 
         for( G4int jelectron=0; jelectron<vClusterElectronCollection.size(); jelectron++ ){
           RecoClusterElectron* celectron = (RecoClusterElectron*)(vClusterElectronCollection.at(jelectron));
           RecoElectron* recoelectron = (RecoElectron*)(celectron->GetRecoElectron());
+          recoelectron->SetClusterID(clusterID);
           cluster->AddElectron(recoelectron);        
         }
       }

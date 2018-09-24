@@ -43,6 +43,7 @@
 #include "G4SystemOfUnits.hh"
 
 #include "Randomize.hh"
+#include "TreeMaker.hh"
 #include <iomanip>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -53,6 +54,7 @@ RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim)
 {
  // Book predefined histograms
  fHistoManager = new HistoManager(); 
+ 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -91,7 +93,12 @@ void RunAction::BeginOfRunAction(const G4Run*)
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
   if ( analysisManager->IsActive() ) {
     analysisManager->OpenFile();
-  }  
+  }
+  
+  // external root file
+  TreeMaker* treemaker = TreeMaker::Instance();
+  treemaker->Initialize("Neutron_capture_gamma.root");
+  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -109,6 +116,10 @@ void RunAction::EndOfRunAction(const G4Run*)
       
   // show Rndm status
   if (isMaster) G4Random::showEngineStatus();
+  	
+  //close root file
+  TreeMaker* treemaker = TreeMaker::Instance();
+  treemaker->CloseFile();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

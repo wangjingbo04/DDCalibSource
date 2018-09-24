@@ -36,6 +36,7 @@
 
 #include "G4UserRunAction.hh"
 #include "globals.hh"
+#include "TreeMaker.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

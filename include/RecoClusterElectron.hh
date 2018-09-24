@@ -25,6 +25,7 @@ class RecoClusterElectron
    G4double GetY(){ return fRecoElectron->GetY(); }
    G4double GetZ(){ return fRecoElectron->GetZ(); }
    G4double GetTime(){ return fRecoElectron->GetTime(); }
+   G4int SetClusterID(G4int id) {fClusterID = id;}
 
   public:
   	
@@ -38,6 +39,7 @@ class RecoClusterElectron
   private:                  
   	G4bool fIsClustered;
     G4bool fIsAllClustered;
+    G4int			fClusterID = -1;
 
     RecoElectron* fRecoElectron;
 

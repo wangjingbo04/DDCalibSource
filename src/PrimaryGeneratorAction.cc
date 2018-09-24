@@ -90,7 +90,7 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)             
 {
-//   fParticleGun->SetParticleEnergy(5*MeV);
+//   fParticleGun->SetParticleEnergy(8*MeV);
 //   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
 //   fParticleGun->GeneratePrimaryVertex(anEvent);
    HEPEvt->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm,0.*cm));

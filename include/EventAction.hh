@@ -41,6 +41,7 @@
 #include "RecoElectron.hh"
 #include "RecoClusterElectron.hh"
 #include "RecoCluster.hh"
+#include "TreeMaker.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -142,6 +143,7 @@ class EventAction : public G4UserEventAction
     std::vector<RecoCluster*>* RecoClusters(std::vector<RecoElectron*>* electronlist);
     
     std::vector<RecoElectron*> *fRecoElectronList = 0;
+    std::vector<RecoCluster*> *fClusterList = 0;
     
     
                 
@@ -190,6 +192,7 @@ class EventAction : public G4UserEventAction
     G4double 		fWeight1, fWeight2;
     G4double 		fTime0;    
     
+    
     G4double fClusterRadius;
     G4int fMinClusterElectrons;
     G4int fMinElectronsPerCluster;
@@ -208,8 +211,6 @@ class EventAction : public G4UserEventAction
   std::vector<RecoCluster*> vClusterList;
   std::vector<RecoClusterElectron*> vClusterElectronList;
   std::vector<RecoClusterElectron*> vClusterElectronCollection;
-  	// vectors of clusters
-  std::vector<RecoCluster*>* fClusterList;
           
     
 };
