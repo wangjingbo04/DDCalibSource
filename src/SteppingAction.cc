@@ -107,7 +107,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // neutrons from generator to 1st moderator
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicDDGenerator() 
+  	//&& preVolume == fDetector->GetLogicDDGenerator() 
   	&& endVolume != fDetector->GetLogicDDGenerator()) {
     
       fEventAction->AddNeutronExit_Generator();
@@ -119,7 +119,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   //Number of Collisions in the moderator
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
    && fEventAction->GetNNeutronEnter_Moderator()== 1
-   && preVolume == fDetector->GetLogicModerator() 
+   //&& preVolume == fDetector->GetLogicModerator() 
    || endVolume == fDetector->GetLogicModerator()) {
 
          Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
@@ -129,7 +129,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // neutrons from moderator to filter 1
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicModerator() 
+  	//&& preVolume == fDetector->GetLogicModerator() 
   	&& endVolume == fDetector->GetLogicFilter1()) {  
     
       fEventAction->AddNeutronEnter_Filter1();
@@ -142,7 +142,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   //Number of Collisions in filter 1
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
    && fEventAction->GetNNeutronEnter_Filter1()== 1
-   && preVolume == fDetector->GetLogicFilter1() 
+   //&& preVolume == fDetector->GetLogicFilter1() 
    || endVolume == fDetector->GetLogicFilter1()) {
 
          Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
@@ -152,7 +152,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // neutrons from filter 1 to filter 2
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicFilter1() 
+  	//&& preVolume == fDetector->GetLogicFilter1() 
   	&& endVolume == fDetector->GetLogicFilter2()) {  
   	
   	  fEventAction->AddNeutronEnter_Filter2();
@@ -162,7 +162,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // neutrons from filter 2 to filter 3
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicFilter2() 
+  	//&& preVolume == fDetector->GetLogicFilter2() 
   	&& endVolume == fDetector->GetLogicFilter3()) {
     
       fEventAction->AddNeutronEnter_Filter3();
@@ -173,7 +173,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // neutrons from filter 3 to Li absorber
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicFilter3() 
+  	//&& preVolume == fDetector->GetLogicFilter3() 
   	&& endVolume == fDetector->GetLogicThermalAbsorber()) {
 
         fEventAction->AddNeutronEnter_ThermalAbsorber();
@@ -184,7 +184,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // neutrons from Li absorber to cryostat memberane
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicThermalAbsorber() 
+  	//&& preVolume == fDetector->GetLogicThermalAbsorber() 
   	&& endVolume == fDetector->GetLogicCryostat()) {
         fEventAction->AddNeutronEnter_Cryostat();        
         if(fEventAction->GetNNeutronEnter_Cryostat() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
@@ -194,7 +194,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // neutrons from cryostat memberane to gas argon buffer
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicCryostat()
+  	//&& preVolume == fDetector->GetLogicCryostat()
   	&& endVolume == fDetector->GetLogicBuffer()) {  
     
       fEventAction->AddNeutronEnter_ArBuffer();
@@ -218,7 +218,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // neutrons entering liquid Argon pool
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicBuffer()
+  	//&& preVolume == fDetector->GetLogicBuffer()
   	&& endVolume == fDetector->GetLogicPool()) {  
     
       fEventAction->AddNeutronEnter_LArPool();

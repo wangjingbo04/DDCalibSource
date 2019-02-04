@@ -340,16 +340,16 @@ void DetectorConstruction::DefineMaterials()
   fDDGeneratorMater = Vacuum; 
   
   // Moderator 
-  fModerator_Mater = Vacuum;
+  fModerator_Mater = man->FindOrBuildMaterial("G4_Fe");
   
   // Filter 1 
-  fFilter1Mater = Vacuum;
+  fFilter1Mater = man->FindOrBuildMaterial("G4_S");
 
   //Filter 2
-  fFilter2Mater = Vacuum;
+  fFilter2Mater = man->FindOrBuildMaterial("G4_S");
    
   // Filter 3
-  fFilter3Mater = Vacuum;
+  fFilter3Mater = man->FindOrBuildMaterial("G4_S");
   
   // neutron thermal absorber
   fThermalAbsorberMater = Vacuum;
