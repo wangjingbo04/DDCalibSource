@@ -61,8 +61,8 @@ void TrackingAction::PreUserTrackingAction(const G4Track*)
 void TrackingAction::UpdateTrackInfo(G4double ekin,G4double trackl,
                                      G4double time, G4String procname, G4String volumename)
 {
-  const G4double antiresonance = 1*eV;
-  if (ekin > antiresonance) {
+  const G4double thermalcut = 1*eV;
+  if (ekin > thermalcut) {
     fNbStep1++; fTrackLen1 = trackl; fTime1 = time;    
   } else {
     fNbStep2++; fTrackLen2 = trackl - fTrackLen1; fTime2 = time - fTime1;  
@@ -70,6 +70,7 @@ void TrackingAction::UpdateTrackInfo(G4double ekin,G4double trackl,
   fProcessName = procname;
   fEndVolumnName = volumename;
 }
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

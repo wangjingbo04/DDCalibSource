@@ -226,6 +226,14 @@ void HistoManager::Book()
   //Histogram 27 - Phi angle for neutrons entering LAr Pool
   ih = analysisManager->CreateH1("h1.27", "Phi angle for neutrons entering LAr Pool", 360, -180, 180, "degree");
   analysisManager->SetH1Activation(ih, true);
+  
+  //Histogram 28 - neutron capture time since DD pulsem (primary neutrons)
+  ih = analysisManager->CreateH1("h1.28", "neutron capture time since DD pulse (primary neutrons)", nbins, vmin, vmax, "us");
+  analysisManager->SetH1Activation(ih, true);
+  
+  //Histogram 29 - neutron capture time since DD pulse (all neutrons)
+  ih = analysisManager->CreateH1("h1.29", "neutron capture time since DD pulse", nbins, vmin, vmax, "us");
+  analysisManager->SetH1Activation(ih, true);
 
 
   

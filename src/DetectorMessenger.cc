@@ -160,6 +160,13 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fFilter3HeightCmd->SetRange("Filter3Height>0.");
   fFilter3HeightCmd->SetUnitCategory("Length");
   fFilter3HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  
+  fAbsorberHeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setAbsorberHeight",this);
+  fAbsorberHeightCmd->SetGuidance("Set Height of the thermal neutron absorber");
+  fAbsorberHeightCmd->SetParameterName("AbsorberHeight",false);
+  fAbsorberHeightCmd->SetRange("AbsorberHeight>0.");
+  fAbsorberHeightCmd->SetUnitCategory("Length");
+  fAbsorberHeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   fPortRefThickCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetPortRefThickness",this);
   fPortRefThickCmd->SetGuidance("Set thickness of the port reflector");

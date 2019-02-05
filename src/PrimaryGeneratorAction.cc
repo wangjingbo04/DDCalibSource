@@ -68,7 +68,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det, size_t
   G4double x = 0.*cm;
   G4double y = 0.*cm;
   G4double z = det->GetInsulatorHeight()/2 - det->GetPortHeight() + det->GetThermalAbsorborHeight() + det->GetFilter3Height() + det->GetFilter2Height() 
-               + det->GetFilter1Height() + det->GetModeratorHeight() - det->GetDDGeneratorHeight() + 10.0*cm;
+               + det->GetFilter1Height() + det->GetModeratorHeight() - det->GetDDGeneratorHeight() + 2.0*cm;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
 
   fMessenger = new G4GenericMessenger(this,"/primary/", "...doc...");
@@ -99,10 +99,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
    dy = std::sin(theta + pi) * std::sin(phi);
    dz = std::cos(theta + pi);
 
-   fParticleGun->SetParticleEnergy(2.5*MeV);
-   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));
-   //fParticleGun->SetParticleEnergy(57*keV);
-   //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1));
+   //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));
+   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1));
    fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
@@ -111,8 +109,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 void PrimaryGeneratorAction::UpdateGunPosition() {
   G4double x = 0.*cm;
   G4double y = 0.*cm;
-  G4double z = fDetector->GetInsulatorHeight()/2 - fDetector->GetPortHeight() + fDetector->GetThermalAbsorborHeight() + fDetector->GetFilter3Height() + fDetector->GetFilter2Height() 
-               + fDetector->GetFilter1Height() + fDetector->GetModeratorHeight() - fDetector->GetDDGeneratorHeight() + 10.0*cm;
+  G4double z = fDetector->GetInsulatorHeight()/2 - fDetector->GetPortHeight() + fDetector->GetThermalAbsorborHeight() + fDetector->GetFilter3Height() + fDetector->GetFilter2Height() + fDetector->GetFilter1Height() + fDetector->GetModeratorHeight() - fDetector->GetDDGeneratorHeight() + 2.0*cm;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));	
 }
 

@@ -78,14 +78,18 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void GetPortRefMaterial ();
     void SetReflectorMaterial (G4String);
     void GetReflectorMaterial ();
+    void SetNGuideMaterial (G4String);
+    void GetNGuideMaterial ();
 
     //Set Dimension Functions
     void SetModeratorHeight(G4double);
     void SetFilter1Height(G4double);
     void SetFilter2Height(G4double);
     void SetFilter3Height(G4double);
+    void SetAbsorberHeight(G4double);
     void SetPortRefThickness(G4double);
     void SetReflectorThickness(G4double);
+    void SetNGuideThickness(G4double);
     void SetNShieldThickness(G4double);
     
 
@@ -99,7 +103,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4VPhysicalVolume* GetPhysiPort()          {return fPhysiPort;}; 
      G4VPhysicalVolume* GetPhysif()             {return fPhysiNShield;};  
      G4VPhysicalVolume* GetPhysiDDGenerator()   {return fPhysiDDGenerator;};
-     G4VPhysicalVolume* GetPhysiReflector()     {return fPhysiReflector;};  
+     G4VPhysicalVolume* GetPhysiReflector()     {return fPhysiReflector;}; 
+     G4VPhysicalVolume* GetPhysiNGuide()        {return fPhysiNGuide;}; 
      G4VPhysicalVolume* GetPhysiModerator()     {return fPhysiModerator;};   
      G4VPhysicalVolume* GetPhysiFilter1()       {return fPhysiFilter1;};
      G4VPhysicalVolume* GetPhysiFilter2()       {return fPhysiFilter2;};  
@@ -113,6 +118,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume* GetLogicPort()            {return fLogicPort;}; 
      G4LogicalVolume* GetLogicShield()          {return fLogicNShield;}; 
      G4LogicalVolume* GetLogicReflector()       {return fLogicReflector;};  
+     G4LogicalVolume* GetLogicNGuide()          {return fLogicNGuide;}; 
      G4LogicalVolume* GetLogicDDGenerator()     {return fLogicDDGenerator;}; 
      G4LogicalVolume* GetLogicModerator()       {return fLogicModerator;};   
      G4LogicalVolume* GetLogicFilter1()         {return fLogicFilter1;};
@@ -130,9 +136,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4double           GetFilter3Height()          {return fFilter3Height;};
      G4double           GetDDGeneratorHeight()      {return fDDGeneratorHeight;};
      G4double           GetInsulatorHeight()        {return fInsulatorHeight;};
-     G4double           GetThermalAbsorberHeight()  {return fThermalAbsorberHeight;};
+     G4double           GetThermalAbsorberHeight()  {return fAbsorberHeight;};
      G4double           GetPortHeight()  						{return fPortHeight;};
-     G4double           GetThermalAbsorborHeight()	{return fThermalAbsorberHeight;};
+     G4double           GetThermalAbsorborHeight()	{return fAbsorberHeight;};
      
      
      void               PrintParameters();
@@ -236,7 +242,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4Material*        fFilter3Mater;
      
      // Thermal neutron absorber
-  	 G4double						fThermalAbsorberHeight;
+  	 G4double						fAbsorberHeight;
   	 G4double						fThermalAbsorberRadius;
   	 G4LogicalVolume*   fLogicThermalAbsorber;
      G4VPhysicalVolume* fPhysiThermalAbsorber;
@@ -250,6 +256,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4VPhysicalVolume* fPhysiReflector;
      G4Material*        fReflectorMater; 
      
+     // neutron guide
+     G4double						fNGuideHeight;
+     G4double						fNGuideRadius_top;
+     G4double						fNGuideRadius_bottom;
+     G4LogicalVolume*   fLogicNGuide;
+     G4VPhysicalVolume* fPhysiNGuide;
+     G4Material*        fNGuideMater; 
+     
      // neutron shield
      G4double						fNShieldThickness;
      G4double           fNShieldHeight;
@@ -257,6 +271,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume*   fLogicNShield;
      G4VPhysicalVolume* fPhysiNShield;
      G4Material*        fNShieldMater;    
+     
+     // define vacuum
+     G4Material* fVacuum;
      
      DetectorMessenger* fDetectorMessenger;
 
