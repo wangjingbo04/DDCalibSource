@@ -105,19 +105,19 @@ DetectorConstruction::DetectorConstruction()
   fDDGeneratorHeight = 50.0*cm;
   fDDGeneratorRadius = 4.0*cm;
   // Moderator
-  fModerator_Thickness = 10*cm;
+  fModerator_Thickness = 8*cm;
   fModerator_Height = fDDGeneratorHeight + fModerator_Thickness; // must be larger than the DD generator height
   fModerator_Radius = fDDGeneratorRadius + 8*cm;
   // 1st Filter
   fFilter1Height = 14*cm;
   fFilter1Radius = fModerator_Radius + 4.0*cm;
   // 2nd Filter
-  fFilter2Height = 5*cm;
+  fFilter2Height = 6*cm;
   fFilter2Radius_top = fFilter1Radius;
   fFilter2Radius_bottom = fModerator_Radius;
   //fFilter2Radius_bottom = 12.5*cm;
   // 3rd Filter
-  fFilter3Height        = 3.0*cm;
+  fFilter3Height        = 5.0*cm;
   fFilter3Radius_top    = fFilter2Radius_bottom;
   fFilter3Radius_bottom = fFilter2Radius_bottom;
   //fFilter3Radius_bottom = 12.5*cm;
@@ -129,8 +129,8 @@ DetectorConstruction::DetectorConstruction()
   
   // neutron guide
   fNGuideHeight = fFilter2Height;
-  fNGuideRadius_top = fFilter2Radius_top + fReflectorThickness/2;
-  fNGuideRadius_bottom = fFilter2Radius_bottom + fReflectorThickness/2;
+  fNGuideRadius_top = fFilter2Radius_top + fReflectorThickness;
+  fNGuideRadius_bottom = fFilter2Radius_bottom + fReflectorThickness;
   
   // neutron shield
   fNShieldThickness = 12.0*cm;
