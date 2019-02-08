@@ -234,7 +234,10 @@ void HistoManager::Book()
   //Histogram 29 - neutron capture time since DD pulse (all neutrons)
   ih = analysisManager->CreateH1("h1.29", "neutron capture time since DD pulse", nbins, vmin, vmax, "us");
   analysisManager->SetH1Activation(ih, true);
-
+  
+  //Histogram 29 - neutron thermalization time since DD pulse (all neutrons)
+  ih = analysisManager->CreateH1("h1.30", "neutron thermalization time since DD pulse", nbins, vmin, vmax, "us");
+  analysisManager->SetH1Activation(ih, true);
 
   
   // histos 2D
@@ -264,13 +267,12 @@ void HistoManager::Book()
   ih = analysisManager->CreateH2("h2.9","neutron capture position in LAr TPC (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
 
-
-
-
-
-
-  
-
+  // nTuples
+  analysisManager->CreateNtuple("Neutron Captures", "Neutron Captures"); //id = 0
+  analysisManager->CreateNtupleDColumn("ncap_x");       //column 0
+  analysisManager->CreateNtupleDColumn("ncap_y");       //column 1
+  analysisManager->CreateNtupleDColumn("ncap_z");       //column 2
+  analysisManager->FinishNtuple();
    
 }
 

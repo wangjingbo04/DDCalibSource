@@ -89,30 +89,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     fTrackingAction->UpdateTrackInfo(ekin,trackl,time, procName, endVolumeName);
     G4AnalysisManager::Instance()->FillH1(6,ekin); // fill the energy of each step to the histogram
     if( procName == "nCapture" && endVolume == fDetector->GetLogicPool()) {
-      G4AnalysisManager::Instance()->FillH1(28, time); 	
+      G4AnalysisManager::Instance()->FillH1(28,time); 	
     }
   }
-  
-
-  /*
-  // neutrons from generator to 1st moderator
-  if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
-  	&& postPoint->GetStepStatus() == fGeomBoundary 
-  	&& preVolume == fDetector->GetLogicDDGenerator() 
-  	&& endVolume == fDetector->GetLogicModerator()) {
-    
-      fEventAction->AddNeutronEnter_Moderator();
-      if(fEventAction->GetNNeutronEnter_Moderator() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
-  }
-  */
-
 
   // neutrons from generator to 1st moderator
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicDDGenerator() 
-  	&& endVolume != fDetector->GetLogicDDGenerator()) {
-    
+  	&& endVolume != fDetector->GetLogicDDGenerator()) {   
       fEventAction->AddNeutronExit_Generator();
       if(fEventAction->GetNNeutronExit_Generator() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
   }
@@ -124,7 +109,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
    && fEventAction->GetNNeutronEnter_Moderator()== 1
    && preVolume == fDetector->GetLogicModerator() 
    || endVolume == fDetector->GetLogicModerator()) {
-
          Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
          run->AddCollisionsMod1();
   }
@@ -173,7 +157,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   }
 
   
-  // neutrons from filter 3 to Li absorber
+  // neutrons from filter 3 to absorber
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicFilter3() 
@@ -203,16 +187,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       fEventAction->AddNeutronEnter_ArBuffer();
       if(fEventAction->GetNNeutronEnter_ArBuffer() == 1){
             G4ThreeVector p = aStep->GetTrack()->GetMomentumDirection();
-            if (p.x() == 0 && p.z() == 0){}
-                else{
-                    G4double angle1 = GetTheta(p.x(), p.z());
-                    G4AnalysisManager::Instance()->FillH1(15, angle1);
-                }
-            if (p.x() == 0 && p.y() == 0){}
-                else{
-                    G4double angle2 = GetPhi(p.x(), p.y());
-                    G4AnalysisManager::Instance()->FillH1(16, angle2);
-                }
+            G4double angle1 = GetTheta(p.z());
+            G4AnalysisManager::Instance()->FillH1(15, angle1);
+            G4double angle2 = GetPhi(p.x(), p.y());
+            G4AnalysisManager::Instance()->FillH1(16, angle2);
         }
         
         if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(13,kinEnergy);
@@ -226,17 +204,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     
       fEventAction->AddNeutronEnter_LArPool();
       if(fEventAction->GetNNeutronEnter_LArPool()==1){
-            G4ThreeVector q = aStep->GetTrack()->GetMomentumDirection();
-            if (q.x() == 0 && q.z() == 0){}
-            else{
-                G4double angle3 = GetTheta(q.x(), q.z());
-                G4AnalysisManager::Instance()->FillH1(26, angle3);
-            }
-            if (q.x() == 0 && q.y() == 0){}
-            else{
-                G4double angle4 = GetPhi(q.x(), q.y());
-                G4AnalysisManager::Instance()->FillH1(27, angle4);
-            }
+         G4ThreeVector q = aStep->GetTrack()->GetMomentumDirection();
+         G4double angle3 = GetTheta(q.z());
+         G4AnalysisManager::Instance()->FillH1(26, angle3);
+         G4double angle4 = GetPhi(q.x(), q.y());
+         G4AnalysisManager::Instance()->FillH1(27, angle4);
         }
       if(fEventAction->GetNNeutronEnter_LArPool() == 1) G4AnalysisManager::Instance()->FillH1(14,kinEnergy);	
   }
@@ -303,7 +275,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	G4AnalysisManager::Instance()->FillH2(8,x, y);
   	G4AnalysisManager::Instance()->FillH2(9,x, z);	
   	G4double time   = aStep->GetTrack()->GetGlobalTime(); 
-  	G4AnalysisManager::Instance()->FillH1(29, time);	 
+  	G4AnalysisManager::Instance()->FillH1(29, time);	//golbal time 
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, x);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 1, y);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 2, z);
   }  
 
 
@@ -396,72 +371,34 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
      G4AnalysisManager::Instance()->FillH1(25, kinEnergy);
      fEventAction->AddNeutronEnter_World();
   }
-
-
-
-
 }
 
 
-G4double SteppingAction::GetTheta(G4double dx, G4double dz){
-
-    const G4double pi = 3.14159265;
-    G4double theta = std::atan(dz/dx) * (180/pi);
-
-    if(dx > 0 && dz > 0)
-        theta = theta + 90;
-    else if(dx < 0 && dz < 0)
-        theta = theta - 90;
-    else if(dx > 0 && dz < 0)
-        theta = theta + 90;
-    else if(dx < 0 && dz > 0)
-        theta = theta - 90;
-    else if(dz == 0 && dx > 0)
-        theta = 90;
-    else if(dz == 0 && dx < 0)
-        theta = -90;
-    else if(dx == 0 && dz < 0)
-        theta = 0;
-    else if(dx == 0 && dz > 0)
-        theta = 180;
-
-    if(theta > 90 || theta < -90)
-        G4cout << "Error - SteppingAction::GetTheta()  " << "dx = " << dx << ", dz = " << dz << G4endl;
+G4double SteppingAction::GetTheta(G4double dz){
+    
+    G4double theta = CLHEP::pi - std::acos(dz);
+    theta = theta * (180./CLHEP::pi);	
 
     return theta*degree;
 }
 
-
-
-
-
-
-
-G4double SteppingAction::GetPhi(G4double dx, G4double dy){
+G4double SteppingAction::GetPhi(G4double dx, G4double dy) {
     
-    const G4double pi = 3.14159265;
-    G4double phi = std::atan(dy/dx) * (180/pi);
-
-
-    if(dx > 0 && dy > 0)
-        phi = phi + 90;
-    else if(dx < 0 && dy < 0)
-        phi = phi - 90;
-    else if(dx > 0 && dy < 0)
-        phi = phi + 90;
-    else if(dx < 0 && dy > 0)
-        phi = phi - 90;
-    else if(dy == 0 && dx > 0)
-        phi = 90;
-    else if(dy == 0 && dx < 0)
-        phi = -90;
-    else if(dx == 0 && dy < 0)
-        phi = 0;
-    else if(dx == 0 && dy > 0)
-        phi = 180;
-        
-   if(phi > 180 || phi < -180)
-        G4cout << "Error - SteppingAction::GetPhi() " << "dx = " << dx << ", dy = " << dy << G4endl;
+    G4double phi = 0.;
+    if(dx ==0.0) {
+      if(dy>0) phi = CLHEP::pi/2;
+      else if(dy<0) phi = -CLHEP::pi/2;
+      else std::cout<<"Error: SteppingAction::GetPhi()"<<std::endl;
+    }
+    else if( dx!=0.0 ){
+      phi = atan(dy/dx);
+      if( dx<0.0 ){
+        if( dy>0.0 ) phi += CLHEP::pi;
+        if( dy<0.0 ) phi -= CLHEP::pi;
+      }  
+      phi = phi * (180./CLHEP::pi);
+    }
+    
 
     return phi*degree;
 }

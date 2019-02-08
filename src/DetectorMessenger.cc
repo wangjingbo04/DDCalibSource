@@ -133,35 +133,35 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
 
 
   //Set Dimension Commands
-  fModeratorHeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setModeratorHeight",this);
-  fModeratorHeightCmd->SetGuidance("Set Height of the moderator");
-  fModeratorHeightCmd->SetParameterName("ModeratorHeight",false);
-  fModeratorHeightCmd->SetRange("ModeratorHeight>0.");
-  fModeratorHeightCmd->SetUnitCategory("Length");
-  fModeratorHeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fModeratorThicknessCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetModeratorThickness",this);
+  fModeratorThicknessCmd->SetGuidance("Set Height of the moderator");
+  fModeratorThicknessCmd->SetParameterName("ModeratorThickness",false);
+  fModeratorThicknessCmd->SetRange("ModeratorThickness>0.");
+  fModeratorThicknessCmd->SetUnitCategory("Length");
+  fModeratorThicknessCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fFilter1HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setFilter1Height",this);
+  fFilter1HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetFilter1Height",this);
   fFilter1HeightCmd->SetGuidance("Set Height of the 1st filter");
   fFilter1HeightCmd->SetParameterName("Filter1Height",false);
   fFilter1HeightCmd->SetRange("Filter1Height>0.");
   fFilter1HeightCmd->SetUnitCategory("Length");
   fFilter1HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fFilter2HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setFilter2Height",this);
+  fFilter2HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetFilter2Height",this);
   fFilter2HeightCmd->SetGuidance("Set Height of the 2nd filter");
   fFilter2HeightCmd->SetParameterName("Filter2Height",false);
   fFilter2HeightCmd->SetRange("Filter2Height>0.");
   fFilter2HeightCmd->SetUnitCategory("Length");
   fFilter2HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fFilter3HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setFilter3Height",this);
+  fFilter3HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetFilter3Height",this);
   fFilter3HeightCmd->SetGuidance("Set Height of the 3rd filter");
   fFilter3HeightCmd->SetParameterName("Filter3Height",false);
   fFilter3HeightCmd->SetRange("Filter3Height>0.");
   fFilter3HeightCmd->SetUnitCategory("Length");
   fFilter3HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   
-  fAbsorberHeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setAbsorberHeight",this);
+  fAbsorberHeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetAbsorberHeight",this);
   fAbsorberHeightCmd->SetGuidance("Set Height of the thermal neutron absorber");
   fAbsorberHeightCmd->SetParameterName("AbsorberHeight",false);
   fAbsorberHeightCmd->SetRange("AbsorberHeight>0.");
@@ -189,17 +189,22 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fNShieldThickCmd->SetUnitCategory("Length");
   fNShieldThickCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   
-
+  fReflectorThickCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetClearanceAboveCryostat",this);
+  fReflectorThickCmd->SetGuidance("Set Clearance Above Cryostat");
+  fReflectorThickCmd->SetParameterName("ClearanceAboveCryostat",false);
+  fReflectorThickCmd->SetRange("ClearanceAboveCryostat>0.");
+  fReflectorThickCmd->SetUnitCategory("Length");
+  fReflectorThickCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
  
   
-  fSizeCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/setSize",this);
+  fSizeCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetSize",this);
   fSizeCmd->SetGuidance("Set size of the box");
   fSizeCmd->SetParameterName("Size",false);
   fSizeCmd->SetRange("Size>0.");
   fSizeCmd->SetUnitCategory("Length");
   fSizeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   
-  fIsotopeCmd = new G4UIcommand("/ddsource/det/setIsotopeMat",this);
+  fIsotopeCmd = new G4UIcommand("/ddsource/det/SetIsotopeMat",this);
   fIsotopeCmd->SetGuidance("Build and select a material with single isotope");
   fIsotopeCmd->SetGuidance("  symbol of isotope, Z, A, density of material");
   //
@@ -253,7 +258,7 @@ DetectorMessenger::~DetectorMessenger()
   delete fReflectorSetMaterCmd;
   delete fReflectorGetMaterCmd;
 
-  delete fModeratorHeightCmd;
+  delete fModeratorThicknessCmd;
   delete fFilter1HeightCmd;
   delete fFilter2HeightCmd;
   delete fFilter3HeightCmd;
@@ -317,13 +322,14 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 
   if( command == fReflectorGetMaterCmd )
    { fDetector->GetReflectorMaterial();}
+   
 
 
 
    
   //Set Dimension Commands
-  if( command == fModeratorHeightCmd )
-   { fDetector->SetModeratorHeight(fSizeCmd->GetNewDoubleValue(newValue));}
+  if( command == fModeratorThicknessCmd )
+   { fDetector->SetModeratorThickness(fSizeCmd->GetNewDoubleValue(newValue));}
   
   if( command == fFilter1HeightCmd )
    { fDetector->SetFilter1Height(fSizeCmd->GetNewDoubleValue(newValue));}
@@ -333,6 +339,9 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 
   if( command == fFilter3HeightCmd )
    { fDetector->SetFilter3Height(fSizeCmd->GetNewDoubleValue(newValue));}
+   
+  if( command == fAbsorberHeightCmd )
+   { fDetector->SetAbsorberHeight(fSizeCmd->GetNewDoubleValue(newValue));}
 
   if( command == fPortRefThickCmd )
    { fDetector->SetPortRefThickness(fSizeCmd->GetNewDoubleValue(newValue));}
@@ -342,7 +351,8 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 
   if( command == fNShieldThickCmd )
    { fDetector->SetNShieldThickness(fSizeCmd->GetNewDoubleValue(newValue));}
-        
+   if( command == fClearanceAboveCryostatCmd )
+   { fDetector->SetClearanceAboveCryostat(fSizeCmd->GetNewDoubleValue(newValue));}     
   
 
   if (command == fIsotopeCmd)

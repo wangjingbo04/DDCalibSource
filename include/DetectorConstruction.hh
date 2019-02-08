@@ -82,7 +82,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void GetNGuideMaterial ();
 
     //Set Dimension Functions
-    void SetModeratorHeight(G4double);
+    void SetModeratorThickness(G4double);
     void SetFilter1Height(G4double);
     void SetFilter2Height(G4double);
     void SetFilter3Height(G4double);
@@ -91,6 +91,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetReflectorThickness(G4double);
     void SetNGuideThickness(G4double);
     void SetNShieldThickness(G4double);
+    void SetClearanceAboveCryostat (G4double value);
     
 
   public:
@@ -154,6 +155,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      
      G4Material*        fWorldMater;  
      
+     // height above cryostat
+     G4double						fClearanceAboveCryostat;
+     
      // polypropylene insulator
      G4double           fInsulatorThickness; 
      G4double 					fInsulatorLength;
@@ -212,6 +216,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4Material*        fDDGeneratorMater;  
      
      // Moderator: 
+     G4double						fModerator_Thickness;
      G4double           fModerator_Height;
      G4double           fModerator_Radius;
      G4LogicalVolume*   fLogicModerator;

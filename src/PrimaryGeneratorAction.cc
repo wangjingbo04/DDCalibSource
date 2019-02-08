@@ -70,6 +70,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det, size_t
   G4double z = det->GetInsulatorHeight()/2 - det->GetPortHeight() + det->GetThermalAbsorborHeight() + det->GetFilter3Height() + det->GetFilter2Height() 
                + det->GetFilter1Height() + det->GetModeratorHeight() - det->GetDDGeneratorHeight() + 2.0*cm;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
+  
 
   fMessenger = new G4GenericMessenger(this,"/primary/", "...doc...");
   fMessenger->DeclareMethod("updateGunPosition", &PrimaryGeneratorAction::UpdateGunPosition, "...doc...");
@@ -90,17 +91,29 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
    G4double theta = std::abs(DDrandom()*degree);
-   G4AnalysisManager::Instance()->FillH1(16,theta);
-   G4double phi = (G4UniformRand()*2*pi)*degree;
-
-   G4double dx, dy, dz;
-
-   dx = std::sin(theta + pi) * std::cos(phi);
-   dy = std::sin(theta + pi) * std::sin(phi);
-   dz = std::cos(theta + pi);
-
-   //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));
-   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1));
+   G4AnalysisManager::Instance()->FillH1(17,theta);
+// Sean's generator turned out to be wrong   	(J. Wang Feb 5, 2019)
+//   G4double phi = (G4UniformRand()*pi)*degree;
+//
+//   G4double dx, dy, dz;
+//   theta = 45./180;
+//   dx = std::sin(theta + pi) * std::cos(phi);
+//   dy = std::sin(theta + pi) * std::sin(phi);
+//   dz = std::cos(theta + pi);
+   	
+// correcect direction generator (J. Wang Feb 5, 2019)
+   G4double cosTheta = -std::cos(theta);
+   G4double phi = twopi*G4UniformRand();
+   G4double sinTheta = std::sqrt(1. - cosTheta*cosTheta);
+   G4double dx = sinTheta*std::cos(phi),
+            dy = sinTheta*std::sin(phi),
+            dz = cosTheta;
+   	
+   //G4double e = 1000*G4UniformRand()*keV;
+   //fParticleGun->SetParticleEnergy(e);
+   //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1));
+   //fParticleGun->SetParticleEnergy(2.5*MeV);
+   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));
    fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
@@ -112,7 +125,6 @@ void PrimaryGeneratorAction::UpdateGunPosition() {
   G4double z = fDetector->GetInsulatorHeight()/2 - fDetector->GetPortHeight() + fDetector->GetThermalAbsorborHeight() + fDetector->GetFilter3Height() + fDetector->GetFilter2Height() + fDetector->GetFilter1Height() + fDetector->GetModeratorHeight() - fDetector->GetDDGeneratorHeight() + 2.0*cm;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));	
 }
-
 
 void PrimaryGeneratorAction::populateProbDist(){
 
@@ -133,15 +145,9 @@ void PrimaryGeneratorAction::populateProbDist(){
             probDist[i] = A + B * std::pow(cosine,2) + C * std::pow(cosine,4);
         }
     }
-
 }
 
-
-
-
-
 G4double PrimaryGeneratorAction::DDrandom(){
-
     G4RandGeneral *randDistribution = new G4RandGeneral(probDist, size);
     G4double random = randDistribution->shoot();
     G4double angle = -180 + (360 * random);

@@ -105,22 +105,25 @@ DetectorConstruction::DetectorConstruction()
   fDDGeneratorHeight = 50.0*cm;
   fDDGeneratorRadius = 4.0*cm;
   // Moderator
-  fModerator_Height = 65.0*cm; // must be larger than the DD generator height
-  fModerator_Radius = fDDGeneratorRadius + 8.0*cm;
+  fModerator_Thickness = 10*cm;
+  fModerator_Height = fDDGeneratorHeight + fModerator_Thickness; // must be larger than the DD generator height
+  fModerator_Radius = fDDGeneratorRadius + 8*cm;
   // 1st Filter
-  fFilter1Height = 10*cm;
+  fFilter1Height = 14*cm;
   fFilter1Radius = fModerator_Radius + 4.0*cm;
   // 2nd Filter
-  fFilter2Height = 15*cm;
+  fFilter2Height = 5*cm;
   fFilter2Radius_top = fFilter1Radius;
   fFilter2Radius_bottom = fModerator_Radius;
+  //fFilter2Radius_bottom = 12.5*cm;
   // 3rd Filter
-  fFilter3Height        = 10.0*cm;
+  fFilter3Height        = 3.0*cm;
   fFilter3Radius_top    = fFilter2Radius_bottom;
   fFilter3Radius_bottom = fFilter2Radius_bottom;
+  //fFilter3Radius_bottom = 12.5*cm;
   
   // neutron reflector
-  fReflectorThickness = 10.0*cm;
+  fReflectorThickness = 12.0*cm;
   fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
   fReflectorRadius = fFilter1Radius + fReflectorThickness;
   
@@ -138,9 +141,11 @@ DetectorConstruction::DetectorConstruction()
   fPortHeight = fInsulatorThickness;
   fPortOuterRadius = fNShieldRadius;
   // Thermal neutron absorber
-  fAbsorberHeight = 4*cm;
+  fAbsorberHeight = 3*cm;
   fThermalAbsorberRadius = fPortOuterRadius;
   
+  // Neutron source position Above Cryostat
+  fClearanceAboveCryostat = fAbsorberHeight; //must be higher than the absorber
   fDetectorMessenger = new DetectorMessenger(this);
   
 }
@@ -377,28 +382,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 //                                 fLogicInsulator,                                                           //its mother  volume
 //                                 false,                                                                     //no boolean operation
 //                                 0);                                                                        //copy number
-//  // Feedthrough port reflector
-//  G4Tubs* 
-//  sPortRef = new G4Tubs("PortRef",                                //its name
-//                        fPortRefInnerRadius,                      //its inner radius
-//                        fPortRefOuterRadius,                      //its outer radius
-//                        fPortRefHeight/2,                           //its height
-//                        0.,                                       //initial angle
-//                        CLHEP::twopi);                            //spanning angle
-//                
-//                       
-//
-//  fLogicPortRef = new G4LogicalVolume(sPortRef,                   //its shape
-//                                      fPortRefMater,              //its material
-//                                      "PortRef_l");               //its name
-//
-//  fPhysiPortRef = new G4PVPlacement(0,                                                           //no rotation
-//                                    G4ThreeVector(0, 0, fPortHeight/2 - fPortRefHeight/2),       //at (0,0,0)
-//                                    fLogicPortRef,                                               //its logical volume
-//                                    "PortRef_p",                                                 //its name
-//                                    fLogicPort,                                                  //its mother volume
-//                                    false,                                                       //no boolean operation
-//                                    0);                                                          //copy number
+
   // cryostat
   G4Box*
   sCryostat = new G4Box("Cryostat",                                                      //its name
@@ -449,7 +433,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       fNShieldMater,                                //its material
                                       "NShield_l");                                 //its name
   fPhysiNShield = new G4PVPlacement(0,                                                              //no rotation
-                                    G4ThreeVector(0, 0,  fInsulatorHeight/2 + fNShieldHeight/2 - fPortHeight + fAbsorberHeight),      
+                                    G4ThreeVector(0, 0,  fInsulatorHeight/2 - fPortHeight + fClearanceAboveCryostat + fNShieldHeight/2),      
                                     fLogicNShield ,                                                 //its logical volume
                                     "NShield_p",                                                    //its name
                                     fLWorld,                                                        //its mother  volume
@@ -826,9 +810,10 @@ void DetectorConstruction::SetSize(G4double value)
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 //Set Dimension Functions
-void DetectorConstruction::SetModeratorHeight(G4double value)
+void DetectorConstruction::SetModeratorThickness(G4double value)
 {
-  fModerator_Height = value;
+  fModerator_Thickness = value;
+  fModerator_Height = fDDGeneratorHeight + fModerator_Thickness;
   fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
   fNShieldHeight = fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
@@ -877,6 +862,11 @@ void DetectorConstruction::SetNShieldThickness(G4double value)
   fNShieldThickness = value;
   fNShieldHeight = fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+void DetectorConstruction::SetClearanceAboveCryostat (G4double value)
+{
+  fClearanceAboveCryostat = value;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -81,7 +81,7 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithoutParameter*   fReflectorGetMaterCmd;
 
     //Set Dimesion Commands
-    G4UIcmdWithADoubleAndUnit* fModeratorHeightCmd;
+    G4UIcmdWithADoubleAndUnit* fModeratorThicknessCmd;
     G4UIcmdWithADoubleAndUnit* fFilter1HeightCmd;
     G4UIcmdWithADoubleAndUnit* fFilter2HeightCmd;
     G4UIcmdWithADoubleAndUnit* fFilter3HeightCmd;
@@ -89,6 +89,7 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit* fPortRefThickCmd;
     G4UIcmdWithADoubleAndUnit* fReflectorThickCmd;
     G4UIcmdWithADoubleAndUnit* fNShieldThickCmd;
+    G4UIcmdWithADoubleAndUnit* fClearanceAboveCryostatCmd;
 
     G4UIcmdWithADoubleAndUnit* fSizeCmd;
     G4UIcmdWithADoubleAndUnit* fFilterHeightCmd;
