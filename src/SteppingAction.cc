@@ -102,8 +102,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(fEventAction->GetNNeutronExit_Generator() == 1) G4AnalysisManager::Instance()->FillH1(7,kinEnergy);
   }
   
-
-
   //Number of Collisions in the moderator
   if (aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
    && fEventAction->GetNNeutronEnter_Moderator()== 1
@@ -117,13 +115,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicModerator() 
-  	&& endVolume == fDetector->GetLogicFilter1()) {  
-    
+  	&& endVolume == fDetector->GetLogicFilter1()) {
       fEventAction->AddNeutronEnter_Filter1();
       if(fEventAction->GetNNeutronEnter_Filter1() == 1) G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
       Run* run = static_cast<Run*>(
           G4RunManager::GetRunManager()->GetNonConstCurrentRun());
-      if(kinEnergy >= 1*eV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Filter1() == 1) run->AddARCount();
+      if(kinEnergy >= 50*keV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Filter1() == 1) run->AddARCount();
   }
 
   //Number of Collisions in filter 1
@@ -388,7 +385,8 @@ G4double SteppingAction::GetPhi(G4double dx, G4double dy) {
     if(dx ==0.0) {
       if(dy>0) phi = CLHEP::pi/2;
       else if(dy<0) phi = -CLHEP::pi/2;
-      else std::cout<<"Error: SteppingAction::GetPhi()"<<std::endl;
+      else phi = 0;
+      //else std::cout<<"Error: SteppingAction::GetPhi()"<<std::endl;
     }
     else if( dx!=0.0 ){
       phi = atan(dy/dx);

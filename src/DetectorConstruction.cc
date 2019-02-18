@@ -97,9 +97,9 @@ DetectorConstruction::DetectorConstruction()
   fCryostatHeight= fPoolHeight + fBufferHeight + 2*fCryostatThickness;
   // Polyethylene insulator
   fInsulatorThickness = 90*cm;
-  fInsulatorLength = fPoolLength + 2*fCryostatThickness + 2*fInsulatorThickness;
-  fInsulatorWidth = fPoolWidth + 2*fCryostatThickness + 2*fInsulatorThickness;
-  fInsulatorHeight= fPoolHeight + fBufferHeight + 2*fCryostatThickness + 2*fInsulatorThickness;
+  fInsulatorLength = fCryostatLength + 2*fInsulatorThickness;
+  fInsulatorWidth = fCryostatWidth + 2*fInsulatorThickness;
+  fInsulatorHeight= fCryostatHeight + 2*fInsulatorThickness;
   
   // neutron DD generator
   fDDGeneratorHeight = 50.0*cm;
@@ -145,7 +145,8 @@ DetectorConstruction::DetectorConstruction()
   fThermalAbsorberRadius = fPortOuterRadius;
   
   // Neutron source position Above Cryostat
-  fClearanceAboveCryostat = fAbsorberHeight; //must be higher than the absorber
+  fClearanceAboveCryostat = fAbsorberHeight; //Design A-2: must be higher than the absorber
+  //fClearanceAboveCryostat = fPortHeight; //Design A-1: 
   fDetectorMessenger = new DetectorMessenger(this);
   
 }
@@ -187,6 +188,7 @@ void DetectorConstruction::DefineMaterials()
   G4Element* Mg = man->FindOrBuildElement("Mg");
   G4Element* Al = man->FindOrBuildElement("Al");
   G4Element* Si = man->FindOrBuildElement("Si");
+  G4Element* S = man->FindOrBuildElement("S");
   G4Element* K = man->FindOrBuildElement("K");
   G4Element* Ca = man->FindOrBuildElement("Ca");
   G4Element* Ti = man->FindOrBuildElement("Ti");
@@ -231,7 +233,23 @@ void DetectorConstruction::DefineMaterials()
   G4Element* ele_B = new G4Element("ele_B", "B", ncomponents=1);
   ele_B->AddIsotope(iso_B,abundance=100.*perCent);
   G4Material* B10=new G4Material("B10",2.34*g/cm3, ncomponents = 1);
-    B10->AddElement(ele_B, fractionmass = 1 );
+  B10->AddElement(ele_B, fractionmass = 1 );
+    
+  // SiO2
+  G4Isotope* iso_Si30 = new G4Isotope("iso_Si30", Z=14, A=30, a=29.9738*g/mole);
+  G4Element* ele_Si30 = new G4Element("ele_Si30", "Si30", ncomponents=1);
+  ele_Si30->AddIsotope(iso_Si30,abundance=100.*perCent);
+  G4Material* Si30=new G4Material("Si30",2.3296*g/cm3, ncomponents = 1);
+  Si30->AddElement(ele_Si30, fractionmass = 1 );
+  G4Material* SiO2 = new G4Material("SiO2", 2.65*g/cm3, ncomponents=2, kStateSolid);
+  SiO2->AddElement(Si, natoms=1);
+  SiO2->AddElement(O, natoms=2);
+  
+  // SiS2
+  G4Material* SiS2 = new G4Material("SiS2", 1.85*g/cm3, ncomponents=2, kStateSolid);
+  SiS2->AddElement(Si, natoms=1);
+  SiS2->AddElement(S, natoms=2);
+  
   // Fluental
   G4Material* AlF3 = new G4Material("AlF3", 2.88*g/cm3, ncomponents=2, kStateSolid); //ALF3
       AlF3->AddElement(Al, natoms=1);
@@ -275,7 +293,7 @@ void DetectorConstruction::DefineMaterials()
   // Feedthrough port
   fPortMater = Air20;
   // feedthrough port reflector
-  fPortRefMater = man->FindOrBuildMaterial("G4_S");
+  fPortRefMater = man->FindOrBuildMaterial("G4_Pb");
   // cryostat
   fCryostatMater = fVacuum;
   // liquid argon pool
