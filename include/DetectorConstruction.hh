@@ -93,6 +93,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetNShieldThickness(G4double);
     void SetClearanceAboveCryostat (G4double value);
     
+    void SetSourceCenterX(G4double value);
+    void SetSourceCenterY(G4double value);
+    
 
   public:
   
@@ -140,6 +143,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4double           GetThermalAbsorberHeight()  {return fAbsorberHeight;};
      G4double           GetPortHeight()  						{return fPortHeight;};
      G4double           GetThermalAbsorborHeight()	{return fAbsorberHeight;};
+     G4double						GetClearanceAboveCryostat() {return fClearanceAboveCryostat;};
+     G4double						GetSourceCenterX()					{return fCenterX;}
+     G4double						GetSourceCenterY()					{return fCenterY;}
      
      
      void               PrintParameters();
@@ -157,6 +163,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      
      // height above cryostat
      G4double						fClearanceAboveCryostat;
+     // neutron source centers
+     G4double						fCenterX;
+     G4double						fCenterY;
+     
+     
      
      // polypropylene insulator
      G4double           fInsulatorThickness; 

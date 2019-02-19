@@ -73,23 +73,23 @@ DetectorConstruction::DetectorConstruction()
 //  fBufferLength      = 8.9*m; 
 //  fBufferWidth      = 7.8*m; 
 //  fBufferHeight      = 0.8*m; 
-//  // DUNE Lar pool  
-//  fPoolLength      = 58.0*m;
-//  fPoolWidth      = 14.5*m;
-//  fPoolHeight      = 12.0*m;
-//  
-//  // DUNE Gas argon buffer
-//  fBufferLength      = 58.0*m;
-//  fBufferWidth      = 14.5*m;
-//  fBufferHeight      = 0.8*m;
-  // Generator LAr TPC  
-  fPoolLength      = 10.0*m;
-  fPoolWidth      = 10.0*m;
-  fPoolHeight      = 10.0*m;
-  // Gas argon buffer
-  fBufferLength      = 10.0*m;
-  fBufferWidth      = 10.0*m;
+  // DUNE Lar pool  
+  fPoolLength      = 58.0*m;
+  fPoolWidth      = 14.5*m;
+  fPoolHeight      = 12.0*m;
+  
+  // DUNE Gas argon buffer
+  fBufferLength      = 58.0*m;
+  fBufferWidth      = 14.5*m;
   fBufferHeight      = 0.8*m;
+//  // Generator LAr TPC  
+//  fPoolLength      = 10.0*m;
+//  fPoolWidth      = 10.0*m;
+//  fPoolHeight      = 10.0*m;
+//  // Gas argon buffer
+//  fBufferLength      = 10.0*m;
+//  fBufferWidth      = 10.0*m;
+//  fBufferHeight      = 0.8*m;
     // stainless steel cryostat
   fCryostatThickness = 1.0*mm;
   fCryostatLength = fPoolLength + 2*fCryostatThickness;
@@ -125,7 +125,7 @@ DetectorConstruction::DetectorConstruction()
   // neutron reflector
   fReflectorThickness = 12.0*cm;
   fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
-  fReflectorRadius = fFilter1Radius + fReflectorThickness;
+  fReflectorRadius = fModerator_Radius + fReflectorThickness;
   
   // neutron guide
   fNGuideHeight = fFilter2Height;
@@ -146,6 +146,14 @@ DetectorConstruction::DetectorConstruction()
   
   // Neutron source position Above Cryostat
   fClearanceAboveCryostat = fAbsorberHeight; //Design A-2: must be higher than the absorber
+  // Neutron source center position
+  //fCenterX = -28.0* m;
+  //fCenterY = -6.25* m;
+  //fCenterX = 15* m;
+  //fCenterY = 0* m;
+  fCenterX = 0* m;
+  fCenterY = 0* m;
+  
   //fClearanceAboveCryostat = fPortHeight; //Design A-1: 
   fDetectorMessenger = new DetectorMessenger(this);
   
@@ -365,7 +373,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   G4Tubs*
   sInsulator2 = new G4Tubs("Insulator2",                         //its name
                    0, fPortOuterRadius, fInsulatorThickness/2, 0.,CLHEP::twopi );   //its dimensions
-  G4ThreeVector zTransInsulator(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2); 
+  G4ThreeVector zTransInsulator(fCenterX, fCenterY, fInsulatorHeight/2 - fInsulatorThickness/2); 
   G4SubtractionSolid* sInsulator =
   new G4SubtractionSolid("Insulator1-Insulator2", sInsulator1, sInsulator2, 0, zTransInsulator); 
   fLogicInsulator = new G4LogicalVolume(sInsulator,                     //its shape
@@ -451,7 +459,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       fNShieldMater,                                //its material
                                       "NShield_l");                                 //its name
   fPhysiNShield = new G4PVPlacement(0,                                                              //no rotation
-                                    G4ThreeVector(0, 0,  fInsulatorHeight/2 - fPortHeight + fClearanceAboveCryostat + fNShieldHeight/2),      
+                                    G4ThreeVector(fCenterX, fCenterY,  fInsulatorHeight/2 - fPortHeight + fClearanceAboveCryostat + fNShieldHeight/2),      
                                     fLogicNShield ,                                                 //its logical volume
                                     "NShield_p",                                                    //its name
                                     fLWorld,                                                        //its mother  volume
@@ -469,7 +477,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                               fThermalAbsorberMater,            //materiald
                                               "ThermalAbsorber_l");             //name
   fPhysiThermalAbsorber = new G4PVPlacement(0,                                                                   //no rotation
-                                            G4ThreeVector(0, 0, fInsulatorHeight/2  -fPortHeight + fAbsorberHeight/2),  
+                                            G4ThreeVector(fCenterX, fCenterY, fInsulatorHeight/2  -fPortHeight + fAbsorberHeight/2),  
                                             fLogicThermalAbsorber,                                               //logical volume
                                             "ThermalAbsorber_p",                                                 //name
                                             fLWorld,                                                          //mother  volume
@@ -882,9 +890,28 @@ void DetectorConstruction::SetNShieldThickness(G4double value)
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
-void DetectorConstruction::SetClearanceAboveCryostat (G4double value)
+void DetectorConstruction::SetClearanceAboveCryostat (G4double value) // not working
 {
   fClearanceAboveCryostat = value;
+  fLogicNShield->RemoveDaughter(fPhysiNShield);
+  delete fPhysiNShield; fPhysiNShield = 0;
+  fPhysiNShield = new G4PVPlacement(0,                                                              //no rotation
+                                    G4ThreeVector(fCenterX, fCenterY,  fInsulatorHeight/2 - fPortHeight + fClearanceAboveCryostat + fNShieldHeight/2),      
+                                    fLogicNShield ,                                                 //its logical volume
+                                    "NShield_p",                                                    //its name
+                                    fLWorld,                                                        //its mother  volume
+                                    false,                                                          //no boolean operation
+                                    0);                                                             //copy number
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+void DetectorConstruction::SetSourceCenterX(G4double value)
+{
+  fCenterX = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+void DetectorConstruction::SetSourceCenterY(G4double value)
+{
+  fCenterY = value;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

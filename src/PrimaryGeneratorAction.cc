@@ -65,8 +65,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det, size_t
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,0.));
   fParticleGun->SetParticleEnergy(2.5*MeV);
-  G4double x = 0.*cm;
-  G4double y = 0.*cm;
+  G4double x = fDetector->GetSourceCenterX();
+  G4double y = fDetector->GetSourceCenterY();
   G4double z = det->GetInsulatorHeight()/2 - det->GetPortHeight() + det->GetThermalAbsorborHeight() + det->GetFilter3Height() + det->GetFilter2Height() 
                + det->GetFilter1Height() + det->GetModeratorHeight() - det->GetDDGeneratorHeight() + 2.0*cm;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
@@ -112,7 +112,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
    //G4double e = 1000*G4UniformRand()*keV;
    //fParticleGun->SetParticleEnergy(e);
    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1));
-   //fParticleGun->SetParticleEnergy(2.5*MeV);
+   //fParticleGun->SetParticleEnergy(2.5*MeV);s
    //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));
    fParticleGun->GeneratePrimaryVertex(anEvent);
 }
@@ -120,9 +120,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorAction::UpdateGunPosition() {
-  G4double x = 0.*cm;
-  G4double y = 0.*cm;
-  G4double z = fDetector->GetInsulatorHeight()/2 - fDetector->GetPortHeight() + fDetector->GetThermalAbsorborHeight() + fDetector->GetFilter3Height() + fDetector->GetFilter2Height() + fDetector->GetFilter1Height() + fDetector->GetModeratorHeight() - fDetector->GetDDGeneratorHeight() + 2.0*cm;
+  G4double x = fDetector->GetSourceCenterX();
+  G4double y = fDetector->GetSourceCenterY();
+  G4double z = fDetector->GetInsulatorHeight()/2 - fDetector->GetPortHeight() + fDetector->GetClearanceAboveCryostat() + fDetector->GetThermalAbsorborHeight() + fDetector->GetFilter3Height() + fDetector->GetFilter2Height() + fDetector->GetFilter1Height() + fDetector->GetModeratorHeight() - fDetector->GetDDGeneratorHeight() + 2.0*cm;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));	
 }
 

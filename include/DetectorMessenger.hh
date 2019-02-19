@@ -90,6 +90,8 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit* fReflectorThickCmd;
     G4UIcmdWithADoubleAndUnit* fNShieldThickCmd;
     G4UIcmdWithADoubleAndUnit* fClearanceAboveCryostatCmd;
+    G4UIcmdWithADoubleAndUnit* fSourceCenterXCmd;
+    G4UIcmdWithADoubleAndUnit* fSourceCenterYCmd;
 
     G4UIcmdWithADoubleAndUnit* fSizeCmd;
     G4UIcmdWithADoubleAndUnit* fFilterHeightCmd;
