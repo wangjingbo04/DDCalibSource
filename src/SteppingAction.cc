@@ -233,8 +233,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicPool()
   	&& endVolume == fDetector->GetLogicInsulator()) {
-    
-      fEventAction->AddNeutronEnter_LArPool();
       G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, kinEnergy);
   	  G4AnalysisManager::Instance()->FillNtupleIColumn(0, 1, 4); 
   	  G4AnalysisManager::Instance()->AddNtupleRow(); 
