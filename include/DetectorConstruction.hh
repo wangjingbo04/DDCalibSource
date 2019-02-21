@@ -129,6 +129,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume* GetLogicFilter2()         {return fLogicFilter2;};
      G4LogicalVolume* GetLogicFilter3()         {return fLogicFilter3;}; 
      G4LogicalVolume* GetLogicThermalAbsorber() {return fLogicThermalAbsorber;}; 
+     G4LogicalVolume* GetLogicInsulator() {return fLogicInsulator;}; 
                    
                     
      G4double           GetSize()                   {return fWorldSize;};      

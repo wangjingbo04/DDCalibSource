@@ -117,7 +117,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& preVolume == fDetector->GetLogicModerator() 
   	&& endVolume == fDetector->GetLogicFilter1()) {
       fEventAction->AddNeutronEnter_Filter1();
-      if(fEventAction->GetNNeutronEnter_Filter1() == 1) G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
+      if(fEventAction->GetNNeutronEnter_Filter1() == 1) {
+      	G4AnalysisManager::Instance()->FillH1(8,kinEnergy);
+      	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, kinEnergy);
+  	    G4AnalysisManager::Instance()->FillNtupleIColumn(0, 1, 0); 
+  	    G4AnalysisManager::Instance()->AddNtupleRow(); 
+      }
       Run* run = static_cast<Run*>(
           G4RunManager::GetRunManager()->GetNonConstCurrentRun());
       if(kinEnergy >= 50*keV && kinEnergy < 1*MeV && fEventAction->GetNNeutronEnter_Filter1() == 1) run->AddARCount();
@@ -162,7 +167,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
         fEventAction->AddNeutronEnter_ThermalAbsorber();
         
-        if(fEventAction->GetNNeutronEnter_ThermalAbsorber() == 1) G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
+        if(fEventAction->GetNNeutronEnter_ThermalAbsorber() == 1) {
+        	G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
+        	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, kinEnergy);
+  	      G4AnalysisManager::Instance()->FillNtupleIColumn(0, 1, 1); 
+  	      G4AnalysisManager::Instance()->AddNtupleRow(); 
+        }
   }
   
   // neutrons from Li absorber to cryostat memberane
@@ -171,7 +181,18 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& preVolume == fDetector->GetLogicThermalAbsorber() 
   	&& endVolume == fDetector->GetLogicCryostat()) {
         fEventAction->AddNeutronEnter_Cryostat();        
-        if(fEventAction->GetNNeutronEnter_Cryostat() == 1) G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
+        if(fEventAction->GetNNeutronEnter_Cryostat() == 1) {
+        	G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
+        	G4ThreeVector p = aStep->GetTrack()->GetMomentumDirection();
+          G4double angle1 = GetTheta(p.z());
+          G4AnalysisManager::Instance()->FillH1(15, angle1);
+          G4double angle2 = GetPhi(p.x(), p.y());
+          G4AnalysisManager::Instance()->FillH1(16, angle2);
+          G4AnalysisManager::Instance()->FillH1(31, kinEnergy);
+          G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, kinEnergy);
+  	      G4AnalysisManager::Instance()->FillNtupleIColumn(0, 1, 2); 
+  	      G4AnalysisManager::Instance()->AddNtupleRow(); 
+        }
   }
 
   
@@ -182,35 +203,42 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& endVolume == fDetector->GetLogicBuffer()) {  
     
       fEventAction->AddNeutronEnter_ArBuffer();
-      if(fEventAction->GetNNeutronEnter_ArBuffer() == 1){
-            G4ThreeVector p = aStep->GetTrack()->GetMomentumDirection();
-            G4double angle1 = GetTheta(p.z());
-            G4AnalysisManager::Instance()->FillH1(15, angle1);
-            G4double angle2 = GetPhi(p.x(), p.y());
-            G4AnalysisManager::Instance()->FillH1(16, angle2);
-        }
         
-        if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(13,kinEnergy);
+      if(fEventAction->GetNNeutronEnter_ArBuffer() == 1) G4AnalysisManager::Instance()->FillH1(13,kinEnergy);
   }
   
   // neutrons entering liquid Argon pool
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicBuffer()
-  	&& endVolume == fDetector->GetLogicPool()) {  
+  	&& endVolume == fDetector->GetLogicPool()) {
     
       fEventAction->AddNeutronEnter_LArPool();
       if(fEventAction->GetNNeutronEnter_LArPool()==1){
          G4ThreeVector q = aStep->GetTrack()->GetMomentumDirection();
          G4double angle3 = GetTheta(q.z());
-         G4AnalysisManager::Instance()->FillH1(26, angle3);
          G4double angle4 = GetPhi(q.x(), q.y());
-         G4AnalysisManager::Instance()->FillH1(27, angle4);
-        }
-      if(fEventAction->GetNNeutronEnter_LArPool() == 1) G4AnalysisManager::Instance()->FillH1(14,kinEnergy);	
+         G4AnalysisManager::Instance()->FillH1(14,kinEnergy);   
+         G4AnalysisManager::Instance()->FillH1(26, angle3); 
+         G4AnalysisManager::Instance()->FillH1(27, angle4);    
+         G4AnalysisManager::Instance()->FillH1(14,kinEnergy);	
+         G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, kinEnergy);
+  	      G4AnalysisManager::Instance()->FillNtupleIColumn(0, 1, 3); 
+  	      G4AnalysisManager::Instance()->AddNtupleRow(); 
+      }
   }
-
   
+   // neutrons entering insulator from liquid Argon pool
+  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& postPoint->GetStepStatus() == fGeomBoundary 
+  	&& preVolume == fDetector->GetLogicPool()
+  	&& endVolume == fDetector->GetLogicInsulator()) {
+    
+      fEventAction->AddNeutronEnter_LArPool();
+      G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, kinEnergy);
+  	  G4AnalysisManager::Instance()->FillNtupleIColumn(0, 1, 4); 
+  	  G4AnalysisManager::Instance()->AddNtupleRow(); 
+  }
   
   // count processes
   // 
@@ -223,8 +251,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& procName == "nCapture" 
   	&& endVolume == fDetector->GetLogicModerator()) {
-  	G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
-  	G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
+  	G4ThreeVector postPointPos  = aStep->GetPostStepPoint()->GetPosition();
+  	G4double x = postPointPos.x(), y = postPointPos.y(), z = postPointPos.z();
   	G4AnalysisManager::Instance()->FillH2(0,x, y);
   	G4AnalysisManager::Instance()->FillH2(1,x, z);	
   }
@@ -234,10 +262,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& procName == "nCapture" 
   	&& endVolume == fDetector->GetLogicFilter1()) {
 
-  	  G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
-  	  G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
+  	  G4ThreeVector postPointPos  = aStep->GetPostStepPoint()->GetPosition();
+  	  G4double x = postPointPos.x(), y = postPointPos.y(), z = postPointPos.z();
   	  G4AnalysisManager::Instance()->FillH2(2,x, y);
-  	  G4AnalysisManager::Instance()->FillH2(3,x, z);	
+  	  G4AnalysisManager::Instance()->FillH2(3,x, z);
   }
 
   procName = process->GetProcessName();  
@@ -245,10 +273,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& procName == "nCapture" 
   	&& endVolume == fDetector->GetLogicFilter2()) {
 
-  	  G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
-  	  G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
-  	  G4AnalysisManager::Instance()->FillH2(4,x, y);
-  	  G4AnalysisManager::Instance()->FillH2(5,x, z);	
+  	  G4ThreeVector postPointPos  = aStep->GetPostStepPoint()->GetPosition();
+  	  G4double x = postPointPos.x(), y = postPointPos.y(), z = postPointPos.z();
+  	  //G4AnalysisManager::Instance()->FillH2(4,x, y);
+  	  //G4AnalysisManager::Instance()->FillH2(5,x, z);	
   }
 
   
@@ -257,27 +285,57 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& procName == "nCapture" 
   	&& endVolume == fDetector->GetLogicFilter3()) {
 
-  	  G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
-  	  G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
-  	  G4AnalysisManager::Instance()->FillH2(6,x, y);
-  	  G4AnalysisManager::Instance()->FillH2(7,x, z);	
+  	  G4ThreeVector postPointPos  = aStep->GetPostStepPoint()->GetPosition();
+  	  G4double x = postPointPos.x(), y = postPointPos.y(), z = postPointPos.z();
+  	  //G4AnalysisManager::Instance()->FillH2(6,x, y);
+  	  //G4AnalysisManager::Instance()->FillH2(7,x, z);	
   }
+  
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& procName == "nCapture" 	
+  	&& endVolume == fDetector->GetLogicBuffer()) {
+  	G4ThreeVector postPointPos  = aStep->GetPostStepPoint()->GetPosition();
+  	G4double x = postPointPos.x(), y = postPointPos.y(), z = postPointPos.z(); 		
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 0, x);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 1, y);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 2, z);
+  	G4AnalysisManager::Instance()->FillNtupleIColumn(1, 3, 0); // in gaseous argon
+  	G4AnalysisManager::Instance()->FillH2(4,x, y);
+  	G4AnalysisManager::Instance()->FillH2(5,x, z);	
+  	G4AnalysisManager::Instance()->AddNtupleRow(); 			
+  } 
   
   procName = process->GetProcessName();  
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& procName == "nCapture" 
   	&& endVolume == fDetector->GetLogicPool()) {
-  	G4ThreeVector postPoint  = aStep->GetPostStepPoint()->GetPosition();
-  	G4double x = postPoint.x(), y = postPoint.y(), z = postPoint.z();
+  	G4ThreeVector postPointPos  = aStep->GetPostStepPoint()->GetPosition();
+  	G4double x = postPointPos.x(), y = postPointPos.y(), z = postPointPos.z();
   	G4AnalysisManager::Instance()->FillH2(8,x, y);
   	G4AnalysisManager::Instance()->FillH2(9,x, z);	
   	G4double time   = aStep->GetTrack()->GetGlobalTime(); 
-  	G4AnalysisManager::Instance()->FillH1(29, time);	//golbal time 
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, x);
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 1, y);
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 2, z);
-  }  
-
+  	G4AnalysisManager::Instance()->FillH1(29, time);	//golbal time   		
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 0, x);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 1, y);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 2, z);
+  	G4AnalysisManager::Instance()->FillNtupleIColumn(1, 3, 1); // in liquid argon
+  	G4AnalysisManager::Instance()->AddNtupleRow(); 			
+  }
+  
+  
+  if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& procName == "nCapture" 	
+  	&& endVolume == fDetector->GetLogicInsulator()) {
+  	G4ThreeVector postPointPos  = aStep->GetPostStepPoint()->GetPosition();
+  	G4double x = postPointPos.x(), y = postPointPos.y(), z = postPointPos.z(); 
+  	G4AnalysisManager::Instance()->FillH2(6,x, y);
+  	G4AnalysisManager::Instance()->FillH2(7,x, z);		
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 0, x);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 1, y);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 2, z);
+  	G4AnalysisManager::Instance()->FillNtupleIColumn(1, 3, 2); // in liquid argon insulator
+  	G4AnalysisManager::Instance()->AddNtupleRow(); 			
+  }
 
 /*                      Gamma Study                                  */
 

@@ -164,11 +164,11 @@ void HistoManager::Book()
   analysisManager->SetH1Activation(ih, true);
 
   //Histogram 15 - Theta angle for neutrons entering the port
-  ih = analysisManager->CreateH1("h1.15", "Theta angle for neutrons entering the gas buffer", 360, xmin, xmax, "degree");
+  ih = analysisManager->CreateH1("h1.15", "Theta angle for neutrons leaving the Li absorber", 360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
 
   //Histogram 16 - Phi angle for neutrons entering the port
-  ih = analysisManager->CreateH1("h1.16", "Phi angle for neutrons entering the gas buffer", 360, xmin, xmax, "degree");
+  ih = analysisManager->CreateH1("h1.16", "Phi angle for neutrons leaving the Li absorber", 360, xmin, xmax, "degree");
   analysisManager->SetH1Activation(ih, true);
 
   //Histogram 17 - DD gun neutron initial momentum angle
@@ -235,8 +235,12 @@ void HistoManager::Book()
   ih = analysisManager->CreateH1("h1.29", "neutron capture time since DD pulse", nbins, vmin, vmax, "us");
   analysisManager->SetH1Activation(ih, true);
   
-  //Histogram 29 - neutron thermalization time since DD pulse (all neutrons)
+  //Histogram 30 - neutron thermalization time since DD pulse (all neutrons)
   ih = analysisManager->CreateH1("h1.30", "neutron thermalization time since DD pulse", nbins, vmin, vmax, "us");
+  analysisManager->SetH1Activation(ih, true);
+  
+  //Histogram 31 - energy spectrum of neutrons leaving Li absorber to cryostat
+  ih = analysisManager->CreateH1("h1.31", "Neutrons entering liquid Argon pool", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
   
@@ -252,26 +256,35 @@ void HistoManager::Book()
   ih = analysisManager->CreateH2("h2.3","neutron capture position in filter 1 (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
   
-  ih = analysisManager->CreateH2("h2.4","neutron capture position in filter 2 (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  ih = analysisManager->CreateH2("h2.4","neutron capture position in gaseous argon (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
-  ih = analysisManager->CreateH2("h2.5","neutron capture position in filter 2 (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  ih = analysisManager->CreateH2("h2.5","neutron capture position in gaseous argon (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
 
-  ih = analysisManager->CreateH2("h2.6","neutron capture position in filter 3 (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  ih = analysisManager->CreateH2("h2.6","neutron capture position in Cryostat insulator (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
-  ih = analysisManager->CreateH2("h2.7","neutron capture position in filter 3 (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  ih = analysisManager->CreateH2("h2.7","neutron capture position in Cryostat insulator (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
   
-  ih = analysisManager->CreateH2("h2.8","neutron capture position in  (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  ih = analysisManager->CreateH2("h2.8","neutron capture position in in LAr TPC (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
   ih = analysisManager->CreateH2("h2.9","neutron capture position in LAr TPC (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
 
   // nTuples
-  analysisManager->CreateNtuple("Neutron Captures", "Neutron Captures"); //id = 0
+  
+  
+  analysisManager->CreateNtuple("energySpectra", "Neutron energy exiting Filter"); //id = 0
+  analysisManager->CreateNtupleDColumn("neutronenergy");//column 0
+  analysisManager->CreateNtupleIColumn("flag_volume"); //column 1
+  analysisManager->FinishNtuple();
+
+  
+  analysisManager->CreateNtuple("ncap", "Neutron Captures"); //id = 1
   analysisManager->CreateNtupleDColumn("ncap_x");       //column 0
   analysisManager->CreateNtupleDColumn("ncap_y");       //column 1
   analysisManager->CreateNtupleDColumn("ncap_z");       //column 2
+  analysisManager->CreateNtupleIColumn("ncap_volume");  //column 3
   analysisManager->FinishNtuple();
    
 }
