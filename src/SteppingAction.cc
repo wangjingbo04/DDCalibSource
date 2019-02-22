@@ -188,7 +188,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           G4AnalysisManager::Instance()->FillH1(15, angle1);
           G4double angle2 = GetPhi(p.x(), p.y());
           G4AnalysisManager::Instance()->FillH1(16, angle2);
-          G4AnalysisManager::Instance()->FillH1(31, kinEnergy);
           G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, kinEnergy);
   	      G4AnalysisManager::Instance()->FillNtupleIColumn(0, 1, 2); 
   	      G4AnalysisManager::Instance()->AddNtupleRow(); 
@@ -221,10 +220,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          G4AnalysisManager::Instance()->FillH1(14,kinEnergy);   
          G4AnalysisManager::Instance()->FillH1(26, angle3); 
          G4AnalysisManager::Instance()->FillH1(27, angle4);    
-         G4AnalysisManager::Instance()->FillH1(14,kinEnergy);	
          G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, kinEnergy);
-  	      G4AnalysisManager::Instance()->FillNtupleIColumn(0, 1, 3); 
-  	      G4AnalysisManager::Instance()->AddNtupleRow(); 
+  	     G4AnalysisManager::Instance()->FillNtupleIColumn(0, 1, 3); 
+  	     G4AnalysisManager::Instance()->AddNtupleRow(); 
       }
   }
   

@@ -134,7 +134,7 @@ DetectorConstruction::DetectorConstruction()
   
   // neutron shield
   fNShieldThickness = 12.0*cm;
-  fNShieldHeight = fReflectorHeight + fFilter2Height + fFilter3Height + fAbsorberHeight + fNShieldThickness;
+  fNShieldHeight = fNShieldHeight = fReflectorHeight + fFilter2Height + fFilter3Height + fAbsorberHeight + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
   
   // Feedthrough port
@@ -142,10 +142,10 @@ DetectorConstruction::DetectorConstruction()
   fPortOuterRadius = fNShieldRadius;
   // Thermal neutron absorber
   fAbsorberHeight = 4*cm;
-  fThermalAbsorberRadius = fFilter3Radius_bottom;
+  fThermalAbsorberRadius = fPortOuterRadius;
   
   // Neutron source position Above Cryostat
-  fClearanceAboveCryostat = 0; //Design A-2: must be higher than the absorber
+  fClearanceAboveCryostat = fAbsorberHeight; //Design A-2: must be higher than the absorber
   // Neutron source center position
   //fCenterX = -28.0* m;
   //fCenterY = -6.25* m;
@@ -478,10 +478,10 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                               fThermalAbsorberMater,            //materiald
                                               "ThermalAbsorber_l");             //name
   fPhysiThermalAbsorber = new G4PVPlacement(0,                                                                   //no rotation
-                                            G4ThreeVector(fCenterX, fCenterY, -fNShieldHeight/2 + fAbsorberHeight/2),  
+                                            G4ThreeVector(fCenterX, fCenterY, fInsulatorHeight/2  -fPortHeight + fAbsorberHeight/2),  
                                             fLogicThermalAbsorber,                                               //logical volume
                                             "ThermalAbsorber_p",                                                 //name
-                                            fLogicNShield,                                                          //mother  volume
+                                            fLWorld,                                                          //mother  volume
                                             false,                                                               //no boolean operation
                                             0);                                                                  //copy number help
   // neutron reflector
@@ -496,7 +496,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                         fReflectorMater,                                 //its material
                                         "Reflector_l");                                  //its name
   fPhysiReflector = new G4PVPlacement(0,                                                 //no rotation
-                                      G4ThreeVector(0, 0, -fNShieldHeight/2 +fAbsorberHeight + fFilter3Height + fFilter2Height + fReflectorHeight/2),   
+                                      G4ThreeVector(0, 0, -fNShieldHeight/2 + fFilter3Height + fFilter2Height + fReflectorHeight/2),
                                       fLogicReflector ,                                  //its logical volume
                                       "Reflector_p",                                     //its name
                                       fLogicNShield,                                     //its mother  volume
@@ -516,7 +516,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       fNGuideMater,              //material
                                       "NGuide_l");               //name
   fPhysiNGuide = new G4PVPlacement(0,                                                                           //no rotation
-                                    G4ThreeVector(0, 0, -fNShieldHeight/2 + fAbsorberHeight + fFilter3Height + fNGuideHeight/2),  //position
+                                    G4ThreeVector(0, 0, -fNShieldHeight/2 + fFilter3Height + fNGuideHeight/2),  //position
                                     fLogicNGuide,                                                               //logical volume
                                     "NGuide_p",                                                                 //name
                                     fLogicNShield,                                                               //mother  volume
@@ -555,7 +555,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       fFilter2Mater,              //material
                                       "Filter2_l");               //name
   fPhysiFilter2 = new G4PVPlacement(0,                                                                           //no rotation
-                                    G4ThreeVector(0, 0, -fNShieldHeight/2 + fAbsorberHeight + fFilter3Height + fFilter2Height/2),  //position
+                                    G4ThreeVector(0, 0, -fNShieldHeight/2 + fFilter3Height + fFilter2Height/2),  //position
                                     fLogicFilter2,                                                               //logical volume
                                     "Filter2_p",                                                                 //name
                                     fLogicNShield,                                                               //mother  volume
@@ -575,7 +575,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       fFilter3Mater,            //material
                                       "Filter3_l");             //name
   fPhysiFilter3 = new G4PVPlacement(0,                                                         //no rotation
-                                    G4ThreeVector(0, 0, -fNShieldHeight/2 + fAbsorberHeight + fFilter3Height/2),  //at (0,0,0)
+                                    G4ThreeVector(0, 0, -fNShieldHeight/2 + fFilter3Height/2),  //at (0,0,0)
                                     fLogicFilter3,                                             //logical volume
                                     "Filter3_p",                                               //name
                                     fLogicNShield,                                             //mother  volume
@@ -842,32 +842,31 @@ void DetectorConstruction::SetModeratorThickness(G4double value)
   fModerator_Thickness = value;
   fModerator_Height = fDDGeneratorHeight + fModerator_Thickness;
   fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
-  fNShieldHeight = fAbsorberHeight + fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
+  fNShieldHeight = fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 void DetectorConstruction::SetFilter1Height(G4double value)
 {
   fFilter1Height = value;
   fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
-  fNShieldHeight = fAbsorberHeight + fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
+  fNShieldHeight = fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 void DetectorConstruction::SetFilter2Height(G4double value)
 {
   fFilter2Height = value;
-  fNShieldHeight = fAbsorberHeight + fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
+  fNShieldHeight = fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 void DetectorConstruction::SetFilter3Height(G4double value)
 {
   fFilter3Height = value;
-  fNShieldHeight = fAbsorberHeight + fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
+  fNShieldHeight = fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 void DetectorConstruction::SetAbsorberHeight(G4double value)
 {
   fAbsorberHeight = value;
-  fNShieldHeight = fAbsorberHeight + fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 void DetectorConstruction::SetPortRefThickness(G4double value)
@@ -881,14 +880,14 @@ void DetectorConstruction::SetReflectorThickness(G4double value)
   fReflectorThickness = value;
   fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
   fReflectorRadius = fModerator_Radius + fReflectorThickness;
-  fNShieldHeight = fAbsorberHeight + fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
+  fNShieldHeight = fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 void DetectorConstruction::SetNShieldThickness(G4double value)
 {
   fNShieldThickness = value;
-  fNShieldHeight = fAbsorberHeight + fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
+  fNShieldHeight = fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
