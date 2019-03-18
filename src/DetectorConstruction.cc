@@ -68,28 +68,29 @@ DetectorConstruction::DetectorConstruction()
 //  fPoolLength      = 8.9*m;
 //  fPoolWidth      = 7.8*m;
 //  fPoolHeight      = 7.3*m;
-//  
 //  // ProtoDUNE Gas argon buffer
 //  fBufferLength      = 8.9*m; 
 //  fBufferWidth      = 7.8*m; 
 //  fBufferHeight      = 0.8*m; 
-  // DUNE Lar pool  
-//  fPoolLength      = 58.0*m;
-//  fPoolWidth      = 14.5*m;
-//  fPoolHeight      = 12.0*m;
-  
-//  // DUNE Gas argon buffer
-//  fBufferLength      = 58.0*m;
-//  fBufferWidth      = 14.5*m;
-//  fBufferHeight      = 0.8*m;
-  // Generator LAr TPC  
-  fPoolLength      = 10.0*m;
-  fPoolWidth      = 10.0*m;
-  fPoolHeight      = 10.0*m;
-  // Gas argon buffer
-  fBufferLength      = 10.0*m;
-  fBufferWidth      = 10.0*m;
+
+
+// DUNE Lar pool  
+  fPoolLength      = 58.0*m;
+  fPoolWidth      = 14.5*m;
+  fPoolHeight      = 12.0*m;  
+  // DUNE Gas argon buffer
+  fBufferLength      = 58.0*m;
+  fBufferWidth      = 14.5*m;
   fBufferHeight      = 0.8*m;
+  
+//  // General LAr TPC  
+//  fPoolLength      = 10.0*m;
+//  fPoolWidth      = 10.0*m;
+//  fPoolHeight      = 10.0*m;
+//  // Gas argon buffer
+//  fBufferLength      = 10.0*m;
+//  fBufferWidth      = 10.0*m;
+//  fBufferHeight      = 0.8*m;
     // stainless steel cryostat
   fCryostatThickness = 1.0*mm;
   fCryostatLength = fPoolLength + 2*fCryostatThickness;
@@ -109,15 +110,15 @@ DetectorConstruction::DetectorConstruction()
   fModerator_Height = fDDGeneratorHeight + fModerator_Thickness; // must be larger than the DD generator height
   fModerator_Radius = fDDGeneratorRadius + 8*cm;
   // 1st Filter
-  fFilter1Height = 12*cm;
+  fFilter1Height = 8*cm;
   fFilter1Radius = fModerator_Radius + 4.0*cm;
   // 2nd Filter
-  fFilter2Height = 5*cm;
+  fFilter2Height = 8*cm;
   fFilter2Radius_top = fFilter1Radius;
-  fFilter2Radius_bottom = fModerator_Radius;
+  fFilter2Radius_bottom = fFilter1Radius;
   //fFilter2Radius_bottom = 12.5*cm;
   // 3rd Filter
-  fFilter3Height        = 4.0*cm;
+  fFilter3Height        = 8.0*cm;
   fFilter3Radius_top    = fFilter2Radius_bottom;
   fFilter3Radius_bottom = fFilter2Radius_bottom;
   //fFilter3Radius_bottom = 12.5*cm;
@@ -125,7 +126,7 @@ DetectorConstruction::DetectorConstruction()
   // neutron reflector
   fReflectorThickness = 12.0*cm;
   fReflectorHeight = fFilter1Height + fModerator_Height + fReflectorThickness;
-  fReflectorRadius = fModerator_Radius + fReflectorThickness;
+  fReflectorRadius = fFilter1Radius + fReflectorThickness;
   
   // neutron guide
   fNGuideHeight = fFilter2Height;
@@ -134,7 +135,7 @@ DetectorConstruction::DetectorConstruction()
   
   // neutron shield
   fNShieldThickness = 12.0*cm;
-  fNShieldHeight = fNShieldHeight = fReflectorHeight + fFilter2Height + fFilter3Height + fAbsorberHeight + fNShieldThickness;
+  fNShieldHeight = fReflectorHeight + fFilter2Height + fFilter3Height + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
   
   // Feedthrough port
