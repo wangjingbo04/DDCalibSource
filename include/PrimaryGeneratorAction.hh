@@ -42,6 +42,8 @@
 #include "globals.hh"
 #include "DetectorConstruction.hh"
 #include "G4GenericMessenger.hh"
+#include "TFile.h"
+#include "TTree.h"
 
 class G4Event;
 

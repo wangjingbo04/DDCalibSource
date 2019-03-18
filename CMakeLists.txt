@@ -2,6 +2,7 @@
 # Setup the project
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(DDSource)
+set(useROOT true)        # use true or false
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -15,6 +16,8 @@ else()
   find_package(Geant4 REQUIRED)
 endif()
 
+find_package(ROOT REQUIRED )
+
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
 #
@@ -27,11 +30,19 @@ include_directories(${PROJECT_SOURCE_DIR}/include
                     ${Geant4_INCLUDE_DIR})
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
+if(useROOT)
+	EXECUTE_PROCESS(COMMAND root-config --cflags OUTPUT_VARIABLE ROOT_CXX_FLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ROOT_CXX_FLAGS}")
+endif(useROOT) 
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(DDSource DDSource.cc ${sources} ${headers})
+if(useROOT)
+	EXECUTE_PROCESS(COMMAND root-config --libs OUTPUT_VARIABLE ROOT_LD_FLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+	set(CMAKE_EXE_LINKER_FLAGS ${ROOT_LD_FLAGS})
+endif(useROOT)
 target_link_libraries(DDSource ${Geant4_LIBRARIES} )
 
 #----------------------------------------------------------------------------
