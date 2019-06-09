@@ -44,6 +44,7 @@
 #include "G4GenericMessenger.hh"
 #include "TFile.h"
 #include "TTree.h"
+#include "TH1D.h"
 
 class G4Event;
 
@@ -63,9 +64,13 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
   private:
     G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
     DetectorConstruction* fDetector;       //pointer to the detector class
-    G4GenericMessenger* fMessenger;      //pinter to generic messanger class
+    G4GenericMessenger* fMessenger;      //pointer to generic messanger class
+    TFile* fhistFile;
+    TH1D* fhistEnergySpectrum; //pointer to the neutron energy spectrum
+    TH1D* fhistZenithAngle; 
     G4double* probDist;
     size_t size;
+    G4int fCounter = 0;
     void populateProbDist();
     G4double DDrandom();
 };

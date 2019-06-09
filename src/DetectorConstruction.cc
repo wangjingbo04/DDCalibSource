@@ -83,6 +83,11 @@ DetectorConstruction::DetectorConstruction()
   fBufferWidth      = 14.5*m;
   fBufferHeight      = 0.8*m;
   
+  // CRP PCB
+  fCRPPCBLength = 58.0*m;
+  fCRPPCBWidth = 14.5*m;
+  fCRPPCBHeight = 3.6*mm; 
+  
 //  // General LAr TPC  
 //  fPoolLength      = 10.0*m;
 //  fPoolWidth      = 10.0*m;
@@ -175,6 +180,7 @@ void DetectorConstruction::DefineMaterials()
   G4int Z, A, a, ncomponents, natoms;
   G4double fractionmass, abundance;
   // world material
+  G4Element* H  = new G4Element("Hydrogen", "H", 1, 1.0*g/mole);
   G4Element* N  = new G4Element("Nitrogen", "N", 7, 14.01*g/mole);
   G4Element* O  = new G4Element("Oxygen",   "O", 8, 16.00*g/mole);     
   G4Material* Air20 = new G4Material("Air", 1.205*mg/cm3, ncomponents=2, kStateGas, 293.*kelvin, 1.*atmosphere);
@@ -209,6 +215,7 @@ void DetectorConstruction::DefineMaterials()
   G4Element* Xe = man->FindOrBuildElement("Xe");
   G4Element* Cs = man->FindOrBuildElement("Cs");
   G4Element* Bi = man->FindOrBuildElement("Bi");
+  G4Element* Br = man->FindOrBuildElement("Br");
   // stainless steel
   G4Material* StainlessSteel = new G4Material("StainlessSteel", density= 8.06*g/cm3, ncomponents=6);
       StainlessSteel->AddElement(C, fractionmass=0.015); 
@@ -290,11 +297,58 @@ void DetectorConstruction::DefineMaterials()
   G4Material* CaF2 = new G4Material("CaF2", 3.18*g/cm3, ncomponents=2, kStateSolid);
       CaF2->AddElement(Ca, natoms=1);
       CaF2->AddElement(F, natoms=2);
+      
+      
   //Lithium Polyethylene
   G4Material* polyethylene = man->FindOrBuildMaterial("G4_POLYETHYLENE");
   G4Material* LiPoly = new G4Material("LiPoly", 1.06*g/cm3, ncomponents=2);
     LiPoly->AddMaterial (Li6, 7.54*perCent);
     LiPoly->AddMaterial (polyethylene, 92.46*perCent);
+    
+  // epoxy_resin
+  G4Material* epoxy_resin = new G4Material("epoxy_resin", 1.125*g/cm3, ncomponents=4, kStateSolid); 
+  epoxy_resin->AddElement(C, natoms=38);
+  epoxy_resin->AddElement(H, natoms=40);
+  epoxy_resin->AddElement(O, natoms=6);
+  epoxy_resin->AddElement(Br, natoms=4);
+  
+  // Fe2O3
+  G4Material* Fe2O3 = new G4Material("Fe203", 5.24*g/cm3, ncomponents=2, kStateSolid);
+  Fe2O3->AddElement(Fe, natoms=2);
+  Fe2O3->AddElement(O, natoms=3);
+  // CaO
+  G4Material* CaO = new G4Material("CaO", 3.35*g/cm3, ncomponents=2, kStateSolid);
+  CaO->AddElement(Ca, natoms=1);
+  CaO->AddElement(O, natoms=1);
+  // MgO
+  G4Material* MgO = new G4Material("MgO", 3.58*g/cm3, ncomponents=2, kStateSolid);
+  MgO->AddElement(Mg, natoms=1);
+  MgO->AddElement(O, natoms=1);
+  // NaO
+  G4Material* NaO = new G4Material("NaO", 2.27*g/cm3, ncomponents=2, kStateSolid);
+  NaO->AddElement(Na, natoms=1);
+  NaO->AddElement(O, natoms=1);
+  // TiO2
+  G4Material* TiO2 = new G4Material("TiO2", 4.23*g/cm3, ncomponents=2, kStateSolid);
+  TiO2->AddElement(Ti, natoms=1);
+  TiO2->AddElement(O, natoms=2);
+  
+  // fibrous_glass
+  G4Material* fibrous_glass = new G4Material("fibrous_glass", 2.74351*g/cm3, ncomponents=7, kStateSolid); 
+  fibrous_glass->AddMaterial (SiO2, fractionmass = 60*perCent);
+  fibrous_glass->AddMaterial (Al2O3, fractionmass = 11.8*perCent);
+  fibrous_glass->AddMaterial (Fe2O3, fractionmass = 0.1*perCent);
+  fibrous_glass->AddMaterial (CaO, fractionmass = 22.4*perCent);
+  fibrous_glass->AddMaterial (MgO, fractionmass = 3.4*perCent);
+  fibrous_glass->AddMaterial (NaO, fractionmass = 1.0*perCent);
+  fibrous_glass->AddMaterial (TiO2, fractionmass = 1.3*perCent);
+  
+  // FR4
+  G4Material* FR4 = new G4Material("FR4", 1.98281*g/cm3, ncomponents=2, kStateSolid); 
+  FR4->AddMaterial (epoxy_resin, fractionmass = 47*perCent);
+  FR4->AddMaterial (fibrous_glass, fractionmass = 53*perCent);
+   
+   
   // world mater
   fWorldMater = Air20;
   // insulator
@@ -309,6 +363,8 @@ void DetectorConstruction::DefineMaterials()
   fPoolMater = man->FindOrBuildMaterial("G4_lAr");
   // gas argon buffer
   fBufferMater = man->FindOrBuildMaterial("G4_Ar");
+  // CRPPCB
+  fCRPPCBMater = FR4;
   // neutron reflectorMater
   fReflectorMater = man->FindOrBuildMaterial("G4_Pb");
   // neutron guide
@@ -452,7 +508,23 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                    "GArbuffer_p",                                                                               //its name
                                    fLogicCryostat,                                                                              //its mother  volume
                                    false,                                                                                       //no boolean operation
-                                   0);                                                                                          //copy number   
+                                   0);  
+                                   
+//  // CRP PCB plate
+//  G4Box*
+//  sCRPPCB = new G4Box("CRPPCB",                                       //its name
+//                         fCRPPCBLength/2,fCRPPCBWidth/2,fCRPPCBHeight/2);   //its dimensions
+//  fLogicCRPPCB = new G4LogicalVolume(sCRPPCB,                            //its shape
+//                                     fCRPPCBMater,                          //its material
+//                                     "CRPPCB_l");                        //its name
+//  fPhysiCRPPCB = new G4PVPlacement(0,                                                                                           //no rotation
+//                                   G4ThreeVector(0, 0, 0),    //at (0,0,0)
+//                                   fLogicCRPPCB,                                                                                //its logical volume
+//                                   "CRPPCB_p",                                                                               //its name
+//                                   fLogicBuffer,                                                                              //its mother  volume
+//                                   false,                                                                                       //no boolean operation
+//                                   0);  
+                                                                                          //copy number   
   // neutron shield
   G4Tubs* 
   sNShield = new G4Tubs("NShield_s",                                                //its name

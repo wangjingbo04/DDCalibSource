@@ -63,36 +63,6 @@ void HistoManager::Book()
   analysisManager->SetVerboseLevel(1);
   analysisManager->SetActivation(true);     //enable inactivation of histograms
   
-/*  // Define 1D histograms start values
-  const G4int kMaxHisto = 12;
-  const G4String id[] = {"0","N collision","Track length","ToF","N collision","Track length","ToF","E at all collision","E degrader1","E degrader2","E filter","E LAr pool"};
-  const G4String title[] = 
-                { "dummy",                                           //0
-                  "incident neutron: nb of collisions above 1 eV",   //1
-                  "incident neutron: total track length above 1 eV", //2
-                  "incident neutron: time of flight above 1 eV",     //3
-                  "incident neutron: nb of collisions below 1 eV",   //4
-                  "incident neutron: total track length below 1 eV", //5
-                  "incident neutron: time of flight below 1 eV",     //6
-                  "incident neutron: energy distribution for all steps", //7
-                  "neutron entering degrader1",                				 //8
-                  "neutron entering degrader2",                				 //9
-                  "neutron entering LAr filter",                				 //10
-                  "neutron entering LAr pool"                				 //11
-                 };  
-
-  // Default values (to be reset via /analysis/h1/set command)               
-  G4int nbins = 100;
-  G4double vmin = 0.;
-  G4double vmax = 100.;
-
-  // Create all histograms as inactivated 
-  // as we have not yet set nbins, vmin, vmax
-  for (G4int k=0; k<kMaxHisto; k++) {
-    G4int ih = analysisManager->CreateH1(id[k], title[k], nbins, vmin, vmax);
-    analysisManager->SetH1Activation(ih, true);
-  }*/
-  
   
   // histos 1D
   //
@@ -270,22 +240,28 @@ void HistoManager::Book()
   analysisManager->SetH2Activation(ih, true);
   ih = analysisManager->CreateH2("h2.9","neutron capture position in LAr TPC (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
+  
+  ih = analysisManager->CreateH2("h2.10","neutron capture position in all volumes (top view, y:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  analysisManager->SetH2Activation(ih, true);
+  ih = analysisManager->CreateH2("h2.11","neutron capture position in all volumes (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
+  analysisManager->SetH2Activation(ih, true);
 
   // nTuples
+   
   
-  
-  analysisManager->CreateNtuple("energySpectra", "Neutron energy exiting Filter"); //id = 0
-  analysisManager->CreateNtupleDColumn("neutronenergy");//column 0
-  analysisManager->CreateNtupleIColumn("flag_volume"); //column 1
+  analysisManager->CreateNtuple("nenergy", "Neutron energy exiting Filter"); //id = 0
+  analysisManager->CreateNtupleDColumn("energy");//column 0
+  analysisManager->CreateNtupleIColumn("volume"); //column 1
   analysisManager->FinishNtuple();
-
   
   analysisManager->CreateNtuple("ncap", "Neutron Captures"); //id = 1
   analysisManager->CreateNtupleDColumn("ncap_x");       //column 0
   analysisManager->CreateNtupleDColumn("ncap_y");       //column 1
   analysisManager->CreateNtupleDColumn("ncap_z");       //column 2
-  analysisManager->CreateNtupleIColumn("ncap_volume");  //column 3
+  analysisManager->CreateNtupleIColumn("volume");  //column 3
   analysisManager->FinishNtuple();
+  
+  analysisManager->SetNtupleActivation(true); 
    
 }
 

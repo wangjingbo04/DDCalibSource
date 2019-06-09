@@ -141,6 +141,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4double           GetFilter3Height()          {return fFilter3Height;};
      G4double           GetDDGeneratorHeight()      {return fDDGeneratorHeight;};
      G4double           GetInsulatorHeight()        {return fInsulatorHeight;};
+     G4double           GetCryostatHeight()        {return fCryostatHeight;};
      G4double           GetThermalAbsorberHeight()  {return fAbsorberHeight;};
      G4double           GetPortHeight()  						{return fPortHeight;};
      G4double           GetThermalAbsorborHeight()	{return fAbsorberHeight;};
@@ -219,6 +220,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume*   fLogicBuffer;
      G4VPhysicalVolume* fPhysiBuffer;
      G4Material*        fBufferMater; 
+     
+     // CRP PCB: Fr4
+     G4double           fCRPPCBHeight; 
+     G4double           fCRPPCBWidth;
+     G4double           fCRPPCBLength;
+     G4LogicalVolume*   fLogicCRPPCB;
+     G4VPhysicalVolume* fPhysiCRPPCB;
+     G4Material*        fCRPPCBMater; 
      
      // neutron DD generator
      G4double           fDDGeneratorHeight; //UI
