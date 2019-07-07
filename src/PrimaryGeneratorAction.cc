@@ -113,23 +113,36 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz)); 
  //fParticleGun->SetParticleEnergy(57*keV);
  //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1)); 
-   G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
-   fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, z));	 //position1
-//   if(fCounter%2 == 0) {
+//   G4double z = fDetector->GetCryostatHeight()/2 - 1.0*mm;
+//   fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, z));	 //position1
+// ideal locations
+//   if(fCounter%3 == 0) {
 //     G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
-//     fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, z));	
+//     fParticleGun->SetParticlePosition(G4ThreeVector(-19.7*m, 0*m, z));	
 //     fCounter++;	
 //   }
-////   else if (fCounter%3 == 1) {
-////     G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
-////     fParticleGun->SetParticlePosition(G4ThreeVector(-19.3*m, 0, z));		// 14.5m, 19.3m
-////     fCounter++;	
-////   }
+//   else if (fCounter%3 == 1) {
+//     G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
+//     fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, z));		// 14.5m, 19.3m
+//     fCounter++;	
+//   }
 //   else {
 //   	 G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
-//     fParticleGun->SetParticlePosition(G4ThreeVector(14.5*m, 0, z));	
+//     fParticleGun->SetParticlePosition(G4ThreeVector(19.7*m, 0*m, z));	
 //     fCounter++;	
 //   }
+   
+// two manholes
+   if(fCounter%2 == 0) {
+     G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
+     fParticleGun->SetParticlePosition(G4ThreeVector(-28.5*m, 6.75*m, z));	
+     fCounter++;	
+   }
+   else {
+   	 G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
+     fParticleGun->SetParticlePosition(G4ThreeVector(28.5*m, -6.75*m, z));	
+     fCounter++;	
+   }   
  fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 

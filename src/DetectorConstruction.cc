@@ -115,15 +115,15 @@ DetectorConstruction::DetectorConstruction()
   fModerator_Height = fDDGeneratorHeight + fModerator_Thickness; // must be larger than the DD generator height
   fModerator_Radius = fDDGeneratorRadius + 8*cm;
   // 1st Filter
-  fFilter1Height = 8*cm;
+  fFilter1Height = 12*cm;
   fFilter1Radius = fModerator_Radius + 4.0*cm;
   // 2nd Filter
-  fFilter2Height = 8*cm;
+  fFilter2Height = 5*cm;
   fFilter2Radius_top = fFilter1Radius;
   fFilter2Radius_bottom = fFilter1Radius;
   //fFilter2Radius_bottom = 12.5*cm;
   // 3rd Filter
-  fFilter3Height        = 8.0*cm;
+  fFilter3Height        = 4.0*cm;
   fFilter3Radius_top    = fFilter2Radius_bottom;
   fFilter3Radius_bottom = fFilter2Radius_bottom;
   //fFilter3Radius_bottom = 12.5*cm;
@@ -151,7 +151,7 @@ DetectorConstruction::DetectorConstruction()
   fThermalAbsorberRadius = fPortOuterRadius;
   
   // Neutron source position Above Cryostat
-  fClearanceAboveCryostat = fAbsorberHeight; //Design A-2: must be higher than the absorber
+  //fClearanceAboveCryostat = fAbsorberHeight; //Design A-2: must be higher than the absorber
   // Neutron source center position
   //fCenterX = -28.0* m;
   //fCenterY = -6.25* m;
@@ -160,7 +160,7 @@ DetectorConstruction::DetectorConstruction()
   fCenterX = 0* m;
   fCenterY = 0* m;
   
-  //fClearanceAboveCryostat = fPortHeight; //Design A-1: 
+  fClearanceAboveCryostat = fPortHeight; //Design A-1: 
   fDetectorMessenger = new DetectorMessenger(this);
   
 }
@@ -352,7 +352,7 @@ void DetectorConstruction::DefineMaterials()
   // world mater
   fWorldMater = Air20;
   // insulator
-  fInsulatorMater = LiPoly;
+  fInsulatorMater = polyethylene;
   // Feedthrough port
   fPortMater = Air20;
   // feedthrough port reflector
@@ -434,7 +434,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   G4ThreeVector zTransInsulator(fCenterX, fCenterY, fInsulatorHeight/2 - fInsulatorThickness/2); 
   G4SubtractionSolid* sInsulator =
   new G4SubtractionSolid("Insulator1-Insulator2", sInsulator1, sInsulator2, 0, zTransInsulator); 
-  fLogicInsulator = new G4LogicalVolume(sInsulator,                     //its shape
+  fLogicInsulator = new G4LogicalVolume(sInsulator1,                     //its shape
                              fInsulatorMater,                 //its material
                              "Insulator_l");     //its name
   fPhysiInsulator = new G4PVPlacement(0,                          //no rotation

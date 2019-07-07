@@ -71,7 +71,7 @@ StackingAction::ClassifyNewTrack(const G4Track* aTrack)
   //kill all secondaries  
 //  return fKill;
   if(name == "neutron") return fWaiting;
-  //else return fKill;
+  else return fKill;
   //return fWaiting;
 }
 
