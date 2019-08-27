@@ -102,6 +102,15 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fFilter3GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetFilter3Material", this);
   fFilter3GetMaterCmd->SetGuidance("Parameterless, returns Filter material 3.");
   fFilter3GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  
+  fFilter4SetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetFilter4Material",this);
+  fFilter4SetMaterCmd->SetGuidance("Select material of the filter 3.");
+  fFilter4SetMaterCmd->SetParameterName("choice",false);
+  fFilter4SetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fFilter4GetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetFilter4Material", this);
+  fFilter4GetMaterCmd->SetGuidance("Parameterless, returns Filter material 3.");
+  fFilter4GetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   fAbsorberSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetAbsorberMaterial",this);
   fAbsorberSetMaterCmd->SetGuidance("Select material of the Absorber.");
@@ -160,6 +169,13 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fFilter3HeightCmd->SetRange("Filter3Height>0.");
   fFilter3HeightCmd->SetUnitCategory("Length");
   fFilter3HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  
+  fFilter4HeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetFilter4Height",this);
+  fFilter4HeightCmd->SetGuidance("Set Height of the 3rd filter");
+  fFilter4HeightCmd->SetParameterName("Filter4Height",false);
+  fFilter4HeightCmd->SetRange("Filter4Height>0.");
+  fFilter4HeightCmd->SetUnitCategory("Length");
+  fFilter4HeightCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   
   fAbsorberHeightCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetAbsorberHeight",this);
   fAbsorberHeightCmd->SetGuidance("Set Height of the thermal neutron absorber");
@@ -258,6 +274,8 @@ DetectorMessenger::~DetectorMessenger()
   delete fFilter2GetMaterCmd;
   delete fFilter3SetMaterCmd;
   delete fFilter3GetMaterCmd;
+  delete fFilter4SetMaterCmd;
+  delete fFilter4GetMaterCmd;
   delete fAbsorberSetMaterCmd;
   delete fAbsorberGetMaterCmd;
   delete fPortRefSetMaterCmd;
@@ -269,6 +287,7 @@ DetectorMessenger::~DetectorMessenger()
   delete fFilter1HeightCmd;
   delete fFilter2HeightCmd;
   delete fFilter3HeightCmd;
+  delete fFilter4HeightCmd;
   delete fPortRefThickCmd;
   delete fReflectorThickCmd;
   delete fNShieldThickCmd;
@@ -311,6 +330,12 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 
   if( command == fFilter3GetMaterCmd )
    { fDetector->GetFilter3Material();}
+   
+  if( command == fFilter4SetMaterCmd )
+   { fDetector->SetFilter4Material(newValue);}
+
+  if( command == fFilter4GetMaterCmd )
+   { fDetector->GetFilter4Material();}
 
   if( command == fAbsorberSetMaterCmd )
    { fDetector->SetAbsorberMaterial(newValue);}
@@ -346,6 +371,9 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 
   if( command == fFilter3HeightCmd )
    { fDetector->SetFilter3Height(fSizeCmd->GetNewDoubleValue(newValue));}
+  
+  if( command == fFilter4HeightCmd )
+   { fDetector->SetFilter4Height(fSizeCmd->GetNewDoubleValue(newValue));}
    
   if( command == fAbsorberHeightCmd )
    { fDetector->SetAbsorberHeight(fSizeCmd->GetNewDoubleValue(newValue));}

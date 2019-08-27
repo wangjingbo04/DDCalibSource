@@ -73,6 +73,8 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithoutParameter*   fFilter2GetMaterCmd;
     G4UIcmdWithAString*        fFilter3SetMaterCmd;
     G4UIcmdWithoutParameter*   fFilter3GetMaterCmd;
+    G4UIcmdWithAString*        fFilter4SetMaterCmd;
+    G4UIcmdWithoutParameter*   fFilter4GetMaterCmd;
     G4UIcmdWithAString*        fAbsorberSetMaterCmd;
     G4UIcmdWithoutParameter*   fAbsorberGetMaterCmd;
     G4UIcmdWithAString*        fPortRefSetMaterCmd;
@@ -85,6 +87,7 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit* fFilter1HeightCmd;
     G4UIcmdWithADoubleAndUnit* fFilter2HeightCmd;
     G4UIcmdWithADoubleAndUnit* fFilter3HeightCmd;
+    G4UIcmdWithADoubleAndUnit* fFilter4HeightCmd;
     G4UIcmdWithADoubleAndUnit* fAbsorberHeightCmd;
     G4UIcmdWithADoubleAndUnit* fPortRefThickCmd;
     G4UIcmdWithADoubleAndUnit* fReflectorThickCmd;

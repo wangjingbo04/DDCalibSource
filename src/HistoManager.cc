@@ -117,17 +117,21 @@ void HistoManager::Book()
   ih = analysisManager->CreateH1("h1.10", "Energy Spectrum from Filter 2", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 11 - energy spectrum of neutrons from filter 3 to thermal absorber
-  ih = analysisManager->CreateH1("h1.11", "Energy Spetrum from Fileter 3 to thermal absorber", nbins, vmin, vmax);
+  //Histogram 11 - energy spectrum of neutrons from filter 3 to filter4
+  ih = analysisManager->CreateH1("h1.11", "Energy Spetrum from Fileter 3 to filter4", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
   
-  //Histogram 12 - energy spectrum of neutrons exiting thermal absorber
-  ih = analysisManager->CreateH1("h1.12", "Energy Spectrum exiting thermal absorber", nbins, vmin, vmax);
+  //Histogram 12 - energy spectrum from filter4 to absorber
+  ih = analysisManager->CreateH1("h1.12", "Energy Spectrum from Fileter 4 to thermal absorber", nbins, vmin, vmax);
+  analysisManager->SetH1Activation(ih, true);
+  
+  //Histogram 13 - energy spectrum of neutrons exiting thermal absorber
+  ih = analysisManager->CreateH1("h1.13", "Energy Spectrum exiting thermal absorber", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
-  //Histogram 13 - energy spectrum of neutrons from cryostat membrane to gas argon buffer
-  ih = analysisManager->CreateH1("h1.13", "Energy Spectrum from cryostat membrane to argon gas buffer", nbins, vmin, vmax);
-  analysisManager->SetH1Activation(ih, true);
+//  //Histogram 13 - energy spectrum of neutrons from cryostat membrane to gas argon buffer
+//  ih = analysisManager->CreateH1("h1.13", "Energy Spectrum from cryostat membrane to argon gas buffer", nbins, vmin, vmax);
+//  analysisManager->SetH1Activation(ih, true);
 
   //Histogram 14 - energy spectrum of neutrons entering liquid argon pool (from gas buffer)
   ih = analysisManager->CreateH1("h1.14", "Neutrons entering liquid Argon pool", nbins, vmin, vmax);
@@ -253,8 +257,8 @@ void HistoManager::Book()
   analysisManager->CreateNtupleDColumn("filter1_e");									//column 2
   analysisManager->CreateNtupleDColumn("filter2_e");									//column 3
   analysisManager->CreateNtupleDColumn("filter3_e");									//column 4
-  analysisManager->CreateNtupleDColumn("thermalAbsorber_e");					//column 5
-  analysisManager->CreateNtupleDColumn("membrane_e");									//column 6
+  analysisManager->CreateNtupleDColumn("filter4_e");									//column 5
+  analysisManager->CreateNtupleDColumn("thermalAbsorber_e");					//column 6
   analysisManager->CreateNtupleDColumn("gasArgon_e");									//column 7
   // angle branches
   analysisManager->CreateNtupleDColumn("absorber_theta");			//column 8

@@ -63,6 +63,9 @@ class EventAction : public G4UserEventAction
     void AddNeutronEnter_Filter3() {fNNeutronEnter_Filter3++;};
     void AddNeutronExit_Filter3() {fNNeutronExit_Filter3++;};
     
+    void AddNeutronEnter_Filter4() {fNNeutronEnter_Filter4++;};
+    void AddNeutronExit_Filter4() {fNNeutronExit_Filter4++;};
+    
     void AddNeutronEnter_ThermalAbsorber() {fNNeutronEnter_ThermalAbsorber++;};
     void AddNeutronExit_ThermalAbsorber() {fNNeutronExit_ThermalAbsorber++;};
     
@@ -103,6 +106,9 @@ class EventAction : public G4UserEventAction
 
     G4int GetNNeutronEnter_Filter3() {return fNNeutronEnter_Filter3;};
     G4int GetNNeutronExit_Filter3() {return fNNeutronExit_Filter3;};
+    
+    G4int GetNNeutronEnter_Filter4() {return fNNeutronEnter_Filter4;};
+    G4int GetNNeutronExit_Filter4() {return fNNeutronExit_Filter4;};
 
     G4int GetNNeutronEnter_ThermalAbsorber() {return fNNeutronEnter_ThermalAbsorber;};
     G4int GetNNeutronExit_ThermalAbsorber() {return fNNeutronExit_ThermalAbsorber;};
@@ -149,6 +155,9 @@ class EventAction : public G4UserEventAction
 
     G4int				fNNeutronEnter_Filter3;
     G4int				fNNeutronExit_Filter3;
+    
+    G4int				fNNeutronEnter_Filter4;
+    G4int				fNNeutronExit_Filter4;
     
     G4int				fNNeutronEnter_ThermalAbsorber;
     G4int				fNNeutronExit_ThermalAbsorber;  

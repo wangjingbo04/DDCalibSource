@@ -169,22 +169,32 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       }
   }
 
-  // neutrons from filter 3 to absorber 
+  // neutrons from filter 3 to filter 4
   if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& postPoint->GetStepStatus() == fGeomBoundary 
   	&& preVolume == fDetector->GetLogicFilter3() 
-  	&& endVolume == fDetector->GetLogicThermalAbsorber()) {
+  	&& endVolume == fDetector->GetLogicFilter4()) {
+    
+      fEventAction->AddNeutronEnter_Filter4();
+      if(fEventAction->GetNNeutronEnter_Filter4() == 1) {
+      	G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
+      	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 4, kinEnergy);
+        G4AnalysisManager::Instance()->AddNtupleRow(0); 	
+      }
+  }
+  
+    // neutrons from filter 4 to thermal absorber
+  if ( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
+  	&& postPoint->GetStepStatus() == fGeomBoundary 
+  	&& preVolume == fDetector->GetLogicFilter4() 
+  	&& endVolume == fDetector->GetLogicThermalAbsorber() ) {
 
         fEventAction->AddNeutronEnter_ThermalAbsorber();
         
         if(fEventAction->GetNNeutronEnter_ThermalAbsorber() == 1) {
-        	G4AnalysisManager::Instance()->FillH1(11,kinEnergy);
-        	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 4, kinEnergy);
+        	G4AnalysisManager::Instance()->FillH1(12,kinEnergy);
+        	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 5, kinEnergy);
           G4AnalysisManager::Instance()->AddNtupleRow(0); 
-//        	G4int AbsorberTag = 1;
-//        	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 0, kinEnergy);
-//  	      G4AnalysisManager::Instance()->FillNtupleIColumn(0, 1, AbsorberTag); 
-//  	      G4AnalysisManager::Instance()->AddNtupleRow(0); 
         }
   }
   
@@ -195,13 +205,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& endVolume == fDetector->GetLogicCryostat()) {
         fEventAction->AddNeutronEnter_Cryostat();        
         if(fEventAction->GetNNeutronEnter_Cryostat() == 1) {
-        	G4AnalysisManager::Instance()->FillH1(12,kinEnergy); 
+        	G4AnalysisManager::Instance()->FillH1(13,kinEnergy); 
         	G4ThreeVector p = aStep->GetTrack()->GetMomentumDirection();
         	G4double theta = GetTheta(p.z());
         	G4double phi = GetPhi(p.x(), p.y());     	
           G4AnalysisManager::Instance()->FillH1(15, theta);
           G4AnalysisManager::Instance()->FillH1(16, phi);
-          G4AnalysisManager::Instance()->FillNtupleDColumn(0, 5, kinEnergy);
+          G4AnalysisManager::Instance()->FillNtupleDColumn(0, 6, kinEnergy);
           G4AnalysisManager::Instance()->FillNtupleDColumn(0, 8, theta);
           G4AnalysisManager::Instance()->FillNtupleDColumn(0, 9, phi);
           G4AnalysisManager::Instance()->AddNtupleRow(0); 
@@ -320,7 +330,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 11, y);
   	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 12, z);
   	G4AnalysisManager::Instance()->FillNtupleIColumn(0, 13, 0); // in gaseous argon
-  	G4AnalysisManager::Instance()->AddNtupleRow(1); 	
+  	G4AnalysisManager::Instance()->AddNtupleRow(0); 	
   	G4AnalysisManager::Instance()->FillH2(4,x, y);
   	G4AnalysisManager::Instance()->FillH2(5,x, z);	
   }
@@ -337,7 +347,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 11, y);
   	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 12, z);
   	G4AnalysisManager::Instance()->FillNtupleIColumn(0, 13, 1); // in liquid argon
-  	G4AnalysisManager::Instance()->AddNtupleRow(1);
+  	G4AnalysisManager::Instance()->AddNtupleRow(0);
   }
   
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
@@ -349,7 +359,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 11, y);
   	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 12, z);
   	G4AnalysisManager::Instance()->FillNtupleIColumn(0, 13, 2); // in liquid argon insulator
-  	G4AnalysisManager::Instance()->AddNtupleRow(1); 	
+  	G4AnalysisManager::Instance()->AddNtupleRow(0); 	
   	
   }
   
@@ -361,7 +371,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 11, y);
   	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 12, z);
   	G4AnalysisManager::Instance()->FillNtupleIColumn(0, 13, 3); // in all volumes
-  	G4AnalysisManager::Instance()->AddNtupleRow(1);
+  	G4AnalysisManager::Instance()->AddNtupleRow(0);
   }
   
 /*

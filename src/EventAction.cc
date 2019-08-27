@@ -71,7 +71,10 @@ void EventAction::BeginOfEventAction(const G4Event*)
   fNNeutronExit_Filter2 = 0; 
 
   fNNeutronEnter_Filter3 = 0;      
-  fNNeutronExit_Filter3 = 0;      
+  fNNeutronExit_Filter3 = 0;     
+  
+  fNNeutronEnter_Filter4 = 0;      
+  fNNeutronExit_Filter4 = 0;   
                               
   fNNeutronEnter_ThermalAbsorber = 0;  
   fNNeutronExit_ThermalAbsorber = 0; 

@@ -74,6 +74,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void GetFilter2Material ();
     void SetFilter3Material (G4String);
     void GetFilter3Material ();
+    void SetFilter4Material (G4String);
+    void GetFilter4Material ();
     void SetAbsorberMaterial (G4String);
     void GetAbsorberMaterial ();
     void SetPortRefMaterial (G4String);
@@ -88,6 +90,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetFilter1Height(G4double);
     void SetFilter2Height(G4double);
     void SetFilter3Height(G4double);
+    void SetFilter4Height(G4double);
     void SetAbsorberHeight(G4double);
     void SetPortRefThickness(G4double);
     void SetReflectorThickness(G4double);
@@ -114,6 +117,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4VPhysicalVolume* GetPhysiFilter1()       {return fPhysiFilter1;};
      G4VPhysicalVolume* GetPhysiFilter2()       {return fPhysiFilter2;};  
      G4VPhysicalVolume* GetPhysiFilter3()       {return fPhysiFilter3;};  
+     G4VPhysicalVolume* GetPhysiFilter4()       {return fPhysiFilter4;};  
       
      
      G4LogicalVolume* GetLogicWorld()           {return fLWorld;};   
@@ -129,6 +133,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume* GetLogicFilter1()         {return fLogicFilter1;};
      G4LogicalVolume* GetLogicFilter2()         {return fLogicFilter2;};
      G4LogicalVolume* GetLogicFilter3()         {return fLogicFilter3;}; 
+     G4LogicalVolume* GetLogicFilter4()         {return fLogicFilter4;};
      G4LogicalVolume* GetLogicThermalAbsorber() {return fLogicThermalAbsorber;}; 
      G4LogicalVolume* GetLogicInsulator() {return fLogicInsulator;}; 
                    
@@ -140,6 +145,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4double           GetFilter1Height()          {return fFilter1Height;};
      G4double           GetFilter2Height()          {return fFilter2Height;};
      G4double           GetFilter3Height()          {return fFilter3Height;};
+     G4double           GetFilter4Height()          {return fFilter4Height;};
      G4double           GetDDGeneratorHeight()      {return fDDGeneratorHeight;};
      G4double           GetInsulatorHeight()        {return fInsulatorHeight;};
      G4double           GetCryostatHeight()        {return fCryostatHeight;};
@@ -151,7 +157,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4double						GetSourceCenterY()					{return fCenterY;}
      
      G4double						GenerateGunPosition()					{return fInsulatorHeight/2 + fBufferHeight/2 - fInsulatorThickness + fPortHeight
-     																											+ fAbsorberHeight + fFilter1Height + fFilter2Height + fFilter3Height
+     																											+ fAbsorberHeight + fFilter1Height + fFilter2Height + fFilter4Height + fFilter3Height
      																											+ fModerator_Thickness + 2.0*cm;}
      
      
@@ -266,6 +272,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume*   fLogicFilter3;
      G4VPhysicalVolume* fPhysiFilter3;
      G4Material*        fFilter3Mater;
+     
+     // Filter4:
+     G4double           fFilter4Height;
+  	 G4double           fFilter4Radius_top;
+  	 G4double           fFilter4Radius_bottom; 	 
+     G4LogicalVolume*   fLogicFilter4;
+     G4VPhysicalVolume* fPhysiFilter4;
+     G4Material*        fFilter4Mater;
      
      // Thermal neutron absorber
   	 G4double						fAbsorberHeight;
