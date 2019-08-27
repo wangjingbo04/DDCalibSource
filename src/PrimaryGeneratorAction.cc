@@ -50,36 +50,32 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det, size_t Size)
-: G4VUserPrimaryGeneratorAction(),fParticleGun(0), fDetector(det)
+PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det)
+: G4VUserPrimaryGeneratorAction(),fParticleGun(0), fDetector(det), fUseUserDefinedEnergy(false)
 {
-  size = Size;
-  probDist = new G4double[size];
+  // make angular distribution 
+  probDist = new G4double[360]; 
+  MakeDDAngularDistribution();
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle); 
   
   // default particle kinematic
-
   G4ParticleDefinition* particle
            = G4ParticleTable::GetParticleTable()->FindParticle("neutron");
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,0.));
   G4double x = fDetector->GetSourceCenterX();
   G4double y = fDetector->GetSourceCenterY();
-  // generate neutrons from membrance
-  G4double z = det->GetCryostatHeight()/2 - 0.5*mm;
+  G4double z = fDetector->GenerateGunPosition();
+  //G4double z = fDetector->GetCryostatHeight()/2 - 1*cm;
   fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
   fParticleGun->SetParticleEnergy(57*keV);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1)); 
 
   fMessenger = new G4GenericMessenger(this,"/primary/", "...doc...");
   fMessenger->DeclareMethod("updateGunPosition", &PrimaryGeneratorAction::UpdateGunPosition, "...doc...");
-  populateProbDist();
+  fMessenger->DeclareMethod("UseUserDefinedEnergy", &PrimaryGeneratorAction::UseUserDefinedEnergy, "...doc...");
   
-  //Read the neutron energy spectrum from a pre-prepared root file
-  fhistFile = new TFile("dunefd_neutron_energy_spectrum.root");
-  fhistEnergySpectrum = (TH1D*)fhistFile->Get("h1.13");
-  fhistZenithAngle = (TH1D*)fhistFile->Get("h1.15");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -88,96 +84,79 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
   delete fParticleGun; fParticleGun = 0;
   delete [] probDist; probDist = 0;
-  delete fhistZenithAngle; fhistZenithAngle = 0;
-  delete fhistEnergySpectrum; fhistEnergySpectrum = 0;
   delete fMessenger; fMessenger = 0;
-  delete fhistFile; fhistFile = 0;
+  if(fUseUserDefinedEnergy) {
+    fNeutronEnergyFile->Close();
+    delete fNeutronEnergyFile; fNeutronEnergyFile = 0;
+  }
+}
+
+void PrimaryGeneratorAction::UseUserDefinedEnergy(TString histname)
+{
+	std::cout<<"PrimaryGenerator::UseUserDefinedEnergy(): Read external neutron beam energy from a ROOT file"<<std::endl;
+	// Open the neutron energy file
+	fUseUserDefinedEnergy = true;
+  fNeutronEnergyFile = new TFile("NeutronEnergy.root");
+  fNeutronEnergy = (TH1D*)fNeutronEnergyFile->Get(histname);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {  
-   // generate direction for moderated neutrons
-   G4double theta = fhistZenithAngle->GetRandom();  
-   G4AnalysisManager::Instance()->FillH1(17,theta);	
+   // define particle energy 
    
+   //fParticleGun->SetParticleEnergy(73*keV);  
+   //fParticleGun->SetParticleEnergy(100.*G4UniformRand()*keV);
+   // generate particle direction     
+   G4double theta = DDrandom()*degree;
    G4double phi = twopi*G4UniformRand();
    G4double cosTheta = -std::cos(theta);
    G4double sinTheta = std::sqrt(1. - cosTheta*cosTheta);
    G4double dx = sinTheta*std::cos(phi),
             dy = sinTheta*std::sin(phi),
             dz = cosTheta;
-   G4double e  = fhistEnergySpectrum->GetRandom()*1000; //convert to keVs
-   fParticleGun->SetParticleEnergy(e*keV);
-   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz)); 
- //fParticleGun->SetParticleEnergy(57*keV);
- //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1)); 
-//   G4double z = fDetector->GetCryostatHeight()/2 - 1.0*mm;
-//   fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, z));	 //position1
-// ideal locations
-//   if(fCounter%3 == 0) {
-//     G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
-//     fParticleGun->SetParticlePosition(G4ThreeVector(-19.7*m, 0*m, z));	
-//     fCounter++;	
-//   }
-//   else if (fCounter%3 == 1) {
-//     G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
-//     fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, z));		// 14.5m, 19.3m
-//     fCounter++;	
-//   }
-//   else {
-//   	 G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
-//     fParticleGun->SetParticlePosition(G4ThreeVector(19.7*m, 0*m, z));	
-//     fCounter++;	
-//   }
-   
-// two manholes
-   if(fCounter%2 == 0) {
-     G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
-     fParticleGun->SetParticlePosition(G4ThreeVector(-28.5*m, 6.75*m, z));	
-     fCounter++;	
+   //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));  
+   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1));
+   UpdateGunPosition();
+   if(fUseUserDefinedEnergy) {
+   	fParticleGun->SetParticleEnergy(fNeutronEnergy->GetRandom()*1000*keV);
    }
-   else {
-   	 G4double z = fDetector->GetCryostatHeight()/2 - 0.5*mm;
-     fParticleGun->SetParticlePosition(G4ThreeVector(28.5*m, -6.75*m, z));	
-     fCounter++;	
-   }   
- fParticleGun->GeneratePrimaryVertex(anEvent);
+   fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 void PrimaryGeneratorAction::UpdateGunPosition() {
-//  G4double x = fDetector->GetSourceCenterX();
-//  G4double y = fDetector->GetSourceCenterY();
-//  G4double z = fDetector->GetInsulatorHeight()/2 - fDetector->GetPortHeight() + fDetector->GetClearanceAboveCryostat() + fDetector->GetThermalAbsorborHeight() + fDetector->GetFilter3Height() + fDetector->GetFilter2Height() + fDetector->GetFilter1Height() + fDetector->GetModeratorHeight() - fDetector->GetDDGeneratorHeight() + 2.0*cm;
-//  fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));	
-}
+  G4double x = fDetector->GetSourceCenterX();
+  G4double y = fDetector->GetSourceCenterY();
+  G4double z = fDetector->GenerateGunPosition();
+  //G4double z = fDetector->GetCryostatHeight()/2 - 1*cm;
+  //G4double z = 0*cm;
+  fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));	
+}                         
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void PrimaryGeneratorAction::populateProbDist(){
+void PrimaryGeneratorAction::MakeDDAngularDistribution(){
 
     G4double thetaMin = -180;
     G4double thetaMax = 180;
-
     G4double A = 0.237;
     G4double B = -0.051;
     G4double C = -0.130;
-
-    for(G4int i=0; i<size; i++){
-        G4double theta = thetaMin + ((thetaMax - thetaMin)/size)*i;
-        if(theta < -90 || theta > 90){
-            probDist[i] = A + B + C;
-        }
-        else{
-            G4double cosine = std::cos(theta *(pi/180) + (pi/2));
-            probDist[i] = A + B * std::pow(cosine,2) + C * std::pow(cosine,4);
-        }
+    for(G4int i=0; i<360; i++){
+      G4double theta = thetaMin + ((thetaMax - thetaMin)/360)*i;
+      if(theta < -90 || theta > 90){                                               
+        probDist[i] = A + B + C;
+      }
+      else{
+        G4double cosine = std::cos(theta *(pi/180) + (pi/2));
+        probDist[i] = A + B * std::pow(cosine,2) + C * std::pow(cosine,4);
+      }
     }
 }
 
 G4double PrimaryGeneratorAction::DDrandom(){
-    G4RandGeneral *randDistribution = new G4RandGeneral(probDist, size);
+    G4RandGeneral *randDistribution = new G4RandGeneral(probDist, 360);
     G4double random = randDistribution->shoot();
     G4double angle = -180 + (360 * random);
     return angle;

@@ -96,6 +96,8 @@ void EventAction::BeginOfEventAction(const G4Event*)
  
   fNNeutronExit_Shield = 0;
   fNNeutronEnter_World = 0;
+  
+  fNAntiResonance = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

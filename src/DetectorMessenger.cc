@@ -189,13 +189,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fNShieldThickCmd->SetUnitCategory("Length");
   fNShieldThickCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   
-  fReflectorThickCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetClearanceAboveCryostat",this);
-  fReflectorThickCmd->SetGuidance("Set Clearance Above Cryostat");
-  fReflectorThickCmd->SetParameterName("ClearanceAboveCryostat",false);
-  fReflectorThickCmd->SetRange("ClearanceAboveCryostat>0.");
-  fReflectorThickCmd->SetUnitCategory("Length");
-  fReflectorThickCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  
   fReflectorThickCmd = new G4UIcmdWithADoubleAndUnit("/ddsource/det/SetSourceCenterX",this);
   fReflectorThickCmd->SetGuidance("Set Neutron Source X position");
   fReflectorThickCmd->SetParameterName("SourceCenterX",false);
@@ -364,9 +357,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
    { fDetector->SetReflectorThickness(fSizeCmd->GetNewDoubleValue(newValue));}
 
   if( command == fNShieldThickCmd )
-   { fDetector->SetNShieldThickness(fSizeCmd->GetNewDoubleValue(newValue));}
-   if( command == fClearanceAboveCryostatCmd )
-   { fDetector->SetClearanceAboveCryostat(fSizeCmd->GetNewDoubleValue(newValue));}     
+   { fDetector->SetNShieldThickness(fSizeCmd->GetNewDoubleValue(newValue));}   
    
   if( command == fSourceCenterXCmd )
    { fDetector->SetSourceCenterX(fSizeCmd->GetNewDoubleValue(newValue));}     

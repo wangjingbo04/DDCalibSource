@@ -36,6 +36,8 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "G4UnitsTable.hh"
+#include "G4SystemOfUnits.hh"
 
 class G4LogicalVolume;
 class G4Material;
@@ -91,7 +93,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetReflectorThickness(G4double);
     void SetNGuideThickness(G4double);
     void SetNShieldThickness(G4double);
-    void SetClearanceAboveCryostat (G4double value);
     
     void SetSourceCenterX(G4double value);
     void SetSourceCenterY(G4double value);
@@ -144,10 +145,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4double           GetCryostatHeight()        {return fCryostatHeight;};
      G4double           GetThermalAbsorberHeight()  {return fAbsorberHeight;};
      G4double           GetPortHeight()  						{return fPortHeight;};
+     G4double           GetVacuumInsulationHeight()  						{return fVacuumInsulationHeight;};
      G4double           GetThermalAbsorborHeight()	{return fAbsorberHeight;};
-     G4double						GetClearanceAboveCryostat() {return fClearanceAboveCryostat;};
      G4double						GetSourceCenterX()					{return fCenterX;}
      G4double						GetSourceCenterY()					{return fCenterY;}
+     
+     G4double						GenerateGunPosition()					{return fInsulatorHeight/2 + fBufferHeight/2 - fInsulatorThickness + fPortHeight
+     																											+ fAbsorberHeight + fFilter1Height + fFilter2Height + fFilter3Height
+     																											+ fModerator_Thickness + 2.0*cm;}
      
      
      void               PrintParameters();
@@ -163,8 +168,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      
      G4Material*        fWorldMater;  
      
-     // height above cryostat
-     G4double						fClearanceAboveCryostat;
      // neutron source centers
      G4double						fCenterX;
      G4double						fCenterY;
@@ -186,6 +189,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   	 G4LogicalVolume*   fLogicPort;
      G4VPhysicalVolume* fPhysiPort;
      G4Material*        fPortMater;
+     
+     // Vacuum insulation
+     G4double						fVacuumInsulationHeight;
+    
+     
     
      // Feedthrough port reflector
      G4double fPortRefHeight; 
@@ -220,14 +228,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4LogicalVolume*   fLogicBuffer;
      G4VPhysicalVolume* fPhysiBuffer;
      G4Material*        fBufferMater; 
-     
-     // CRP PCB: Fr4
-     G4double           fCRPPCBHeight; 
-     G4double           fCRPPCBWidth;
-     G4double           fCRPPCBLength;
-     G4LogicalVolume*   fLogicCRPPCB;
-     G4VPhysicalVolume* fPhysiCRPPCB;
-     G4Material*        fCRPPCBMater; 
      
      // neutron DD generator
      G4double           fDDGeneratorHeight; //UI
@@ -300,6 +300,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      
      // define vacuum
      G4Material* fVacuum;
+     
+     // Ni58
+     G4Material* fNi58;
      
      DetectorMessenger* fDetectorMessenger;
 

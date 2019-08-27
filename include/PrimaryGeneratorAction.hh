@@ -53,26 +53,27 @@ class G4Event;
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
-    PrimaryGeneratorAction(DetectorConstruction* det, size_t Size);    
+    PrimaryGeneratorAction(DetectorConstruction* dets);    
    ~PrimaryGeneratorAction();
 
   public:
     virtual void GeneratePrimaries(G4Event*);
     G4ParticleGun* GetParticleGun() {return fParticleGun;};
     void UpdateGunPosition();
+    void UseUserDefinedEnergy(TString histname);
 
   private:
     G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
     DetectorConstruction* fDetector;       //pointer to the detector class
     G4GenericMessenger* fMessenger;      //pointer to generic messanger class
-    TFile* fhistFile;
-    TH1D* fhistEnergySpectrum; //pointer to the neutron energy spectrum
-    TH1D* fhistZenithAngle; 
     G4double* probDist;
     size_t size;
     G4int fCounter = 0;
-    void populateProbDist();
+    void MakeDDAngularDistribution();
     G4double DDrandom();
+    TFile* fNeutronEnergyFile; 
+    TH1D* fNeutronEnergy;
+    G4bool fUseUserDefinedEnergy = false;  // neutron energy option
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

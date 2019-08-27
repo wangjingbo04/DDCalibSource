@@ -121,8 +121,8 @@ void HistoManager::Book()
   ih = analysisManager->CreateH1("h1.11", "Energy Spetrum from Fileter 3 to thermal absorber", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
   
-  //Histogram 12 - energy spectrum of neutrons from thermal absorber to cryostat membrane
-  ih = analysisManager->CreateH1("h1.12", "Energy Spectrum from Thermal Absorber to cryostat membrane", nbins, vmin, vmax);
+  //Histogram 12 - energy spectrum of neutrons exiting thermal absorber
+  ih = analysisManager->CreateH1("h1.12", "Energy Spectrum exiting thermal absorber", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
 
   //Histogram 13 - energy spectrum of neutrons from cryostat membrane to gas argon buffer
@@ -212,7 +212,6 @@ void HistoManager::Book()
   //Histogram 31 - energy spectrum of neutrons leaving Li absorber to cryostat
   ih = analysisManager->CreateH1("h1.31", "Neutrons entering liquid Argon pool", nbins, vmin, vmax);
   analysisManager->SetH1Activation(ih, true);
-
   
   // histos 2D
   //
@@ -246,20 +245,37 @@ void HistoManager::Book()
   ih = analysisManager->CreateH2("h2.11","neutron capture position in all volumes (side view, z:x)",nbins,vmin,vmax, nbins,vmin,vmax);
   analysisManager->SetH2Activation(ih, true);
 
-  // nTuples
-   
-  
-  analysisManager->CreateNtuple("nenergy", "Neutron energy exiting Filter"); //id = 0
-  analysisManager->CreateNtupleDColumn("energy");//column 0
-  analysisManager->CreateNtupleIColumn("volume"); //column 1
+  // tree name
+  analysisManager->CreateNtuple("pns", "Pulsed Neutron Source"); 			//id = 0
+  // energy branches
+  analysisManager->CreateNtupleDColumn("ddgenerator_e");							//column 0
+  analysisManager->CreateNtupleDColumn("moderator_e");								//column 1
+  analysisManager->CreateNtupleDColumn("filter1_e");									//column 2
+  analysisManager->CreateNtupleDColumn("filter2_e");									//column 3
+  analysisManager->CreateNtupleDColumn("filter3_e");									//column 4
+  analysisManager->CreateNtupleDColumn("thermalAbsorber_e");					//column 5
+  analysisManager->CreateNtupleDColumn("membrane_e");									//column 6
+  analysisManager->CreateNtupleDColumn("gasArgon_e");									//column 7
+  // angle branches
+  analysisManager->CreateNtupleDColumn("absorber_theta");			//column 8
+  analysisManager->CreateNtupleDColumn("absorber_phi");				//column 9
+  // neutron capture
+  analysisManager->CreateNtupleDColumn("ncap_x");       //column 10
+  analysisManager->CreateNtupleDColumn("ncap_y");       //column 11
+  analysisManager->CreateNtupleDColumn("ncap_z");       //column 12
+  analysisManager->CreateNtupleIColumn("volume");  //column 13
   analysisManager->FinishNtuple();
   
-  analysisManager->CreateNtuple("ncap", "Neutron Captures"); //id = 1
-  analysisManager->CreateNtupleDColumn("ncap_x");       //column 0
-  analysisManager->CreateNtupleDColumn("ncap_y");       //column 1
-  analysisManager->CreateNtupleDColumn("ncap_z");       //column 2
-  analysisManager->CreateNtupleIColumn("volume");  //column 3
-  analysisManager->FinishNtuple();
+ 
+  
+  
+//  // tree name
+//  analysisManager->CreateNtuple("ncap", "Neutron Captures"); //id = 1
+//  analysisManager->CreateNtupleDColumn("ncap_x");       //column 0
+//  analysisManager->CreateNtupleDColumn("ncap_y");       //column 1
+//  analysisManager->CreateNtupleDColumn("ncap_z");       //column 2
+//  analysisManager->CreateNtupleIColumn("volume");  //column 3
+//  analysisManager->FinishNtuple();
   
   analysisManager->SetNtupleActivation(true); 
    

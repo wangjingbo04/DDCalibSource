@@ -64,43 +64,22 @@ DetectorConstruction::DetectorConstruction()
   fWorldSize = 80*m;
   DefineMaterials();
   SetWorldMaterial("Air");
-//  // ProtoDUNE Lar pool  
-//  fPoolLength      = 8.9*m;
-//  fPoolWidth      = 7.8*m;
-//  fPoolHeight      = 7.3*m;
-//  // ProtoDUNE Gas argon buffer
-//  fBufferLength      = 8.9*m; 
-//  fBufferWidth      = 7.8*m; 
-//  fBufferHeight      = 0.8*m; 
-
-
-// DUNE Lar pool  
-  fPoolLength      = 58.0*m;
-  fPoolWidth      = 14.5*m;
-  fPoolHeight      = 12.0*m;  
-  // DUNE Gas argon buffer
-  fBufferLength      = 58.0*m;
-  fBufferWidth      = 14.5*m;
+  
+  // Example LAr TPC
+  fPoolLength      = 60.0*m;
+  fPoolWidth      = 10.0*m;
+  fPoolHeight      = 10.0*m;
+  // Gas argon buffer
+  fBufferLength      = 60.0*m;
+  fBufferWidth      = 10.0*m;
   fBufferHeight      = 0.8*m;
   
-  // CRP PCB
-  fCRPPCBLength = 58.0*m;
-  fCRPPCBWidth = 14.5*m;
-  fCRPPCBHeight = 3.6*mm; 
-  
-//  // General LAr TPC  
-//  fPoolLength      = 10.0*m;
-//  fPoolWidth      = 10.0*m;
-//  fPoolHeight      = 10.0*m;
-//  // Gas argon buffer
-//  fBufferLength      = 10.0*m;
-//  fBufferWidth      = 10.0*m;
-//  fBufferHeight      = 0.8*m;
-    // stainless steel cryostat
+  // stainless steel cryostat
   fCryostatThickness = 1.0*mm;
   fCryostatLength = fPoolLength + 2*fCryostatThickness;
   fCryostatWidth = fPoolWidth + 2*fCryostatThickness;
   fCryostatHeight= fPoolHeight + fBufferHeight + 2*fCryostatThickness;
+  
   // Polyethylene insulator
   fInsulatorThickness = 90*cm;
   fInsulatorLength = fCryostatLength + 2*fInsulatorThickness;
@@ -110,23 +89,26 @@ DetectorConstruction::DetectorConstruction()
   // neutron DD generator
   fDDGeneratorHeight = 50.0*cm;
   fDDGeneratorRadius = 4.0*cm;
+  
   // Moderator
   fModerator_Thickness = 20*cm;
   fModerator_Height = fDDGeneratorHeight + fModerator_Thickness; // must be larger than the DD generator height
   fModerator_Radius = fDDGeneratorRadius + 8*cm;
+  
   // 1st Filter
-  fFilter1Height = 12*cm;
-  fFilter1Radius = fModerator_Radius + 4.0*cm;
+  fFilter1Height = 10*cm;
+  //fFilter1Radius = fModerator_Radius + 4.0*cm;
+  fFilter1Radius = fModerator_Radius;
+  
   // 2nd Filter
-  fFilter2Height = 5*cm;
+  fFilter2Height = 20*cm;
   fFilter2Radius_top = fFilter1Radius;
-  fFilter2Radius_bottom = fFilter1Radius;
-  //fFilter2Radius_bottom = 12.5*cm;
+  fFilter2Radius_bottom = 10*cm;
+
   // 3rd Filter
-  fFilter3Height        = 4.0*cm;
+  fFilter3Height        = 12.0*cm;
   fFilter3Radius_top    = fFilter2Radius_bottom;
   fFilter3Radius_bottom = fFilter2Radius_bottom;
-  //fFilter3Radius_bottom = 12.5*cm;
   
   // neutron reflector
   fReflectorThickness = 12.0*cm;
@@ -143,24 +125,21 @@ DetectorConstruction::DetectorConstruction()
   fNShieldHeight = fReflectorHeight + fFilter2Height + fFilter3Height + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
   
-  // Feedthrough port
-  fPortHeight = fInsulatorThickness;
+  // Feedthrough \ vacuum insulation
+  //fPortHeight = fInsulatorThickness;
+  fPortHeight = 0.*cm;
   fPortOuterRadius = fNShieldRadius;
+  
+  // vacuum insulation 
+  fVacuumInsulationHeight = 0.*cm;
+  
   // Thermal neutron absorber
   fAbsorberHeight = 4*cm;
   fThermalAbsorberRadius = fPortOuterRadius;
   
-  // Neutron source position Above Cryostat
-  //fClearanceAboveCryostat = fAbsorberHeight; //Design A-2: must be higher than the absorber
-  // Neutron source center position
-  //fCenterX = -28.0* m;
-  //fCenterY = -6.25* m;
-  //fCenterX = 15* m;
-  //fCenterY = 0* m;
   fCenterX = 0* m;
   fCenterY = 0* m;
   
-  fClearanceAboveCryostat = fPortHeight; //Design A-1: 
   fDetectorMessenger = new DetectorMessenger(this);
   
 }
@@ -250,6 +229,13 @@ void DetectorConstruction::DefineMaterials()
   ele_B->AddIsotope(iso_B,abundance=100.*perCent);
   G4Material* B10=new G4Material("B10",2.34*g/cm3, ncomponents = 1);
   B10->AddElement(ele_B, fractionmass = 1 );
+  
+  // Ni-58 isotope
+  G4Isotope* iso_Ni58 = new G4Isotope("iso_Ni58", Z=28, A=58, a=58*g/mole);
+  G4Element* ele_Ni58 = new G4Element("ele_Ni58", "Ni", ncomponents=1);
+  ele_Ni58->AddIsotope(iso_Ni58,abundance=100.*perCent);
+  fNi58=new G4Material("Ni58",8.908*g/cm3, ncomponents = 1);
+  fNi58->AddElement(ele_Ni58, fractionmass = 1 );
     
   // SiO2
   G4Isotope* iso_Si30 = new G4Isotope("iso_Si30", Z=14, A=30, a=29.9738*g/mole);
@@ -347,45 +333,53 @@ void DetectorConstruction::DefineMaterials()
   G4Material* FR4 = new G4Material("FR4", 1.98281*g/cm3, ncomponents=2, kStateSolid); 
   FR4->AddMaterial (epoxy_resin, fractionmass = 47*perCent);
   FR4->AddMaterial (fibrous_glass, fractionmass = 53*perCent);
-   
-   
+  
+  // liquid argon
+  G4Material* LAr = man->BuildMaterialWithNewDensity("Liquid_argon","G4_lAr", 1.3954*g/cm3, 77.*kelvin, 1.0*atmosphere);
+  
   // world mater
   fWorldMater = Air20;
   // insulator
   fInsulatorMater = polyethylene;
   // Feedthrough port
-  fPortMater = Air20;
+  fPortMater = fVacuum;
   // feedthrough port reflector
   fPortRefMater = man->FindOrBuildMaterial("G4_Pb");
   // cryostat
-  fCryostatMater = fVacuum;
+  fCryostatMater = StainlessSteel;
+  
   // liquid argon pool
   fPoolMater = man->FindOrBuildMaterial("G4_lAr");
+  //fPoolMater = LAr;
+  
   // gas argon buffer
   fBufferMater = man->FindOrBuildMaterial("G4_Ar");
-  // CRPPCB
-  fCRPPCBMater = FR4;
+  
   // neutron reflectorMater
   fReflectorMater = man->FindOrBuildMaterial("G4_Pb");
+  
   // neutron guide
-  fNGuideMater = man->FindOrBuildMaterial("G4_Pb");
+  //fNGuideMater = man->FindOrBuildMaterial("G4_Pb");
+  fNGuideMater = fNi58;
+  
   // DD generator
   fDDGeneratorMater = fVacuum; 
   // Moderator 
-  fModerator_Mater = man->FindOrBuildMaterial("G4_Fe");
+  fModerator_Mater = man->FindOrBuildMaterial("G4_Si");
   // Filter 1 
   fFilter1Mater = man->FindOrBuildMaterial("G4_S");
   // Filter 2
   fFilter2Mater = man->FindOrBuildMaterial("G4_S");
   // Filter 3
-  //fFilter3Mater = man->FindOrBuildMaterial("G4_S");
   fFilter3Mater = man->FindOrBuildMaterial("G4_S");
-  // Filter 4
+
   // neutron thermal absorber
-  fThermalAbsorberMater = Li6;
+  fThermalAbsorberMater = B10;
+  
   // neutron shield
   fNShieldMater = LiPoly;
- ///G4cout << *(G4Material::GetMaterialTable()) << G4endl;
+  
+  G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 G4Material* DetectorConstruction::MaterialWithSingleIsotope( G4String name,
@@ -434,11 +428,11 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   G4ThreeVector zTransInsulator(fCenterX, fCenterY, fInsulatorHeight/2 - fInsulatorThickness/2); 
   G4SubtractionSolid* sInsulator =
   new G4SubtractionSolid("Insulator1-Insulator2", sInsulator1, sInsulator2, 0, zTransInsulator); 
-  fLogicInsulator = new G4LogicalVolume(sInsulator1,                     //its shape
+  fLogicInsulator = new G4LogicalVolume(sInsulator,                     //its shape
                              fInsulatorMater,                 //its material
                              "Insulator_l");     //its name
   fPhysiInsulator = new G4PVPlacement(0,                          //no rotation
-                            G4ThreeVector(0, 0, 0),            //at (0,0,0)
+                            G4ThreeVector(0, 0, fBufferHeight/2),            //at (0,0,0)
                             fLogicInsulator,                      //its logical volume
                             "Insulator_p",      //its name
                             fLWorld,                          //its mother  volume
@@ -452,18 +446,16 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 //                     fPortHeight/2,                                                                     //its height
 //                     0.,                                                                                //spanning angle
 //                     CLHEP::twopi );                                                                    //spanning angle
-//                
-//                     G4ThreeVector zTransInsulator(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2);  
 //
 //  fLogicPort = new G4LogicalVolume(sPort,                      //its shape
 //                                   fPortMater,                 //its material
 //                                   "Port_l");                  //its name
-//
+//  
 //  fPhysiPort = new G4PVPlacement(0,                                                                         //no rotation
-//                                 G4ThreeVector(0, 0, fInsulatorHeight/2 - fInsulatorThickness/2),           //at (0,0,0)
+//                                 G4ThreeVector(0, 0, fInsulatorHeight/2 - fInsulatorThickness + fPortHeight/2),           //at (0,0,0)
 //                                 fLogicPort,                                                                //its logical volume
 //                                 "Port_p",                                                                  //its name
-//                                 fLogicInsulator,                                                           //its mother  volume
+//                                 fLWorld,                                                           //its mother  volume
 //                                 false,                                                                     //no boolean operation
 //                                 0);                                                                        //copy number
 
@@ -509,22 +501,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                    fLogicCryostat,                                                                              //its mother  volume
                                    false,                                                                                       //no boolean operation
                                    0);  
-                                   
-//  // CRP PCB plate
-//  G4Box*
-//  sCRPPCB = new G4Box("CRPPCB",                                       //its name
-//                         fCRPPCBLength/2,fCRPPCBWidth/2,fCRPPCBHeight/2);   //its dimensions
-//  fLogicCRPPCB = new G4LogicalVolume(sCRPPCB,                            //its shape
-//                                     fCRPPCBMater,                          //its material
-//                                     "CRPPCB_l");                        //its name
-//  fPhysiCRPPCB = new G4PVPlacement(0,                                                                                           //no rotation
-//                                   G4ThreeVector(0, 0, 0),    //at (0,0,0)
-//                                   fLogicCRPPCB,                                                                                //its logical volume
-//                                   "CRPPCB_p",                                                                               //its name
-//                                   fLogicBuffer,                                                                              //its mother  volume
-//                                   false,                                                                                       //no boolean operation
-//                                   0);  
-                                                                                          //copy number   
+                                     
   // neutron shield
   G4Tubs* 
   sNShield = new G4Tubs("NShield_s",                                                //its name
@@ -533,7 +510,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                       fNShieldMater,                                //its material
                                       "NShield_l");                                 //its name
   fPhysiNShield = new G4PVPlacement(0,                                                              //no rotation
-                                    G4ThreeVector(fCenterX, fCenterY,  fInsulatorHeight/2 - fPortHeight + fClearanceAboveCryostat + fNShieldHeight/2),      
+                                    G4ThreeVector(fCenterX, fCenterY,  fInsulatorHeight/2+fBufferHeight/2 - fInsulatorThickness + fPortHeight + fAbsorberHeight + fNShieldHeight/2),      
                                     fLogicNShield ,                                                 //its logical volume
                                     "NShield_p",                                                    //its name
                                     fLWorld,                                                        //its mother  volume
@@ -551,13 +528,13 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                               fThermalAbsorberMater,            //materiald
                                               "ThermalAbsorber_l");             //name
   fPhysiThermalAbsorber = new G4PVPlacement(0,                                                                   //no rotation
-                                            G4ThreeVector(fCenterX, fCenterY, fInsulatorHeight/2  -fPortHeight + fAbsorberHeight/2),  
+                                            G4ThreeVector(fCenterX, fCenterY, fInsulatorHeight/2+fBufferHeight/2  - fInsulatorThickness + fPortHeight + fAbsorberHeight/2),  
                                             fLogicThermalAbsorber,                                               //logical volume
                                             "ThermalAbsorber_p",                                                 //name
                                             fLWorld,                                                          //mother  volume
                                             false,                                                               //no boolean operation
                                             0);                                                                  //copy number help
-  // neutron reflector
+  // neutron reflectors
   G4Tubs* 
   sReflector = new G4Tubs("Reflector_s",                                                 //its name
                           0,                                                             //inner radius
@@ -764,7 +741,8 @@ void DetectorConstruction::GetModeratorMaterial(){
 void DetectorConstruction::SetFilter1Material(G4String materialChoice)
 { 
 	G4Material* pttoMaterial;
-  if(materialChoice == "Vacuum") pttoMaterial = fVacuum;	
+  if(materialChoice == "Vacuum") pttoMaterial = fVacuum;
+  else if(materialChoice == "Ni58") 	pttoMaterial = fNi58;
   // search the material by its name
   else pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   if (pttoMaterial) { 
@@ -785,6 +763,7 @@ void DetectorConstruction::SetFilter2Material(G4String materialChoice)
 { 
 	G4Material* pttoMaterial;
   if(materialChoice == "Vacuum") pttoMaterial = fVacuum;
+  else if(materialChoice == "Ni58") 	pttoMaterial = fNi58;
   // search the material by its name
   else pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   if (pttoMaterial) { 
@@ -805,6 +784,7 @@ void DetectorConstruction::SetFilter3Material(G4String materialChoice)
 {  
 	G4Material* pttoMaterial;
   if(materialChoice == "Vacuum") pttoMaterial = fVacuum;	
+  else if(materialChoice == "Ni58") 	pttoMaterial = fNi58;
   // search the material by its name
   else pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   if (pttoMaterial) { 
@@ -962,11 +942,6 @@ void DetectorConstruction::SetNShieldThickness(G4double value)
   fNShieldThickness = value;
   fNShieldHeight = fFilter3Height + fFilter2Height + fReflectorHeight + fNShieldThickness;
   fNShieldRadius = fReflectorRadius + fNShieldThickness;
-  G4RunManager::GetRunManager()->ReinitializeGeometry();
-}
-void DetectorConstruction::SetClearanceAboveCryostat (G4double value) // not working
-{
-  fClearanceAboveCryostat = value;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 void DetectorConstruction::SetSourceCenterX(G4double value)

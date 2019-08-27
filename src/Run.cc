@@ -305,7 +305,7 @@ void Run::EndOfRun()
   G4cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
   G4cout << G4endl;
   G4cout << "Total Number of Events: " << numberOfEvent << G4endl;
-  G4cout << "Total (57 keV - 1 MeV): " << GetARCount() << G4endl;
+  G4cout << "Total (48 keV - 62 keV): " << GetARCount() << G4endl;
   G4cout << "Average # of Interactions in Moderator 1: " << (GetCollisionsMod1()/numberOfEvent) << G4endl;
   G4cout << "Average # of Interactions in Filter 1:    " << (GetCollisionsF1()/numberOfEvent) << G4endl;
   G4cout << G4endl;

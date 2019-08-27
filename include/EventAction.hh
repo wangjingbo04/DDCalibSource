@@ -87,6 +87,8 @@ class EventAction : public G4UserEventAction
 
     void AddNeutronExit_Shield() {fNNeutronExit_Shield++;};
     void AddNeutronEnter_World() {fNNeutronEnter_World++;};
+    
+    void AddAntiResonance() {fNAntiResonance++;};
 
     G4int GetNNeutronExit_Generator() {return fNNeutronExit_Generator;};
     
@@ -125,9 +127,15 @@ class EventAction : public G4UserEventAction
     G4int GetGammaExit_LArPool() {return fGammaExit_LArPool;};
 
     G4int GetNNeutronExit_Shield() {return fNNeutronExit_Shield;};
-    G4int GetNNeutronEnter_World() {return fNNeutronEnter_World;};    
+    G4int GetNNeutronEnter_World() {return fNNeutronEnter_World;};  
+    
+    G4int GetNAntiResonance() {return fNAntiResonance;}  
+    
+    
                 
   private:                  
+  	G4int		    fNAntiResonance;
+  	
     G4int       fNNeutronExit_Generator;
 
     G4int				fNNeutronEnter_Moderator;
