@@ -70,7 +70,7 @@ DetectorConstruction::DetectorConstruction()
   fPoolWidth      = 10.0*m;
   fPoolHeight      = 10.0*m;
   // Gas argon buffer
-  fBufferLength      = 60.0*m;
+  fBufferLength      = 20.0*m;
   fBufferWidth      = 10.0*m;
   fBufferHeight      = 0.8*m;
   

@@ -128,7 +128,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
    if(fUseUserDefinedEnergy) {
    	 fParticleGun->SetParticleEnergy(fNeutronEnergy->GetRandom()*1000*keV);
    }
-   UpdateGunPosition();
+   //UpdateGunPosition();
    fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
