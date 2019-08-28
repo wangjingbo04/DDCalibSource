@@ -326,11 +326,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
   	&& procName == "nCapture" 	
   	&& endVolume == fDetector->GetLogicBuffer()) {  	
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 10, x);
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 11, y);
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 12, z);
-  	G4AnalysisManager::Instance()->FillNtupleIColumn(0, 13, 0); // in gaseous argon
-  	G4AnalysisManager::Instance()->AddNtupleRow(0); 	
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 0, x);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 1, y);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 2, z);
+  	G4AnalysisManager::Instance()->FillNtupleIColumn(1, 3, 0); // in gaseous argon
+  	G4AnalysisManager::Instance()->AddNtupleRow(1); 	
   	G4AnalysisManager::Instance()->FillH2(4,x, y);
   	G4AnalysisManager::Instance()->FillH2(5,x, z);	
   }
@@ -343,11 +343,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	G4AnalysisManager::Instance()->FillH2(9,x, z);	
   	G4double time   = aStep->GetTrack()->GetGlobalTime(); 
   	G4AnalysisManager::Instance()->FillH1(29, time);	//golbal time   		
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 10, x);
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 11, y);
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 12, z);
-  	G4AnalysisManager::Instance()->FillNtupleIColumn(0, 13, 1); // in liquid argon
-  	G4AnalysisManager::Instance()->AddNtupleRow(0);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 0, x);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 1, y);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 2, z);
+  	G4AnalysisManager::Instance()->FillNtupleIColumn(1, 3, 1); // in liquid argon
+  	G4AnalysisManager::Instance()->AddNtupleRow(1);
   }
   
   if( aStep->GetTrack()->GetDefinition()->GetParticleName() == "neutron"
@@ -355,11 +355,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& endVolume == fDetector->GetLogicInsulator()) {
   	G4AnalysisManager::Instance()->FillH2(6,x, y);
   	G4AnalysisManager::Instance()->FillH2(7,x, z);		
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 10, x);
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 11, y);
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 12, z);
-  	G4AnalysisManager::Instance()->FillNtupleIColumn(0, 13, 2); // in liquid argon insulator
-  	G4AnalysisManager::Instance()->AddNtupleRow(0); 	
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 0, x);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 1, y);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 2, z);
+  	G4AnalysisManager::Instance()->FillNtupleIColumn(1, 3, 2); // in liquid argon insulator
+  	G4AnalysisManager::Instance()->AddNtupleRow(1); 	
   	
   }
   
@@ -367,11 +367,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   	&& procName == "nCapture") { 
   	G4AnalysisManager::Instance()->FillH2(10,x, y);
   	G4AnalysisManager::Instance()->FillH2(11,x, z);		
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 10, x);
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 11, y);
-  	G4AnalysisManager::Instance()->FillNtupleDColumn(0, 12, z);
-  	G4AnalysisManager::Instance()->FillNtupleIColumn(0, 13, 3); // in all volumes
-  	G4AnalysisManager::Instance()->AddNtupleRow(0);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 0, x);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 1, y);
+  	G4AnalysisManager::Instance()->FillNtupleDColumn(1, 2, z);
+  	G4AnalysisManager::Instance()->FillNtupleIColumn(1, 3, 3); // in all volumes
+  	G4AnalysisManager::Instance()->AddNtupleRow(1);
   }
   
 /*

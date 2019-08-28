@@ -61,6 +61,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     G4ParticleGun* GetParticleGun() {return fParticleGun;};
     void UpdateGunPosition();
     void UseUserDefinedEnergy(TString histname);
+    void UseUserDefinedDirection();
 
   private:
     G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
@@ -74,6 +75,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     TFile* fNeutronEnergyFile; 
     TH1D* fNeutronEnergy;
     G4bool fUseUserDefinedEnergy = false;  // neutron energy option
+    G4bool fUseUserDefinedDirection = false;  // neutron direction option
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -66,7 +66,7 @@ DetectorConstruction::DetectorConstruction()
   SetWorldMaterial("Air");
   
   // Example LAr TPC
-  fPoolLength      = 60.0*m;
+  fPoolLength      = 20.0*m;
   fPoolWidth      = 10.0*m;
   fPoolHeight      = 10.0*m;
   // Gas argon buffer

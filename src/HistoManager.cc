@@ -263,23 +263,24 @@ void HistoManager::Book()
   // angle branches
   analysisManager->CreateNtupleDColumn("absorber_theta");			//column 8
   analysisManager->CreateNtupleDColumn("absorber_phi");				//column 9
-  // neutron capture
-  analysisManager->CreateNtupleDColumn("ncap_x");       //column 10
-  analysisManager->CreateNtupleDColumn("ncap_y");       //column 11
-  analysisManager->CreateNtupleDColumn("ncap_z");       //column 12
-  analysisManager->CreateNtupleIColumn("volume");  //column 13
-  analysisManager->FinishNtuple();
+//  // neutron capture
+//  analysisManager->CreateNtupleDColumn("ncap_x");       //column 10
+//  analysisManager->CreateNtupleDColumn("ncap_y");       //column 11
+//  analysisManager->CreateNtupleDColumn("ncap_z");       //column 12
+//  analysisManager->CreateNtupleIColumn("volume");  //column 13
+//  analysisManager->FinishNtuple();
   
  
   
   
-//  // tree name
-//  analysisManager->CreateNtuple("ncap", "Neutron Captures"); //id = 1
-//  analysisManager->CreateNtupleDColumn("ncap_x");       //column 0
-//  analysisManager->CreateNtupleDColumn("ncap_y");       //column 1
-//  analysisManager->CreateNtupleDColumn("ncap_z");       //column 2
-//  analysisManager->CreateNtupleIColumn("volume");  //column 3
-//  analysisManager->FinishNtuple();
+  // neutron capture
+  analysisManager->CreateNtuple("ncap", "Neutron Captures"); //id = 1
+  analysisManager->CreateNtupleDColumn("ncap_x");       //column 0
+  analysisManager->CreateNtupleDColumn("ncap_y");       //column 1
+  analysisManager->CreateNtupleDColumn("ncap_z");       //column 2
+  analysisManager->CreateNtupleIColumn("volume");  //column 3
+  //analysisManager->CreateNtupleIColumn("incident_e");  //column 4
+  analysisManager->FinishNtuple();
   
   analysisManager->SetNtupleActivation(true); 
    

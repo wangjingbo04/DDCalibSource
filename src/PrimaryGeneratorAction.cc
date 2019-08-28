@@ -75,7 +75,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det)
   fMessenger = new G4GenericMessenger(this,"/primary/", "...doc...");
   fMessenger->DeclareMethod("updateGunPosition", &PrimaryGeneratorAction::UpdateGunPosition, "...doc...");
   fMessenger->DeclareMethod("UseUserDefinedEnergy", &PrimaryGeneratorAction::UseUserDefinedEnergy, "...doc...");
-  
+  fMessenger->DeclareMethod("UseUserDefinedDirection", &PrimaryGeneratorAction::UseUserDefinedDirection, "...doc...");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -100,6 +100,12 @@ void PrimaryGeneratorAction::UseUserDefinedEnergy(TString histname)
   fNeutronEnergy = (TH1D*)fNeutronEnergyFile->Get(histname);
 }
 
+void PrimaryGeneratorAction::UseUserDefinedDirection()
+{
+	std::cout<<"PrimaryGenerator::UseUserDefinedDirection(): Use an analytical angular distribution "<<std::endl;
+	fUseUserDefinedDirection = true;
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
@@ -109,19 +115,20 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
    //fParticleGun->SetParticleEnergy(73*keV);  
    //fParticleGun->SetParticleEnergy(100.*G4UniformRand()*keV);
    // generate particle direction     
-   G4double theta = DDrandom()*degree;
-   G4double phi = twopi*G4UniformRand();
-   G4double cosTheta = -std::cos(theta);
-   G4double sinTheta = std::sqrt(1. - cosTheta*cosTheta);
-   G4double dx = sinTheta*std::cos(phi),
-            dy = sinTheta*std::sin(phi),
-            dz = cosTheta;
-   //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));  
-   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,-1));
-   UpdateGunPosition();
-   if(fUseUserDefinedEnergy) {
-   	fParticleGun->SetParticleEnergy(fNeutronEnergy->GetRandom()*1000*keV);
+   if(fUseUserDefinedDirection) {
+     G4double theta = DDrandom()*degree;
+     G4double phi = twopi*G4UniformRand();
+     G4double cosTheta = -std::cos(theta);
+     G4double sinTheta = std::sqrt(1. - cosTheta*cosTheta);
+     G4double dx = sinTheta*std::cos(phi),
+              dy = sinTheta*std::sin(phi),
+              dz = cosTheta;
+   	 fParticleGun->SetParticleMomentumDirection(G4ThreeVector(dx,dy,dz));  
    }
+   if(fUseUserDefinedEnergy) {
+   	 fParticleGun->SetParticleEnergy(fNeutronEnergy->GetRandom()*1000*keV);
+   }
+   UpdateGunPosition();
    fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
