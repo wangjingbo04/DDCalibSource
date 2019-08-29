@@ -81,6 +81,8 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithoutParameter*   fPortRefGetMaterCmd;
     G4UIcmdWithAString*        fReflectorSetMaterCmd;
     G4UIcmdWithoutParameter*   fReflectorGetMaterCmd;
+    G4UIcmdWithAString*        fNGuideSetMaterCmd;
+    G4UIcmdWithoutParameter*   fNGuideGetMaterCmd;
 
     //Set Dimesion Commands
     G4UIcmdWithADoubleAndUnit* fModeratorThicknessCmd;

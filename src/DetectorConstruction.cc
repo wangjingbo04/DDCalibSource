@@ -103,7 +103,7 @@ DetectorConstruction::DetectorConstruction()
   // 2nd Filter
   fFilter2Height = 20*cm;
   fFilter2Radius_top = fFilter1Radius;
-  fFilter2Radius_bottom = 10*cm;
+  fFilter2Radius_bottom = 12*cm;
 
   // 3rd Filter
   fFilter3Height        = 12.0*cm;
@@ -226,14 +226,14 @@ void DetectorConstruction::DefineMaterials()
   G4Isotope* iso_Li = new G4Isotope("iso_Li", Z=3, A=6, a=6.015122795*g/mole);
   G4Element* ele_Li = new G4Element("ele_Li", "Li", ncomponents=1);
   ele_Li->AddIsotope(iso_Li,abundance=100.*perCent);
-  G4Material* Li6=new G4Material("Li6",0.534*g/cm3, ncomponents = 1);
-    Li6->AddElement(ele_Li, fractionmass = 1 );
+  fLi6=new G4Material("Li6",0.534*g/cm3, ncomponents = 1);
+    fLi6->AddElement(ele_Li, fractionmass = 1 );
   // B-10 isotope
   G4Isotope* iso_B = new G4Isotope("iso_B", Z=5, A=10, a=10.013*g/mole);
   G4Element* ele_B = new G4Element("ele_B", "B", ncomponents=1);
   ele_B->AddIsotope(iso_B,abundance=100.*perCent);
-  G4Material* B10=new G4Material("B10",2.34*g/cm3, ncomponents = 1);
-  B10->AddElement(ele_B, fractionmass = 1 );
+  fB10=new G4Material("B10",2.34*g/cm3, ncomponents = 1);
+  fB10->AddElement(ele_B, fractionmass = 1 );
   
   // Ni-58 isotope
   G4Isotope* iso_Ni58 = new G4Isotope("iso_Ni58", Z=28, A=58, a=58*g/mole);
@@ -293,7 +293,7 @@ void DetectorConstruction::DefineMaterials()
   //Lithium Polyethylene
   G4Material* polyethylene = man->FindOrBuildMaterial("G4_POLYETHYLENE");
   G4Material* LiPoly = new G4Material("LiPoly", 1.06*g/cm3, ncomponents=2);
-    LiPoly->AddMaterial (Li6, 7.54*perCent);
+    LiPoly->AddMaterial (fLi6, 7.54*perCent);
     LiPoly->AddMaterial (polyethylene, 92.46*perCent);
     
   // epoxy_resin
@@ -381,7 +381,7 @@ void DetectorConstruction::DefineMaterials()
   fFilter4Mater = man->FindOrBuildMaterial("G4_S");
 
   // neutron thermal absorber
-  fThermalAbsorberMater = B10;
+  fThermalAbsorberMater = fB10;
   
   // neutron shield
   fNShieldMater = LiPoly;
@@ -753,6 +753,9 @@ void DetectorConstruction::SetModeratorMaterial(G4String materialChoice)
 {
   G4Material* pttoMaterial;
   if(materialChoice == "Vacuum") pttoMaterial = fVacuum;	
+  else if(materialChoice == "Ni58") 	pttoMaterial = fNi58;
+  else if(materialChoice == "B10") 	pttoMaterial = fB10;
+  else if(materialChoice == "Li6") 	pttoMaterial = fLi6;
   // search the material by its name
   else pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(materialChoice); 
   if (pttoMaterial) { 
@@ -774,6 +777,8 @@ void DetectorConstruction::SetFilter1Material(G4String materialChoice)
 	G4Material* pttoMaterial;
   if(materialChoice == "Vacuum") pttoMaterial = fVacuum;
   else if(materialChoice == "Ni58") 	pttoMaterial = fNi58;
+  else if(materialChoice == "B10") 	pttoMaterial = fB10;
+  else if(materialChoice == "Li6") 	pttoMaterial = fLi6;
   // search the material by its name
   else pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   if (pttoMaterial) { 
@@ -795,6 +800,8 @@ void DetectorConstruction::SetFilter2Material(G4String materialChoice)
 	G4Material* pttoMaterial;
   if(materialChoice == "Vacuum") pttoMaterial = fVacuum;
   else if(materialChoice == "Ni58") 	pttoMaterial = fNi58;
+  else if(materialChoice == "B10") 	pttoMaterial = fB10;
+  else if(materialChoice == "Li6") 	pttoMaterial = fLi6;
   // search the material by its name
   else pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   if (pttoMaterial) { 
@@ -816,6 +823,8 @@ void DetectorConstruction::SetFilter3Material(G4String materialChoice)
 	G4Material* pttoMaterial;
   if(materialChoice == "Vacuum") pttoMaterial = fVacuum;	
   else if(materialChoice == "Ni58") 	pttoMaterial = fNi58;
+  else if(materialChoice == "B10") 	pttoMaterial = fB10;
+  else if(materialChoice == "Li6") 	pttoMaterial = fLi6;
   // search the material by its name
   else pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   if (pttoMaterial) { 
@@ -837,6 +846,8 @@ void DetectorConstruction::SetFilter4Material(G4String materialChoice)
 	G4Material* pttoMaterial;
   if(materialChoice == "Vacuum") pttoMaterial = fVacuum;	
   else if(materialChoice == "Ni58") 	pttoMaterial = fNi58;
+  else if(materialChoice == "B10") 	pttoMaterial = fB10;
+  else if(materialChoice == "Li6") 	pttoMaterial = fLi6;
   // search the material by its name
   else pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   if (pttoMaterial) { 
@@ -856,7 +867,10 @@ void DetectorConstruction::GetFilter4Material(){
 void DetectorConstruction::SetAbsorberMaterial(G4String materialChoice)
 {  
 	G4Material* pttoMaterial;
-  if(materialChoice == "Vacuum") pttoMaterial = fVacuum;	
+  if(materialChoice == "Vacuum") pttoMaterial = fVacuum;
+  else if(materialChoice == "Ni58") 	pttoMaterial = fNi58;	
+  else if(materialChoice == "B10") 	pttoMaterial = fB10;
+  else if(materialChoice == "Li6") 	pttoMaterial = fLi6;
   // search the material by its name
   else pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   if (pttoMaterial) { 
@@ -897,6 +911,9 @@ void DetectorConstruction::SetReflectorMaterial(G4String materialChoice)
 {
 	G4Material* pttoMaterial;
   if(materialChoice == "Vacuum") pttoMaterial = fVacuum;	
+  else if(materialChoice == "Ni58") 	pttoMaterial = fNi58;	
+  else if(materialChoice == "B10") 	pttoMaterial = fB10;
+  else if(materialChoice == "Li6") 	pttoMaterial = fLi6;
   // search the material by its name
   else pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   if (pttoMaterial) { 

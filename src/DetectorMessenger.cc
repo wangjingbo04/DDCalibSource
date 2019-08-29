@@ -138,6 +138,15 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fReflectorGetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetReflectorMaterial", this);
   fReflectorGetMaterCmd->SetGuidance("Parameterless, returns material of the reflector.");
   fReflectorGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  
+  fNGuideSetMaterCmd = new G4UIcmdWithAString("/ddsource/det/SetNGuideMaterial",this);
+  fNGuideSetMaterCmd->SetGuidance("Select material of the reflector.");
+  fNGuideSetMaterCmd->SetParameterName("choice",false);
+  fNGuideSetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fNGuideGetMaterCmd = new G4UIcmdWithoutParameter("/ddsource/det/GetNGuideMaterial", this);
+  fNGuideGetMaterCmd->SetGuidance("Parameterless, returns material of the guide reflector.");
+  fNGuideGetMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
 
 
@@ -282,6 +291,8 @@ DetectorMessenger::~DetectorMessenger()
   delete fPortRefGetMaterCmd;
   delete fReflectorSetMaterCmd;
   delete fReflectorGetMaterCmd;
+  delete fNGuideSetMaterCmd;
+  delete fNGuideGetMaterCmd;
 
   delete fModeratorThicknessCmd;
   delete fFilter1HeightCmd;
@@ -354,6 +365,12 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 
   if( command == fReflectorGetMaterCmd )
    { fDetector->GetReflectorMaterial();}
+   
+  if( command == fNGuideSetMaterCmd )
+   { fDetector->SetNGuideMaterial(newValue);}
+
+  if( command == fNGuideGetMaterCmd )
+   { fDetector->GetNGuideMaterial();}
    
 
 

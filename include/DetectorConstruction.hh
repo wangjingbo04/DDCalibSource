@@ -312,11 +312,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      G4VPhysicalVolume* fPhysiNShield;
      G4Material*        fNShieldMater;    
      
-     // define vacuum
-     G4Material* fVacuum;
-     
-     // Ni58
-     G4Material* fNi58;
+     // User defined material
+     G4Material* fVacuum; // vacuum
+     G4Material* fNi58;  // Ni-58
+     G4Material* fB10; // B-10
+     G4Material* fLi6; // Li-6
      
      DetectorMessenger* fDetectorMessenger;
 
